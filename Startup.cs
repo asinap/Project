@@ -41,7 +41,7 @@ namespace test2
 
             services.AddDbContext<LockerDbContext>(option =>
             {
-                option.UseSqlite("Data Source=Locker.db");
+                option.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
                 //option.UseSqlServer("Server=DESKTOP-D2NINII\\SQLEXPRESS; Database=LeaveManagement;Integrated Security=true");
             });
 
