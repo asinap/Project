@@ -64,24 +64,26 @@ namespace test2.Migrations
                     b.ToTable("LockerMetadatas");
                 });
 
-            modelBuilder.Entity("test2.DatabaseContext.Models.MessageDetail", b =>
+            modelBuilder.Entity("test2.DatabaseContext.Models.Notification", b =>
                 {
-                    b.Property<int>("Id_message")
+                    b.Property<int>("Id_notification")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("Date");
+                    b.Property<DateTime>("DateandTime");
 
                     b.Property<string>("Id_account");
 
                     b.Property<int>("Id_content");
 
+                    b.Property<int>("Id_vacant");
+
                     b.Property<bool>("IsShow");
 
-                    b.Property<DateTime>("Time");
+                    b.Property<string>("Mac_address");
 
-                    b.HasKey("Id_message");
+                    b.HasKey("Id_notification");
 
-                    b.ToTable("MessageDetails");
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("test2.DatabaseContext.Models.Reservation", b =>
@@ -100,6 +102,12 @@ namespace test2.Migrations
                     b.Property<int>("Id_vacancy");
 
                     b.Property<bool>("IsActive");
+
+                    b.Property<string>("Location");
+
+                    b.Property<int>("Optional");
+
+                    b.Property<string>("Size");
 
                     b.Property<DateTime>("StartDay");
 

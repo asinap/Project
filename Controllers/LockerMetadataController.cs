@@ -36,7 +36,7 @@ namespace test2.Controllers
         }
 
         [Route("DeleteLocker")]
-        [HttpDelete]
+        [HttpPut]
         public IActionResult DeleteLocker([FromQuery] string Mac_address)
         {
             if (_lockerRepo.DeleteLocker(Mac_address))
@@ -47,11 +47,11 @@ namespace test2.Controllers
 
         }
 
-        [Route("UpdateActiveLocker")]
+        [Route("RestoreLocker")]
         [HttpPut]
-        public IActionResult UpdateLocker([FromQuery] string Mac_address)
+        public IActionResult RestoreLocker([FromQuery] string Mac_address)
         {
-            if (_lockerRepo.UpdateActive(Mac_address))
+            if (_lockerRepo.RestoreLocker(Mac_address))
             {
                 return Ok(Mac_address);
             }
@@ -72,6 +72,44 @@ namespace test2.Controllers
         {
             var list = _lockerRepo.GetLocker(mac_address);
             return Ok(list);
+        }
+
+        [Route("ActiveLocker")]
+        [HttpGet]
+        public IActionResult ActiveLocker()
+        {
+            var list = _lockerRepo.GetActivelocker();
+            return Ok(list);
+        }
+
+        [Route ("Inactivelocker")]
+        [HttpGet]
+        public IActionResult InactiveLocker()
+        {
+            var list = _lockerRepo.GetInactivelocker();
+            return Ok(list);
+        }
+
+        [Route("DeleteAll")]
+        [HttpDelete]
+        public IActionResult Delete()
+        {
+            if (_lockerRepo.Delete())
+            {
+                return Ok();
+            }
+            return NotFound();
+        }
+
+        [Route("Delete")]
+        [HttpDelete]
+        public IActionResult Delete(string id)
+        {
+            if (_lockerRepo.Delete(id))
+            {
+                return Ok();
+            }
+            return NotFound();
         }
     }
 }

@@ -36,7 +36,7 @@ namespace test2.Repositories
             }
             catch (Exception)
             {
-                Console.WriteLine("Have %s it already", locker.ToString());
+                Console.WriteLine("Have %s it already", locker.Mac_address.ToString());
                 return false;
             }
         }
@@ -72,10 +72,10 @@ namespace test2.Repositories
             }
         }
 
-        /* Update Active                *
+        /* Restore Locker               *
          * Input = string Mac_address   *
          *      set IsActive = true     */
-        public bool UpdateActive(string Mac_address)//consider no_vacant and mac_address to set active
+        public bool RestoreLocker(string Mac_address)//consider no_vacant and mac_address to set active
         {
             try
             {
@@ -139,6 +139,52 @@ namespace test2.Repositories
                                  where lockerlist.IsActive == false
                                  select lockerlist;
             return inactivelocker.ToList();
+        }
+
+        /*Delete*/
+        public bool Delete()
+        {
+            try
+            {
+                var data = from list in _dbContext.LockerMetadatas select list;
+                _dbContext.LockerMetadatas.RemoveRange(data);
+                var vacant = from list in _dbContext.Vacancies select list;
+                _dbContext.Vacancies.RemoveRange(vacant);
+                _dbContext.SaveChanges();
+                return true;
+
+            }
+            catch (Exception)
+            {
+                Console.Write("Cannot delete all LockerMetadatas database");
+                return false;
+            }
+        }
+
+        public bool Delete(string mac_address)
+        {
+            try
+            {
+                if (_dbContext.LockerMetadatas.Where(x => x.Mac_address == mac_address) == null)
+                {
+                    return false;
+                }
+                var data = from list in _dbContext.LockerMetadatas
+                           where list.Mac_address == mac_address
+                           select list;
+                _dbContext.LockerMetadatas.RemoveRange(data);
+                var vacant = from list in _dbContext.Vacancies
+                             where list.Mac_address == mac_address
+                             select list;
+                _dbContext.Vacancies.RemoveRange(vacant);
+                _dbContext.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                Console.Write("Cannot delete %s", mac_address);
+                return false;
+            }
         }
     }
 }

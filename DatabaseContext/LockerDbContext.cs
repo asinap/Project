@@ -18,7 +18,7 @@ namespace test2.DatabaseContext
         public DbSet<Vacancy> Vacancies { get; set; }
         public DbSet<LockerMetadata> LockerMetadatas { get; set; }
         public DbSet<Content> Contents { get; set; }
-        public DbSet<MessageDetail> MessageDetails { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
         public DbSet<Account> Accounts { get; set; }
 
     }

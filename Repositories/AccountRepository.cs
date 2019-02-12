@@ -24,7 +24,7 @@ namespace test2.Repositories
         {
             try
             {
-                if(_dbContext.Accounts.FirstOrDefault(x=>x.Id_account == account.Id_account)==null)
+                if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == account.Id_account) != null)
                 {
                     Console.WriteLine("already exist");
                     return false;
@@ -37,7 +37,7 @@ namespace test2.Repositories
             }
             catch (Exception)
             {
-                Console.WriteLine("AddAccount Error");
+                Console.WriteLine("AddUserAccount Error");
                 return false;
             }
         }
@@ -50,7 +50,7 @@ namespace test2.Repositories
         {
             try
             {
-                if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == account.Id_account) == null)
+                if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == account.Id_account) != null)
                 {
                     Console.WriteLine("already exist");
                     return false;
@@ -63,7 +63,7 @@ namespace test2.Repositories
             }
             catch (Exception)
             {
-                Console.WriteLine("AddAccount Error");
+                Console.WriteLine("AddAdminAccount Error");
                 return false;
             }
         }
@@ -105,7 +105,7 @@ namespace test2.Repositories
             }
             catch (Exception)
             {
-                Console.WriteLine("AddPhoneNumber Error");
+                Console.WriteLine("Cannot update point");
                 return false;
             }
         }
@@ -133,9 +133,59 @@ namespace test2.Repositories
         public List<Account> GetAdminAccount()
         {
             var adminlist = from accountlist in _dbContext.Accounts
-                             where accountlist.Role == "Administrator"
-                             select accountlist;
+                            where accountlist.Role == "Administrator"
+                            select accountlist;
             return adminlist.ToList();
+        }
+
+        /*Admin*/
+        public List<Account> GetAdminAccount(string id)
+        {
+            var adminlist = from accountlist in _dbContext.Accounts
+                            where accountlist.Role == "Administrator" && accountlist.Id_account == id
+                            select accountlist;
+            return adminlist.ToList();
+        }
+
+        /*DeleteAll*/
+
+        public bool Delete()
+        {
+            try
+            {
+                var data = from list in _dbContext.Accounts select list;
+                _dbContext.Accounts.RemoveRange(data);
+                _dbContext.SaveChanges();
+                return true;
+
+            }
+            catch (Exception)
+            {
+                Console.Write("Cannot delete all account database");
+                return false;
+            }
+        }
+
+        public bool Delete(string id)
+        {
+            try
+            {
+                if(_dbContext.Accounts.Where(x=>x.Id_account==id)==null)
+                {
+                    return false;
+                }
+                var data = from list in _dbContext.Accounts
+                           where list.Id_account == id
+                           select list;
+                _dbContext.Accounts.RemoveRange(data);
+                _dbContext.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                Console.Write("Cannot delete %s", id);
+                return false;
+            }
         }
     }
 }

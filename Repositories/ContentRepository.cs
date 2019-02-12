@@ -31,14 +31,14 @@ namespace test2.Repositories
             }
             catch (Exception)
             {
-                Console.WriteLine("Exception error");
+                Console.WriteLine("Cannot add content");
                 return false;
             }
         }
 
         /* Delete Content                                   *
          * Input = Id_content                               *
-         *      set that Id_content has IsActive = false                        */
+         *      set that Id_content has IsActive = false    */
         public bool DeleteContent(int id)
         {
             try
@@ -49,15 +49,15 @@ namespace test2.Repositories
             }
             catch (Exception)
             {
-                Console.WriteLine("Exception error");
+                Console.WriteLine("Cannot delete content");
                 return false;
             }
         }
 
-        /* Set Active => set content can use.                   *
+        /* Restore content => set content can use.                   *
          * Input = Id_content                                   *
          *      set that Id_content has IsActive = true         */
-        public bool SetActive(int id)
+        public bool RestoreContent(int id)
         {
             try
             {
@@ -77,7 +77,7 @@ namespace test2.Repositories
 
         /* Get All Content          *
          * return all Content       */
-        public List<Content> GetContent()
+        public List<Content> GetAllContent()
         {
             return _dbContext.Contents.ToList();
         }
@@ -85,10 +85,58 @@ namespace test2.Repositories
         /* Get Content                                  *
          * Input = Id_content                           *
          * return content that has Id_content = Input   */
+
+        public List<Content> GetContent()
+        {
+            return _dbContext.Contents.Where(x => x.IsActive == true).ToList();
+        }
+
         public List<Content> GetContent(int id)
         {
+            var content = from contentlist in _dbContext.Contents
+                          where contentlist.Id_content == id && contentlist.IsActive == true
+                          select contentlist;
+            return content.ToList();
+        }
 
-            return _dbContext.Contents.Where(x => x.Id_content == id).ToList();
+        /*Delete*/
+        public bool Delete()
+        {
+            try
+            {
+                var data = from list in _dbContext.Contents select list;
+                _dbContext.Contents.RemoveRange(data);
+                _dbContext.SaveChanges();
+                return true;
+
+            }
+            catch (Exception)
+            {
+                Console.Write("Cannot delete all contents database");
+                return false;
+            }
+        }
+
+        public bool Delete(int id)
+        {
+            try
+            {
+                if (_dbContext.Contents.Where(x => x.Id_content == id) == null)
+                {
+                    return false;
+                }
+                var data = from list in _dbContext.Contents
+                           where list.Id_content == id
+                           select list;
+                _dbContext.Contents.RemoveRange(data);
+                _dbContext.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                Console.Write("Cannot delete %s", id);
+                return false;
+            }
         }
     }
 }

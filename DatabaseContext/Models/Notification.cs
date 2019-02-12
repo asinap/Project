@@ -7,18 +7,22 @@ using System.Threading.Tasks;
 
 namespace test2.DatabaseContext.Models
 {
-    public class MessageDetail
+    public class Notification
     {
         [Key]
-        public int Id_message { get; set; }
-        public DateTime Date { get; set; }
-        public DateTime Time { get; set; }
+        public int Id_notification { get; set; }
+        public DateTime DateandTime { get; set; }
+        //public DateTime Time { get; set; }
         public bool IsShow { get; set; }
+        public string Mac_address { get; set; }
+        public int Id_vacant { get; set; }
 
         [ForeignKey("Content")]
         public int Id_content { get; set; }
         [ForeignKey("Account")]
         public string Id_account { get; set; }
+        
+        
 
     }
 }

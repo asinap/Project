@@ -17,16 +17,16 @@ namespace test2.Repositories
         }
 
 
-        public bool AddReservation(Reservation reserve, string size, int optional)
+        public int AddReservation(Reservation reserve)
         {
             try
             {
-                switch (optional)
+                switch (reserve.Optional)
                 {
-                    case 1: return ReserveByDay(reserve, size);
-                    case 2: return ReserveByTime(reserve, size);
+                    case 1: return ReserveByDay(reserve);
+                    case 2: return ReserveByTime(reserve);
                     default: Console.WriteLine("Out of optional");
-                        return false;
+                        return 0;
                 }
                 //if (CheckId_studentRef(reserve.Id_account))
                 //{
@@ -46,39 +46,48 @@ namespace test2.Repositories
             catch (Exception)
             {
                 Console.WriteLine("AddReservation Error");
-                return false;
+                return 0;
             }
 
 
         }
 
 
-        public bool ReserveByDay(Reservation reserve, string size)
+        public int ReserveByDay(Reservation reserve)
         {
+            //1. check account exist.
             if (CheckId_account(reserve.Id_account))
             {
-                return false;
+                return 1;
             }
+
+            //2. find non-overlap locker; check available day, free vacancy and right location return list of vacancy
             var nonOverlap = CheckAvailableDay(reserve);
             if (nonOverlap == null)
             {
-                return false;
+                return 2;
             }
-            var inSize = nonOverlap.FirstOrDefault(x => x.Size == size);
+
+            //3.find size
+            var inSize = nonOverlap.FirstOrDefault(x => x.Size == reserve.Size);
+            if(inSize==null)
+            {
+                return 3;
+            }
             reserve.Id_vacancy = inSize.Id_vacancy;
             reserve.Status = "Unuse";
             _dbContext.Reservations.Add(reserve);
             _dbContext.SaveChanges();
-            return true;
+            return 4;
         }
 
-        public bool ReserveByTime(Reservation reserve, string size)
+        public int ReserveByTime(Reservation reserve)
         {
             if (CheckId_account(reserve.Id_account))
             {
-                return false;
+                return 0;
             }
-            return true;
+            return 1;
         }
 
         public bool CheckId_account(string id)
@@ -91,8 +100,9 @@ namespace test2.Repositories
             var overlap = from reservelist in _dbContext.Reservations
                              where reservelist.StartDay <= reserve.StartDay && reservelist.EndDay >= reserve.StartDay
                              select reservelist;
-            var availableVacant = from vacantlist in _dbContext.Vacancies
-                                  where !(overlap.Any(x => x.Id_vacancy == vacantlist.Id_vacancy))
+            var availableVacant = from vacantlist in _dbContext.Vacancies join lockerlist in _dbContext.LockerMetadatas
+                                  on vacantlist.Mac_address equals lockerlist.Mac_address
+                                  where !(overlap.Any(x => x.Id_vacancy == vacantlist.Id_vacancy)) && lockerlist.Location == reserve.Location
                                   select vacantlist;
             return availableVacant.ToList();
         }
@@ -124,6 +134,12 @@ namespace test2.Repositories
                 return false;
             }
         }
+
+        public List<Reservation> GetResverve()
+        {
+            return _dbContext.Reservations.ToList();
+        }
+
         ///// <summary>
         /////     Delete employee in database
         ///// </summary>

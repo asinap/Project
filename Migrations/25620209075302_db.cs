@@ -51,20 +51,21 @@ namespace test2.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MessageDetails",
+                name: "Notifications",
                 columns: table => new
                 {
-                    Id_message = table.Column<int>(nullable: false)
+                    Id_notification = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Date = table.Column<DateTime>(nullable: false),
-                    Time = table.Column<DateTime>(nullable: false),
+                    DateandTime = table.Column<DateTime>(nullable: false),
                     IsShow = table.Column<bool>(nullable: false),
+                    Mac_address = table.Column<string>(nullable: true),
+                    Id_vacant = table.Column<int>(nullable: false),
                     Id_content = table.Column<int>(nullable: false),
                     Id_account = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MessageDetails", x => x.Id_message);
+                    table.PrimaryKey("PK_Notifications", x => x.Id_notification);
                 });
 
             migrationBuilder.CreateTable(
@@ -80,6 +81,9 @@ namespace test2.Migrations
                     EndDay = table.Column<DateTime>(nullable: false),
                     StartTime = table.Column<DateTime>(nullable: false),
                     EndTime = table.Column<DateTime>(nullable: false),
+                    Optional = table.Column<int>(nullable: false),
+                    Size = table.Column<string>(nullable: true),
+                    Location = table.Column<string>(nullable: true),
                     Id_account = table.Column<string>(nullable: true),
                     Id_vacancy = table.Column<int>(nullable: false)
                 },
@@ -117,7 +121,7 @@ namespace test2.Migrations
                 name: "LockerMetadatas");
 
             migrationBuilder.DropTable(
-                name: "MessageDetails");
+                name: "Notifications");
 
             migrationBuilder.DropTable(
                 name: "Reservations");

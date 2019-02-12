@@ -24,13 +24,22 @@ namespace test2.Controllers
 
         [Route("AddReserve")]
         [HttpPost]
-        public IActionResult AddReservation([FromBody] Reservation reserve,string size, int optional)
+        public IActionResult AddReservation([FromBody] Reservation reserve)
         {
-            if (_reserveRepo.AddReservation(reserve,size,optional))
+            int result = _reserveRepo.AddReservation(reserve);
+            switch(result)
             {
-                return Ok(reserve.Id_reserve);
+                case 1: return NotFound("account is not existed.");
+                case 2: return NotFound("No avaliable vacant.");
+                case 3: return NotFound("Cannot find size requirement");
+                case 4: return Ok(reserve.Id_reserve);
+                default: return NotFound("Error");
+
             }
-            return NotFound();
+            //{
+            //    return Ok(reserve.Id_reserve);
+            //}
+            //return NotFound();
         }
 
         [Route("CancelReserve")]
@@ -42,6 +51,14 @@ namespace test2.Controllers
                 return Ok();
             }
             return NotFound();
+        }
+
+        [Route("ReserveAll")]
+        [HttpGet]
+        public IActionResult GetNotification()
+        {
+            var list = _reserveRepo.GetResverve();
+            return Ok(list);
         }
 
     }

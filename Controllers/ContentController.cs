@@ -23,7 +23,7 @@ namespace test2.Controllers
 
         [Route("AddContent")]
         [HttpPost]
-        public IActionResult AddLocker([FromBody] Content _cont)
+        public IActionResult AddContent([FromBody] Content _cont)
         {
             if (_contentRepo.AddContent(_cont))
             {
@@ -33,8 +33,8 @@ namespace test2.Controllers
         }
 
         [Route("DeleteContent")]
-        [HttpDelete]
-        public IActionResult DeleteLocker([FromQuery] int id)
+        [HttpPut]
+        public IActionResult DeleteContent([FromQuery] int id)
         {
             if (_contentRepo.DeleteContent(id))
             {
@@ -44,11 +44,11 @@ namespace test2.Controllers
 
         }
 
-        [Route("SetActiveContent")]
+        [Route("RestoreContent")]
         [HttpPut]
-        public IActionResult SetActiveContent([FromQuery] int id)
+        public IActionResult RestoreContent([FromQuery] int id)
         {
-            if (_contentRepo.SetActive(id))
+            if (_contentRepo.RestoreContent(id))
             {
                 return Ok(id);
             }
@@ -59,16 +59,46 @@ namespace test2.Controllers
         [HttpGet]
         public IActionResult GetContent()
         {
+            var list = _contentRepo.GetAllContent();
+            return Ok(list);
+        }
+
+        [Route("ActiveContent")]
+        [HttpGet]
+        public IActionResult ActiveContent()
+        {
             var list = _contentRepo.GetContent();
             return Ok(list);
         }
 
-        [Route("ContentId")]
+        [Route("ActiveContentID")]
         [HttpGet]
         public IActionResult GetContent(int id)
         {
             var list = _contentRepo.GetContent(id);
             return Ok(list);
+        }
+
+        [Route("DeleteAll")]
+        [HttpDelete]
+        public IActionResult Delete()
+        {
+            if (_contentRepo.Delete())
+            {
+                return Ok();
+            }
+            return NotFound();
+        }
+
+        [Route("Delete")]
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            if (_contentRepo.Delete(id))
+            {
+                return Ok();
+            }
+            return NotFound();
         }
 
     }

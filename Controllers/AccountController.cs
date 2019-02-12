@@ -21,16 +21,28 @@ namespace test2.Controllers
             _accountRepo = new AccountRepository(_dbContext);
         }
 
-        [Route("AddAccount")]
+        [Route("AddUserAccount")]
         [HttpPost]
-        public IActionResult AddAccount([FromBody] Account account)
+        public IActionResult AddUserAccount([FromBody] Account account)
         {
             if (_accountRepo.AddUserAccount(account))
             {
                 return Ok(account.Id_account);
             }
+            return NotFound("Cannot AddUser");
+        }
+
+        [Route("AddAdminAccount")]
+        [HttpPost]
+        public IActionResult AddAdminAccount([FromBody] Account account)
+        {
+            if (_accountRepo.AddAdminAccount(account))
+            {
+                return Ok(account.Id_account);
+            }
             return NotFound();
         }
+
 
         [Route("AddPhoneNumber")]
         [HttpPut]
@@ -54,20 +66,58 @@ namespace test2.Controllers
             return NotFound();
         }
 
-        [Route("AccountAll")]
+        [Route("UserAccountAll")]
         [HttpGet]
-        public IActionResult GetAccount()
+        public IActionResult GetUserAccount()
         {
             var list = _accountRepo.GetUserAccount();
             return Ok(list);
         }
 
-        [Route("ContentId")]
+        [Route("UserAccount")]
         [HttpGet]
-        public IActionResult GetAccount(string id)
+        public IActionResult GetUserAccount(string id)
         {
             var list = _accountRepo.GetUserAccount(id);
             return Ok(list);
+        }
+
+        [Route("AdminAccountAll")]
+        [HttpGet]
+        public IActionResult GetAdminAccount()
+        {
+            var list = _accountRepo.GetAdminAccount();
+            return Ok(list);
+        }
+
+        [Route("AdminAccount")]
+        [HttpGet]
+        public IActionResult GetAdminAccount(string id)
+        {
+            var list = _accountRepo.GetAdminAccount(id);
+            return Ok(list); 
+        }
+
+        [Route("DeleteAll")]
+        [HttpDelete]
+        public IActionResult Delete ()
+        {
+            if(_accountRepo.Delete())
+            {
+                return Ok();
+            }
+            return NotFound();
+        }
+
+        [Route("Delete")]
+        [HttpDelete]
+        public IActionResult Delete (string id)
+        {
+            if(_accountRepo.Delete(id))
+            {
+                return Ok();
+            }
+            return NotFound();
         }
     }
 }

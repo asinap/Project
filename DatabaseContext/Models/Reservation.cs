@@ -21,6 +21,9 @@ namespace test2.DatabaseContext.Models
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         //  public int CountOpen { get; set; }
+        public int Optional { get; set; }
+        public string Size { get; set; }
+        public string Location { get; set; }
         [ForeignKey("Account")]
         public string Id_account { get; set; }
         [ForeignKey("Vacancy")]
