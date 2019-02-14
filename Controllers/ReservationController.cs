@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using test2.Class;
 using test2.DatabaseContext;
 using test2.DatabaseContext.Models;
 using test2.Repositories;
@@ -32,7 +33,8 @@ namespace test2.Controllers
                 case 1: return NotFound("account is not existed.");
                 case 2: return NotFound("No avaliable vacant.");
                 case 3: return NotFound("Cannot find size requirement");
-                case 4: return Ok(reserve.Id_reserve);
+                case 4: return NotFound("No point");
+                case 5: return Ok(reserve.Id_reserve);
                 default: return NotFound("Error");
 
             }
@@ -46,11 +48,26 @@ namespace test2.Controllers
         [HttpDelete]
         public IActionResult CancelReservation([FromQuery] int id)
         {
-            if (_reserveRepo.CancelReseveration(id))
+            int result = _reserveRepo.CancelReseveration(id);
+            switch (result)
             {
-                return Ok();
+                case 1: return Ok(id);
+                case 2: return NotFound("Cannot cancel cause time");
+                case 3: return NotFound("Reservation is not existed");
+                default: return NotFound("Error");
             }
-            return NotFound();
+        }
+
+        [Route ("SetCode")]
+        [HttpPut]
+        public IActionResult SetCode (int id,string code)
+        {
+            if(_reserveRepo.SetCode(id,code)==1)
+            {
+                string result = string.Format("id_reserve : {0}, code : {1}",id,code); 
+                return Ok(result);
+            }
+            return NotFound("Error to set code");
         }
 
         [Route("ReserveAll")]
@@ -93,8 +110,17 @@ namespace test2.Controllers
             int use = _reserveRepo.Use(id);
             int penalty = _reserveRepo.Penalty(id);
             int expire = _reserveRepo.Expire(id);
-            string result = String.Format("Unuse:{0},Use:{1},Penalty:{2},Expire:{3}",unuse,use,penalty,expire);
-            return Json(result);
+ //           string result = String.Format("Unuse:{0},Use:{1},Penalty:{2},Expire:{3}",unuse,use,penalty,expire);
+            Counter counter = new Counter()
+            {
+                Unuse = unuse,
+                Use = use,
+                Penalty = penalty,
+                Expire = expire
+            };
+
+
+            return Json(counter);
         }
 
         [Route("SetState")]
@@ -104,6 +130,11 @@ namespace test2.Controllers
             if(_reserveRepo.SetStatus(reserveID,condition)==1)
             {
                 string result = String.Format("{0}:{1}",reserveID,condition);
+                return Ok(result);
+            }
+            else if (_reserveRepo.SetStatus(reserveID,condition)==2)
+            {
+                string result = String.Format("{0}:{1}", reserveID, condition);
                 return Ok(result);
             }
             else

@@ -82,7 +82,7 @@ namespace test2.Migrations
                     StartTime = table.Column<DateTime>(nullable: false),
                     EndTime = table.Column<DateTime>(nullable: false),
                     DateModified = table.Column<DateTime>(nullable: false),
-                    Optional = table.Column<int>(nullable: false),
+                    Optional = table.Column<bool>(nullable: false),
                     Size = table.Column<string>(nullable: true),
                     Location = table.Column<string>(nullable: true),
                     Id_account = table.Column<string>(nullable: true),

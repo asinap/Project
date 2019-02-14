@@ -78,10 +78,16 @@ namespace test2.Repositories
             }
             reserve.Id_vacancy = inSize.Id_vacancy;
             reserve.Status = "Unuse";
+            //4.out of point
+            if(_dbContext.Accounts.FirstOrDefault(x=>x.Id_account==reserve.Id_account).Point==0)
+            {
+                return 4;
+            }
+            _dbContext.Accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Point -= 5;
             //reserve.DateModified = DateTime.Now;
             _dbContext.Reservations.Add(reserve);
             _dbContext.SaveChanges();
-            return 4;
+            return 5;
         }
 
         public int ReserveByTime(Reservation reserve)
@@ -120,24 +126,53 @@ namespace test2.Repositories
         //    return _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == id) == null;
         //}
 
-        public bool CancelReseveration(int id)
+        public int CancelReseveration(int id)
         {
             try
             {
-                if (_dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id) == null)
+                if (_dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id) != null)
                 {
-                    _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id).IsActive = false;
-                    return true;
+                    DateTime date = DateTime.Now;
+                    var reserve = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id);
+                    if(reserve.StartDay>date)
+                    {
+                        _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id).IsActive = false;
+                        _dbContext.Accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Point += 5;
+                        _dbContext.SaveChanges();
+                        return 1;
+                    }
+
+                    return 2;
                 }
-                return false;
+                return 3;
             }
             catch (Exception)
             {
                 Console.WriteLine("Cancel reservation error");
-                return false;
+                return 0;
             }
         }
 
+        public int SetCode (int id_reserve,string code)
+        {
+            try
+            {
+                var list = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id_reserve);
+                if(list.Code.ToLower()=="string")
+                {
+                    list.Code = code;
+                    _dbContext.SaveChanges();
+                    return 1;
+                }
+                return 0;
+
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Error to set code");
+                return 0;
+            }
+        }
         public List<Reservation> GetReserve()
         {
             return _dbContext.Reservations.ToList();
@@ -148,13 +183,13 @@ namespace test2.Repositories
             return _dbContext.Reservations.Where(x => x.Id_account == id).ToList();
         }
 
-        public List<Reservation> Pending(string id)
+        public List<Reservation> Pending(string id)//order by recent date
         {
             var list = GetReserve(id);
             return list.Where(x => x.IsActive == true).ToList();
         }
 
-        public List<Reservation> History(string id)
+        public List<Reservation> History(string id)//order by recent day
         {
             var list = GetReserve(id);
             return list.Where(x => x.IsActive == false).ToList();
@@ -188,9 +223,22 @@ namespace test2.Repositories
         {
             try
             {
-                _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == reserve).Status = condition;
-                _dbContext.SaveChanges();
-                return 1;
+                if(condition.ToLower()=="use")
+                {
+                    _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == reserve).Status = condition;
+                    var user = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == reserve);
+                    _dbContext.Accounts.FirstOrDefault(x => x.Id_account == user.Id_account).Point += 5;
+                    _dbContext.SaveChanges();
+                    return 1;
+                }
+                else
+                {
+                    _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == reserve).Status = condition;
+                    _dbContext.SaveChanges();
+                    return 2;
+                }
+                //return 0;
+                
             }
             catch (Exception)
             {

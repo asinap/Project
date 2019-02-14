@@ -9,7 +9,7 @@ using test2.DatabaseContext;
 namespace test2.Migrations
 {
     [DbContext(typeof(LockerDbContext))]
-    [Migration("25620212133128_db")]
+    [Migration("25620214175737_db")]
     partial class db
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -109,7 +109,7 @@ namespace test2.Migrations
 
                     b.Property<string>("Location");
 
-                    b.Property<int>("Optional");
+                    b.Property<bool>("Optional");
 
                     b.Property<string>("Size");
 

@@ -107,7 +107,7 @@ namespace test2.Migrations
 
                     b.Property<string>("Location");
 
-                    b.Property<int>("Optional");
+                    b.Property<bool>("Optional");
 
                     b.Property<string>("Size");
 
