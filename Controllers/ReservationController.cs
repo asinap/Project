@@ -57,8 +57,82 @@ namespace test2.Controllers
         [HttpGet]
         public IActionResult GetNotification()
         {
-            var list = _reserveRepo.GetResverve();
+            var list = _reserveRepo.GetReserve();
             return Ok(list);
+        }
+
+        [Route("ReserveID")]
+        [HttpGet]
+        public IActionResult GetNotification(string id)
+        {
+            var list = _reserveRepo.GetReserve(id);
+            return Ok(list);
+        }
+
+        [Route("Pending")]
+        [HttpGet]
+        public IActionResult Pending (string id)
+        {
+            var list = _reserveRepo.Pending(id);
+            return Ok(list);
+        }
+
+        [Route("History")]
+        [HttpGet]
+        public IActionResult History (string id)
+        {
+            var list = _reserveRepo.History(id);
+            return Ok(list);
+        }
+
+        [Route ("Count")]
+        [HttpGet]
+        public JsonResult CountUser (string id)
+        {
+            int unuse = _reserveRepo.Unuse(id);
+            int use = _reserveRepo.Use(id);
+            int penalty = _reserveRepo.Penalty(id);
+            int expire = _reserveRepo.Expire(id);
+            string result = String.Format("Unuse:{0},Use:{1},Penalty:{2},Expire:{3}",unuse,use,penalty,expire);
+            return Json(result);
+        }
+
+        [Route("SetState")]
+        [HttpPut]
+        public IActionResult SetState (int reserveID, string condition)
+        {
+            if(_reserveRepo.SetStatus(reserveID,condition)==1)
+            {
+                string result = String.Format("{0}:{1}",reserveID,condition);
+                return Ok(result);
+            }
+            else
+            {
+                return NotFound("Error to Set state");
+            }
+
+        }
+
+        [Route("DeleteAll")]
+        [HttpDelete]
+        public IActionResult Delete()
+        {
+            if (_reserveRepo.Delete())
+            {
+                return Ok();
+            }
+            return NotFound();
+        }
+
+        [Route("Delete")]
+        [HttpDelete]
+        public IActionResult Delete(int id_noti)
+        {
+            if (_reserveRepo.Delete(id_noti))
+            {
+                return Ok();
+            }
+            return NotFound();
         }
 
     }

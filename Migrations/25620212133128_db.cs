@@ -81,6 +81,7 @@ namespace test2.Migrations
                     EndDay = table.Column<DateTime>(nullable: false),
                     StartTime = table.Column<DateTime>(nullable: false),
                     EndTime = table.Column<DateTime>(nullable: false),
+                    DateModified = table.Column<DateTime>(nullable: false),
                     Optional = table.Column<int>(nullable: false),
                     Size = table.Column<string>(nullable: true),
                     Location = table.Column<string>(nullable: true),

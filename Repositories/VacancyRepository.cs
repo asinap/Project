@@ -95,7 +95,7 @@ namespace test2.Repositories
                 _dbContext.SaveChanges();
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //Console.WriteLine("No have %s\t%s it already on UpdateActive()", Mac_address, No_vacant);
                 return false;
@@ -120,7 +120,7 @@ namespace test2.Repositories
                 }
                 return false;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Console.WriteLine("No have %s\t%s it process  UpdateSize()", Mac_address, No_vacant);
                 return false;
@@ -155,6 +155,45 @@ namespace test2.Repositories
         public List<Vacancy> GetInactive()
         {
             return _dbContext.Vacancies.Where(x => x.IsActive == false).ToList();
+        }
+
+        public bool Delete()
+        {
+            try
+            {
+                var data = from list in _dbContext.Vacancies select list;
+                _dbContext.Vacancies.RemoveRange(data);
+                _dbContext.SaveChanges();
+                return true;
+
+            }
+            catch (Exception)
+            {
+                Console.Write("Cannot delete all Vacancy database");
+                return false;
+            }
+        }
+
+        public bool Delete(int id_vacant)
+        {
+            try
+            {
+                if (_dbContext.Vacancies.Where(x => x.Id_vacancy == id_vacant) == null)
+                {
+                    return false;
+                }
+                var data = from list in _dbContext.Vacancies
+                           where list.Id_vacancy == id_vacant
+                           select list;
+                _dbContext.Vacancies.RemoveRange(data);
+                _dbContext.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                Console.Write("Cannot delete %s", id_vacant);
+                return false;
+            }
         }
     }
 }

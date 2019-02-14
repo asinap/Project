@@ -93,6 +93,8 @@ namespace test2.Migrations
 
                     b.Property<string>("Code");
 
+                    b.Property<DateTime>("DateModified");
+
                     b.Property<DateTime>("EndDay");
 
                     b.Property<DateTime>("EndTime");

@@ -21,13 +21,15 @@ namespace test2.Repositories
         {
             try
             {
-                switch (reserve.Optional)
+                if (!reserve.Optional)
                 {
-                    case 1: return ReserveByDay(reserve);
-                    case 2: return ReserveByTime(reserve);
-                    default: Console.WriteLine("Out of optional");
-                        return 0;
+                    return ReserveByDay(reserve);
                 }
+                else {
+                    return ReserveByTime(reserve);
+                }
+                Console.WriteLine("Out of optional");
+                return 0;
                 //if (CheckId_studentRef(reserve.Id_account))
                 //{
                 //    return false;
@@ -76,6 +78,7 @@ namespace test2.Repositories
             }
             reserve.Id_vacancy = inSize.Id_vacancy;
             reserve.Status = "Unuse";
+            //reserve.DateModified = DateTime.Now;
             _dbContext.Reservations.Add(reserve);
             _dbContext.SaveChanges();
             return 4;
@@ -135,10 +138,112 @@ namespace test2.Repositories
             }
         }
 
-        public List<Reservation> GetResverve()
+        public List<Reservation> GetReserve()
         {
             return _dbContext.Reservations.ToList();
         }
+
+        public List<Reservation> GetReserve(string id)
+        {
+            return _dbContext.Reservations.Where(x => x.Id_account == id).ToList();
+        }
+
+        public List<Reservation> Pending(string id)
+        {
+            var list = GetReserve(id);
+            return list.Where(x => x.IsActive == true).ToList();
+        }
+
+        public List<Reservation> History(string id)
+        {
+            var list = GetReserve(id);
+            return list.Where(x => x.IsActive == false).ToList();
+        }
+
+        public int Unuse (string id)
+        {
+            var list = GetReserve(id);
+            return list.Count(x => x.Status == "Unuse");
+        }
+
+        public int Use (string id)
+        {
+            var list = GetReserve(id);
+            return list.Count(x => x.Status == "Use");
+        }
+
+        public int Penalty (string id)
+        {
+            var list = GetReserve(id);
+            return list.Count(x => x.Status == "Penalty");
+        }
+        
+        public int Expire (string id)
+        {
+            var list = GetReserve(id);
+            return list.Count(x => x.Status == "Expire");
+        }
+
+        public int SetStatus(int reserve, string condition)
+        {
+            try
+            {
+                _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == reserve).Status = condition;
+                _dbContext.SaveChanges();
+                return 1;
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Error to set state");
+                return 0;
+            }
+
+        }
+
+        public bool Delete()
+        {
+            try
+            {
+                var data = from list in _dbContext.Reservations select list;
+                _dbContext.Reservations.RemoveRange(data);
+                _dbContext.SaveChanges();
+                return true;
+
+            }
+            catch (Exception)
+            {
+                Console.Write("Cannot delete all Reservation database");
+                return false;
+            }
+        }
+
+        public bool Delete(int id_reserve)
+        {
+            try
+            {
+                if (_dbContext.Reservations.Where(x => x.Id_reserve == id_reserve) == null)
+                {
+                    return false;
+                }
+                var data = from list in _dbContext.Reservations
+                           where list.Id_reserve == id_reserve
+                           select list;
+                _dbContext.Reservations.RemoveRange(data);
+                _dbContext.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                Console.Write("Cannot delete %s", id_reserve);
+                return false;
+            }
+        }
+
+
+
+
+
+
 
         ///// <summary>
         /////     Delete employee in database

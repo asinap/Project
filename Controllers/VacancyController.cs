@@ -82,5 +82,27 @@ namespace test2.Controllers
             var list = _vacancyRepo.GetVacancy(id);
             return Ok(list);
         }
+
+        [Route("DeleteAll")]
+        [HttpDelete]
+        public IActionResult Delete()
+        {
+            if (_vacancyRepo.Delete())
+            {
+                return Ok();
+            }
+            return NotFound();
+        }
+
+        [Route("Delete")]
+        [HttpDelete]
+        public IActionResult Delete(int id_noti)
+        {
+            if (_vacancyRepo.Delete(id_noti))
+            {
+                return Ok();
+            }
+            return NotFound();
+        }
     }
 }

@@ -9,7 +9,7 @@ using test2.DatabaseContext;
 namespace test2.Migrations
 {
     [DbContext(typeof(LockerDbContext))]
-    [Migration("25620209075302_db")]
+    [Migration("25620212133128_db")]
     partial class db
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -94,6 +94,8 @@ namespace test2.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Code");
+
+                    b.Property<DateTime>("DateModified");
 
                     b.Property<DateTime>("EndDay");
 
