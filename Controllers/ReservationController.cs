@@ -23,17 +23,17 @@ namespace test2.Controllers
             _reserveRepo = new ReservationRepository(_dbContext);
         }
 
-        [Route("AddReserve")]
+        [Route("/mobile/AddReserve")]
         [HttpPost]
         public IActionResult AddReservation([FromBody] Reservation reserve)
         {
             int result = _reserveRepo.AddReservation(reserve);
             switch(result)
             {
-                case 1: return NotFound("account is not existed.");
-                case 2: return NotFound("No avaliable vacant.");
-                case 3: return NotFound("Cannot find size requirement");
-                case 4: return NotFound("No point");
+                case 1: return NotFound("account_is_not_existed.");
+                case 2: return NotFound("No_avaliable_vacant.");
+                case 3: return NotFound("Cannot_find_size_requirement");
+                case 4: return NotFound("No_point");
                 case 5: return Ok(reserve.Id_reserve);
                 default: return NotFound("Error");
 
@@ -44,7 +44,7 @@ namespace test2.Controllers
             //return NotFound();
         }
 
-        [Route("CancelReserve")]
+        [Route("/mobile/CancelReserve")]
         [HttpDelete]
         public IActionResult CancelReservation([FromQuery] int id)
         {
@@ -52,13 +52,13 @@ namespace test2.Controllers
             switch (result)
             {
                 case 1: return Ok(id);
-                case 2: return NotFound("Cannot cancel cause time");
-                case 3: return NotFound("Reservation is not existed");
+                case 2: return NotFound("Cannot_cancel_cause_time");
+                case 3: return NotFound("Reservation_is_not_existed");
                 default: return NotFound("Error");
             }
         }
 
-        [Route ("SetCode")]
+        [Route ("/mobile/SetCode")]
         [HttpPut]
         public IActionResult SetCode (int id,string code)
         {
@@ -70,9 +70,33 @@ namespace test2.Controllers
             return NotFound("Error to set code");
         }
 
+        [Route ("/web/Activity")]
+        [HttpGet]
+        public JsonResult GetActivity()
+        {
+            var list = _reserveRepo.GetActivities();
+            return Json(list);
+        }
+
+        [Route("/web/Notification")]
+        [HttpGet]
+        public JsonResult GetNotification()
+        {
+            var list = _reserveRepo.GetNotification();
+            return Json(list);
+        }
+
+        [Route ("/web/ReserveDetail")]
+        [HttpGet]
+        public JsonResult GetReserveDetail(int id_noti)
+        {
+            ReserveDetail detail = _reserveRepo.GetReserveDetail(id_noti);
+            return Json(detail);
+        }
+
         [Route("ReserveAll")]
         [HttpGet]
-        public IActionResult GetNotification()
+        public IActionResult GetReserve()
         {
             var list = _reserveRepo.GetReserve();
             return Ok(list);
@@ -80,27 +104,36 @@ namespace test2.Controllers
 
         [Route("ReserveID")]
         [HttpGet]
-        public IActionResult GetNotification(string id)
+        public IActionResult GetReserve(string id)
         {
             var list = _reserveRepo.GetReserve(id);
             return Ok(list);
         }
 
-        [Route("Pending")]
+        [Route("/mobile/Pending")]
         [HttpGet]
-        public IActionResult Pending (string id)
+        public JsonResult Pending (string id)
         {
             var list = _reserveRepo.Pending(id);
-            return Ok(list);
+            return Json(list);
         }
 
-        [Route("History")]
+        [Route("/mobile/History")]
         [HttpGet]
-        public IActionResult History (string id)
+        public JsonResult History (string id)
         {
             var list = _reserveRepo.History(id);
-            return Ok(list);
+            return Json(list);
         }
+
+        [Route ("/mobile/BookingDetail")]
+        [HttpGet]
+        public JsonResult BookingDetail (int id)
+        {
+            BookingForm result = _reserveRepo.GetBookingDetail(id);
+            return Json(result);
+        }
+
 
         [Route ("Count")]
         [HttpGet]
@@ -108,7 +141,7 @@ namespace test2.Controllers
         {
             int unuse = _reserveRepo.Unuse(id);
             int use = _reserveRepo.Use(id);
-            int penalty = _reserveRepo.Penalty(id);
+            int penalty = _reserveRepo.TimeUp(id);
             int expire = _reserveRepo.Expire(id);
  //           string result = String.Format("Unuse:{0},Use:{1},Penalty:{2},Expire:{3}",unuse,use,penalty,expire);
             Counter counter = new Counter()
@@ -118,8 +151,6 @@ namespace test2.Controllers
                 Penalty = penalty,
                 Expire = expire
             };
-
-
             return Json(counter);
         }
 

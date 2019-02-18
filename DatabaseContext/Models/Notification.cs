@@ -11,11 +11,12 @@ namespace test2.DatabaseContext.Models
     {
         [Key]
         public int Id_notification { get; set; }
-        public DateTime DateandTime { get; set; }
+        public DateTime CreateTime { get; set; }
         //public DateTime Time { get; set; }
-        public bool IsShow { get; set; }
-        public string Mac_address { get; set; }
-        public int Id_vacant { get; set; }
+        public bool IsShow { get; set; }  //delete
+        public int Id_reserve { get; set; }
+        public bool Read { get; set; } //status for reading
+
 
         [ForeignKey("Content")]
         public int Id_content { get; set; }

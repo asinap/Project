@@ -9,7 +9,7 @@ using test2.DatabaseContext;
 namespace test2.Migrations
 {
     [DbContext(typeof(LockerDbContext))]
-    [Migration("25620214175737_db")]
+    [Migration("25620218144549_db")]
     partial class db
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -71,17 +71,17 @@ namespace test2.Migrations
                     b.Property<int>("Id_notification")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("DateandTime");
+                    b.Property<DateTime>("CreateTime");
 
                     b.Property<string>("Id_account");
 
                     b.Property<int>("Id_content");
 
-                    b.Property<int>("Id_vacant");
+                    b.Property<int>("Id_reserve");
 
                     b.Property<bool>("IsShow");
 
-                    b.Property<string>("Mac_address");
+                    b.Property<bool>("Read");
 
                     b.HasKey("Id_notification");
 

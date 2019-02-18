@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using test2.Class;
 using test2.DatabaseContext;
 using test2.DatabaseContext.Models;
 
@@ -28,8 +29,8 @@ namespace test2.Repositories
                 else {
                     return ReserveByTime(reserve);
                 }
-                Console.WriteLine("Out of optional");
-                return 0;
+                //Console.WriteLine("Out of optional");
+                //return 0;
                 //if (CheckId_studentRef(reserve.Id_account))
                 //{
                 //    return false;
@@ -71,7 +72,7 @@ namespace test2.Repositories
             }
 
             //3.find size
-            var inSize = nonOverlap.FirstOrDefault(x => x.Size == reserve.Size);
+            var inSize = nonOverlap.FirstOrDefault(x => x.Size == reserve.Size.ToUpper());
             if(inSize==null)
             {
                 return 3;
@@ -90,6 +91,7 @@ namespace test2.Repositories
             return 5;
         }
 
+        /*not finnish yet!!!!!!!!!!!!!!!*/
         public int ReserveByTime(Reservation reserve)
         {
             if (CheckId_account(reserve.Id_account))
@@ -137,6 +139,7 @@ namespace test2.Repositories
                     if(reserve.StartDay>date)
                     {
                         _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id).IsActive = false;
+                        _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id).Status = "Cancel";
                         _dbContext.Accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Point += 5;
                         _dbContext.SaveChanges();
                         return 1;
@@ -173,26 +176,133 @@ namespace test2.Repositories
                 return 0;
             }
         }
+
+        /*web all activity*/
+        public List<WebForm> GetActivities()
+        {
+            var list = _dbContext.Reservations.OrderByDescending(x => x.DateModified.Date);
+            List<WebForm> result = new List<WebForm>();
+            foreach (var run in list)
+            {
+                WebForm tmp = new WebForm() {
+                    Status=run.Status,
+                    Id_booking=run.Id_reserve,
+                    Id_user=run.Id_account,
+                    Location=run.Location,
+                    DateModified=run.DateModified
+                };
+                result.Add(tmp);
+            }
+            return result;
+
+        }
+
+        public List<WebForm> GetNotification()
+        {
+            var list = _dbContext.Reservations.Where(x => x.Status.ToLower() == "timeup");
+            List<WebForm> result = new List<WebForm>();
+            foreach (var run in list)
+            {
+                WebForm tmp = new WebForm() {
+                    Status=run.Status,
+                    Id_booking=run.Id_reserve,
+                    Id_user=run.Id_account,
+                    Location=run.Location,
+                    DateModified=run.DateModified
+                };
+                result.Add(tmp);
+            }
+            return result;
+        }
+
+        public List<BookingForm> Pending(string id)//order by recent date
+        {
+            var list = GetReserve(id);
+            var intime = list.Where(x => x.EndDay > DateTime.Now).OrderBy(x => x.StartDay);
+            List<BookingForm> result = new List<BookingForm>();
+            foreach (var run in intime)
+            {
+                string no_vacancy = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == run.Id_vacancy).No_vacancy;
+                BookingForm tmp = new BookingForm()
+                {
+                    BookingID=run.Id_reserve,
+                    StartDate=run.StartDay,
+                    EndDate=run.EndDay,
+                    Location=run.Location,
+                    Size=run.Size,
+                    NumberVacancy=no_vacancy
+                };
+                result.Add(tmp);
+            }
+            return result;
+        }
+
+        public List<BookingForm> History(string id)//order by recent day
+        {
+            var list = GetReserve(id);
+            var intime = list.Where(x => x.StartDay < DateTime.Now).OrderByDescending(x => x.EndDay);
+            List<BookingForm> result = new List<BookingForm>();
+            foreach (var run in intime)
+            {
+                string no_vacancy = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == run.Id_vacancy).No_vacancy;
+                BookingForm tmp = new BookingForm()
+                {
+                    BookingID = run.Id_reserve,
+                    StartDate = run.StartDay,
+                    EndDate = run.EndDay,
+                    Location = run.Location,
+                    Size = run.Size,
+                    NumberVacancy = no_vacancy
+                };
+                result.Add(tmp);
+            }
+            return result;
+        }
+
+        public BookingForm GetBookingDetail (int id_reserve)
+        {
+            var list = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id_reserve);
+            string no_vacancy = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == list.Id_vacancy).No_vacancy;
+            BookingForm result = new BookingForm()
+            {
+                UserID = list.Id_account,
+                BookingID = list.Id_reserve,
+                StartDate = list.StartDay,
+                EndDate = list.EndDay,
+                Location = list.Location,
+                Size = list.Size,
+                NumberVacancy = no_vacancy
+            };
+            return result;
+        }
+
+        public ReserveDetail GetReserveDetail(int id_reserve)
+        {
+            var reserve = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id_reserve); //BookingID,UserID,StartDate,EndDate,DateModified,Location,Size
+            string numberVacant = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == reserve.Id_vacancy).No_vacancy;//NumberVacancy
+            string name = _dbContext.Accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Name;
+            ReserveDetail result = new ReserveDetail() {
+                Id_user=reserve.Id_account,
+                Name=name,
+                BookingID=reserve.Id_reserve,
+                StartDate=reserve.StartDay,
+                EndDate=reserve.EndDay,
+                DateModified=reserve.DateModified,
+                Location=reserve.Location,
+                Size=reserve.Size,
+                NumberVacancy=numberVacant
+            };
+            return result;
+
+        }
         public List<Reservation> GetReserve()
         {
             return _dbContext.Reservations.ToList();
         }
 
-        public List<Reservation> GetReserve(string id)
+        public List<Reservation> GetReserve(string id) //by id account
         {
             return _dbContext.Reservations.Where(x => x.Id_account == id).ToList();
-        }
-
-        public List<Reservation> Pending(string id)//order by recent date
-        {
-            var list = GetReserve(id);
-            return list.Where(x => x.IsActive == true).ToList();
-        }
-
-        public List<Reservation> History(string id)//order by recent day
-        {
-            var list = GetReserve(id);
-            return list.Where(x => x.IsActive == false).ToList();
         }
 
         public int Unuse (string id)
@@ -207,16 +317,22 @@ namespace test2.Repositories
             return list.Count(x => x.Status == "Use");
         }
 
-        public int Penalty (string id)
+        public int TimeUp (string id)
         {
             var list = GetReserve(id);
-            return list.Count(x => x.Status == "Penalty");
+            return list.Count(x => x.Status == "TimeUp");
         }
         
         public int Expire (string id)
         {
             var list = GetReserve(id);
             return list.Count(x => x.Status == "Expire");
+        }
+
+        public int Cancel(string id)
+        {
+            var list = GetReserve(id);
+            return list.Count(x => x.Status == "Cancel");
         }
 
         public int SetStatus(int reserve, string condition)
@@ -286,11 +402,6 @@ namespace test2.Repositories
                 return false;
             }
         }
-
-
-
-
-
 
 
         ///// <summary>

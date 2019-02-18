@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using test2.Class;
 using test2.DatabaseContext;
 using test2.DatabaseContext.Models;
 
@@ -33,6 +33,7 @@ namespace test2.Repositories
                     return false;
                 }
                 /*search reservation for create notification and assign no_vacancy and mac_address*/
+                _noti.Read = false;
                 _dbContext.Notifications.Add(_noti);
                 _dbContext.SaveChanges();
                 return true;
@@ -89,6 +90,21 @@ namespace test2.Repositories
             }
         }
 
+        public bool SetRead(int id)
+        {
+            try
+            {
+                _dbContext.Notifications.FirstOrDefault(x => x.Id_notification == id).Read = true;
+                _dbContext.SaveChanges();
+                return true;
+            }
+            catch(Exception)
+            {
+                Console.WriteLine("Error");
+                return false;
+            }
+        }
+
         /* Get all message                      *
          * return all message detail to string  */
         public List<Notification> GetNotification()
@@ -107,6 +123,63 @@ namespace test2.Repositories
             return usernotilist.ToList();
 
         }
+
+        public List<NotificationForm> GetNotificationForm (string id_account)
+        {
+            if(_dbContext.Accounts.FirstOrDefault(x=>x.Id_account==id_account)==null)
+            {
+                return null;
+            }
+            var list = _dbContext.Notifications.Where(x => x.Id_account == id_account && x.IsShow==true).OrderByDescending(x=>x.CreateTime.Date).ThenBy(x=>x.Read);
+            List<NotificationForm> result = new List<NotificationForm>();
+            foreach (var run in list )
+            {
+                var content = _dbContext.Contents.FirstOrDefault(x => x.Id_content == run.Id_content);
+                var reservelist = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == run.Id_reserve);
+                var vacant = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == reservelist.Id_vacancy);
+                string _content = content.PlainText;
+                _content = _content.Replace("%p", reservelist.Location);
+                _content = _content.Replace("%v", vacant.No_vacancy);
+                NotificationForm form = new NotificationForm() {
+                    Id_account = run.Id_account,
+                    CreateTime = run.CreateTime,
+                    Content=_content,
+                    Read = run.Read
+                };
+                result.Add(form);
+
+            }
+            return result;
+        }
+
+        public NotificationForm GetNotificationDetail (int id_noti)
+        {
+            var list = _dbContext.Notifications.FirstOrDefault(x => x.Id_notification == id_noti);
+            var content = _dbContext.Contents.FirstOrDefault(x => x.Id_content == list.Id_content);
+            var reservelist = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == list.Id_reserve);
+            var vacant = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == reservelist.Id_vacancy);
+            string _content = content.PlainText;
+            _content = _content.Replace("%p", reservelist.Location);
+            _content = _content.Replace("%v", vacant.No_vacancy);
+            NotificationForm form = new NotificationForm()
+            {
+                Id_account = list.Id_account,
+                CreateTime = list.CreateTime,
+                Content = _content,
+                Read = list.Read
+            };
+            return form;
+        }
+
+        //public List<NotificationForm> GetNotificationForm (string id_account, int id_noti)
+        //{
+        //    if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == id_account) == null)
+        //    {
+        //        return null;
+        //    }
+            
+
+        //}
         
         /* Get active message for one user                  *
          *  input = string id_account                       *

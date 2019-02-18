@@ -56,10 +56,10 @@ namespace test2.Migrations
                 {
                     Id_notification = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    DateandTime = table.Column<DateTime>(nullable: false),
+                    CreateTime = table.Column<DateTime>(nullable: false),
                     IsShow = table.Column<bool>(nullable: false),
-                    Mac_address = table.Column<string>(nullable: true),
-                    Id_vacant = table.Column<int>(nullable: false),
+                    Id_reserve = table.Column<int>(nullable: false),
+                    Read = table.Column<bool>(nullable: false),
                     Id_content = table.Column<int>(nullable: false),
                     Id_account = table.Column<string>(nullable: true)
                 },

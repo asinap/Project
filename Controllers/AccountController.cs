@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using test2.Class;
 using test2.DatabaseContext;
 using test2.DatabaseContext.Models;
 using test2.Repositories;
@@ -21,7 +22,7 @@ namespace test2.Controllers
             _accountRepo = new AccountRepository(_dbContext);
         }
 
-        [Route("AddUserAccount")]
+        [Route("/mobile/AddUserAccount")]
         [HttpPost]
         public IActionResult AddUserAccount([FromBody] Account account)
         {
@@ -29,10 +30,10 @@ namespace test2.Controllers
             {
                 return Ok(account.Id_account);
             }
-            return NotFound("Cannot AddUser");
+            return NotFound("already_existed");
         }
 
-        [Route("AddAdminAccount")]
+        [Route("/web/AddAdminAccount")]
         [HttpPost]
         public IActionResult AddAdminAccount([FromBody] Account account)
         {
@@ -44,7 +45,7 @@ namespace test2.Controllers
         }
 
 
-        [Route("AddPhoneNumber")]
+        [Route("/mobile/AddPhoneNumber")]
         [HttpPut]
         public IActionResult AddPhoneNumber([FromQuery] string id, string phone)
         {
@@ -52,21 +53,21 @@ namespace test2.Controllers
             {
                 return Ok(id);
             }
-            return NotFound();
+            return NotFound("CannotAddphone");
         }
 
-        [Route("UpdatePoint")]
-        [HttpPut]
-        public IActionResult UpdatePoint([FromQuery] string id, int num)
-        {
-            if (_accountRepo.UpdatePoint(id, num))
-            {
-                return Ok(id);
-            }
-            return NotFound();
-        }
+        //[Route("UpdatePoint")]
+        //[HttpPut]
+        //public IActionResult UpdatePoint([FromQuery] string id, int num)
+        //{
+        //    if (_accountRepo.UpdatePoint(id, num))
+        //    {
+        //        return Ok(id);
+        //    }
+        //    return NotFound();
+        //}
 
-        [Route("UserAccountAll")]
+        [Route("/web/UserAccountAll")]
         [HttpGet]
         public IActionResult GetUserAccount()
         {
@@ -74,11 +75,35 @@ namespace test2.Controllers
             return Ok(list);
         }
 
+        [Route("/mobile/UserAccount")]
+        [HttpGet]
+        public JsonResult GetUserAccount(string id)
+        {
+            MemberAccount account = _accountRepo.GetUserAccount(id);
+            return Json(account);
+        }
+
+        [Route("/web/UserOverview")]
+        [HttpGet]
+        public JsonResult GetUserOverview(string id)
+        {
+            UserOverview user = _accountRepo.GetUserOverview(id);
+            return Json(user);
+        }
+
+        [Route("UserAccountAll")]
+        [HttpGet]
+        public IActionResult GetUserAccountdev()
+        {
+            var list = _accountRepo.GetUserAccountdev();
+            return Ok(list);
+        }
+
         [Route("UserAccount")]
         [HttpGet]
-        public IActionResult GetUserAccount(string id)
+        public IActionResult GetUserAccountdev(string id)
         {
-            var list = _accountRepo.GetUserAccount(id);
+            var list = _accountRepo.GetUserAccountdev(id);
             return Ok(list);
         }
 
