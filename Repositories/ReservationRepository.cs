@@ -180,7 +180,7 @@ namespace test2.Repositories
         /*web all activity*/
         public List<WebForm> GetActivities()
         {
-            var list = _dbContext.Reservations.OrderByDescending(x => x.DateModified.Date);
+            var list = _dbContext.Reservations.OrderByDescending(x => x.DateModified);
             List<WebForm> result = new List<WebForm>();
             foreach (var run in list)
             {
@@ -193,13 +193,13 @@ namespace test2.Repositories
                 };
                 result.Add(tmp);
             }
-            return result;
+            return result.ToList();
 
         }
 
         public List<WebForm> GetNotification()
         {
-            var list = _dbContext.Reservations.Where(x => x.Status.ToLower() == "timeup");
+            var list = _dbContext.Reservations.Where(x => x.Status.ToLower() == "timeup").OrderByDescending(x=>x.DateModified);
             List<WebForm> result = new List<WebForm>();
             foreach (var run in list)
             {
@@ -212,13 +212,13 @@ namespace test2.Repositories
                 };
                 result.Add(tmp);
             }
-            return result;
+            return result.ToList();
         }
 
         public List<BookingForm> Pending(string id)//order by recent date
         {
             var list = GetReserve(id);
-            var intime = list.Where(x => x.EndDay > DateTime.Now).OrderBy(x => x.StartDay);
+            var intime = list.Where(x => x.EndDay > DateTime.Now).OrderBy(x => x.StartDay); // change; isActive==true
             List<BookingForm> result = new List<BookingForm>();
             foreach (var run in intime)
             {
@@ -234,13 +234,13 @@ namespace test2.Repositories
                 };
                 result.Add(tmp);
             }
-            return result;
+            return result.ToList();
         }
 
         public List<BookingForm> History(string id)//order by recent day
         {
             var list = GetReserve(id);
-            var intime = list.Where(x => x.StartDay < DateTime.Now).OrderByDescending(x => x.EndDay);
+            var intime = list.Where(x => x.StartDay < DateTime.Now).OrderByDescending(x => x.EndDay); // change; isActive==false
             List<BookingForm> result = new List<BookingForm>();
             foreach (var run in intime)
             {
@@ -256,7 +256,7 @@ namespace test2.Repositories
                 };
                 result.Add(tmp);
             }
-            return result;
+            return result.ToList();
         }
 
         public BookingForm GetBookingDetail (int id_reserve)
@@ -288,6 +288,7 @@ namespace test2.Repositories
                 StartDate=reserve.StartDay,
                 EndDate=reserve.EndDay,
                 DateModified=reserve.DateModified,
+                Status=reserve.Status,
                 Location=reserve.Location,
                 Size=reserve.Size,
                 NumberVacancy=numberVacant
@@ -404,39 +405,6 @@ namespace test2.Repositories
         }
 
 
-        ///// <summary>
-        /////     Delete employee in database
-        ///// </summary>
-        ///// <param name="staffId">An id of the one who will be deleted</param>
-        ///// <returns>
-        /////     true - if success
-        /////     false - if no id found
-        ///// </returns>
-        //public bool DeleteEmployee(string staffId)
-        //{
-        //    if (_dbContext.Employees.Where(x => x.StaffId == staffId) == null)
-        //        return false;
-        //    _dbContext.Employees.FirstOrDefault(x => x.StaffId == staffId).IsActive = false;
-        //    _dbContext.SaveChanges();
-        //    return true;
-        //}
-
-        ///// <summary>
-        /////     Get basic information of the employee
-        ///// </summary>
-        ///// <param name="staffId">An id of the employee</param>
-        ///// <returns>
-        /////     Employee - An instance of the employee
-        /////     null - if no employee found
-        ///// </returns>
-        //public Employee GetProfile(string staffId)
-        //{
-        //    var emp = _dbContext.Employees.FirstOrDefault(x => x.StaffId == staffId);
-        //    if (emp == null)
-        //        return null;
-        //    if (emp.IsActive == false)
-        //        return null;
-        //    return emp;
-        //}
+    
     }
 }

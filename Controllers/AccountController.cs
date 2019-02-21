@@ -26,11 +26,15 @@ namespace test2.Controllers
         [HttpPost]
         public IActionResult AddUserAccount([FromBody] Account account)
         {
-            if (_accountRepo.AddUserAccount(account))
+            int result = _accountRepo.AddUserAccount(account);
+            switch(result)
             {
-                return Ok(account.Id_account);
+                case 1: return NotFound("wrong_domainmail");
+                case 2: return NotFound("not_student");
+                case 3: return NotFound("account_already_exist");
+                case 4: return Ok(account.Id_account);
+                default:return NotFound("Error");
             }
-            return NotFound("already_existed");
         }
 
         [Route("/web/AddAdminAccount")]
@@ -113,6 +117,17 @@ namespace test2.Controllers
         {
             var list = _accountRepo.GetAdminAccount();
             return Ok(list);
+        }
+
+        [Route("/web/Admin")]
+        [HttpGet]
+        public IActionResult GetAdmin ()
+        {
+            var admin = _accountRepo.GetAdmins();
+            if (admin != null)
+                return Ok(admin);
+            else
+                return NotFound("No_admin");
         }
 
         [Route("AdminAccount")]

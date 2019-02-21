@@ -88,9 +88,9 @@ namespace test2.Controllers
 
         [Route ("/web/ReserveDetail")]
         [HttpGet]
-        public JsonResult GetReserveDetail(int id_noti)
+        public JsonResult GetReserveDetail(int id_reserve)
         {
-            ReserveDetail detail = _reserveRepo.GetReserveDetail(id_noti);
+            ReserveDetail detail = _reserveRepo.GetReserveDetail(id_reserve);
             return Json(detail);
         }
 

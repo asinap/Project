@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using test2.Class;
 using test2.DatabaseContext;
 using test2.DatabaseContext.Models;
 
@@ -185,6 +186,37 @@ namespace test2.Repositories
                 Console.Write("Cannot delete %s", mac_address);
                 return false;
             }
+        }
+
+        public LockerDetail GetLockerDetail (string mac_address)
+        {
+            var vacantlist = _dbContext.Vacancies.Where(x => x.Mac_address == mac_address);
+            string location = _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == mac_address).Location;
+            List<VacancyDetail> vacancyDetails = GetVacantList(mac_address);
+            LockerDetail lockerDetail = new LockerDetail() {
+                LockerID=mac_address,
+                Location=location,
+                Vacancieslist=vacancyDetails
+            };
+            return lockerDetail;
+        }
+
+        public List<VacancyDetail> GetVacantList(string mac_address)
+        {
+            var vacantlist = _dbContext.Vacancies.Where(x => x.Mac_address == mac_address).OrderBy(x => x.Id_vacancy);
+            List<VacancyDetail> result = new List<VacancyDetail>();
+            foreach (var run in vacantlist)
+            {
+                VacancyDetail lockerDetail = new VacancyDetail()
+                {
+                    VacancyID = run.Id_vacancy,
+                    No_vacancy = run.No_vacancy,
+                    Size = run.Size,
+                    IsActive = run.IsActive
+                };
+                result.Add(lockerDetail);
+            }
+            return result;
         }
     }
 }

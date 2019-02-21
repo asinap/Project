@@ -130,7 +130,7 @@ namespace test2.Repositories
             {
                 return null;
             }
-            var list = _dbContext.Notifications.Where(x => x.Id_account == id_account && x.IsShow==true).OrderByDescending(x=>x.CreateTime.Date).ThenBy(x=>x.Read);
+            var list = _dbContext.Notifications.Where(x => x.Id_account == id_account && x.IsShow==true).OrderByDescending(x=>x.Id_notification).ThenBy(x=>x.Read);
             List<NotificationForm> result = new List<NotificationForm>();
             foreach (var run in list )
             {
@@ -142,6 +142,7 @@ namespace test2.Repositories
                 _content = _content.Replace("%v", vacant.No_vacancy);
                 NotificationForm form = new NotificationForm() {
                     Id_account = run.Id_account,
+                    Id_noti =run.Id_notification,
                     CreateTime = run.CreateTime,
                     Content=_content,
                     Read = run.Read
@@ -149,7 +150,7 @@ namespace test2.Repositories
                 result.Add(form);
 
             }
-            return result;
+            return result.ToList();
         }
 
         public NotificationForm GetNotificationDetail (int id_noti)

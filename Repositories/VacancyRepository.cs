@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using test2.Class;
 using test2.DatabaseContext;
 using test2.DatabaseContext.Models;
 
@@ -30,6 +31,10 @@ namespace test2.Repositories
                 }
                 else
                 {
+                    if(!CheckNo_vacant(vacant.Mac_address,vacant.No_vacancy))
+                    {
+                        return false;
+                    }
                     _dbContext.Vacancies.Add(vacant);
                     _dbContext.SaveChanges();
                     return true;
@@ -48,6 +53,20 @@ namespace test2.Repositories
         public bool CheckMac_address(string mac_address)
         {
             return _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == mac_address) == null;
+        }
+
+        public bool CheckNo_vacant (string mac_address, string no_vacant)
+        {
+            var list = from vacantlist in _dbContext.Vacancies
+                       where vacantlist.Mac_address == mac_address && vacantlist.No_vacancy == no_vacant
+                       select vacantlist;
+            if (list == null)
+            {
+                return false;
+            }
+            else
+                return true;
+
         }
 
         /* Delete vacancy                                                                           *
@@ -143,6 +162,7 @@ namespace test2.Repositories
             return _dbContext.Vacancies.Where(x => x.Id_vacancy == id).ToList();
         }
 
+  
         /* Get active vacancy                   *
          * return vacancy has IsActive = true   */
         public List<Vacancy> GetActive()
@@ -195,5 +215,7 @@ namespace test2.Repositories
                 return false;
             }
         }
+
+
     }
 }

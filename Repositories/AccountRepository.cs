@@ -21,25 +21,41 @@ namespace test2.Repositories
          * input = account 
                     attributes => Id_account, Name, Phone, Email, Role, Point
                     default Point = 100 */
-        public bool AddUserAccount(Account account)
+        public int AddUserAccount(Account account)
         {
             try
             {
+                string id = "";
+                string domainmail = "@kmitl.ac.th";
+                if (!account.Email.Contains(domainmail))
+                {
+                    // detect domain email
+                    return 1;
+                }
+                id = account.Email.Replace(domainmail, "");
+                int numberic;
+                if (!int.TryParse(id, out numberic))
+                {
+                    //before email is not studentID
+                    return 2;
+                }
+                account.Id_account = id;
                 if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == account.Id_account) != null)
                 {
+                    //already have account
                     Console.WriteLine("already exist");
-                    return false;
+                    return 3;
                 }
                 account.Point = 100;
                 account.Role = "User";
                 _dbContext.Accounts.Add(account);
                 _dbContext.SaveChanges();
-                return true;
+                return 4;
             }
             catch (Exception)
             {
                 Console.WriteLine("AddUserAccount Error");
-                return false;
+                return 0;
             }
         }
 
@@ -166,7 +182,7 @@ namespace test2.Repositories
             //TimeUp+Expire count 
             int timeUpCount = _dbContext.Reservations.Count(x => x.Id_account == id_account && x.Status.ToLower() == "timeup") + _dbContext.Reservations.Count(x => x.Id_account == id_account && x.Status.ToLower() == "expire");
             //all reservation
-            var reserve = _dbContext.Reservations.Where(x => x.Id_account == id_account).OrderByDescending(x => x.DateModified.Date);
+            var reserve = _dbContext.Reservations.Where(x => x.Id_account == id_account).OrderByDescending(x => x.DateModified);
             List<WebForm> tmp = new List<WebForm>();
             foreach (var run in reserve)
             {
@@ -177,16 +193,17 @@ namespace test2.Repositories
                     Location=run.Location,
                     DateModified=run.DateModified
                 };
+                tmp.Add(newby);
             }
 
             UserOverview overview = new UserOverview()
             {
-                UserID=user.Id_account,
-                Name=user.Name,
-                Using=usingCount,
-                TimeUp=timeUpCount,
-                Point=user.Point,
-                BookingList=tmp
+                UserID = user.Id_account,
+                Name = user.Name,
+                Using = usingCount,
+                TimeUp = timeUpCount,
+                Point = user.Point,
+                BookingList = tmp
             };
             return overview;
 
@@ -219,6 +236,22 @@ namespace test2.Repositories
             return adminlist.ToList();
         }
 
+
+        public List<Admin> GetAdmins()
+        {
+            var adminlist = _dbContext.Accounts.Where(x => x.Role == "Administrator");
+            List<Admin> result = new List<Admin>();
+            foreach (var run in adminlist)
+            {
+                Admin admin = new Admin()
+                {
+                    Name=run.Name,
+                    Email=run.Email
+                };
+                result.Add(admin);
+            }
+            return result;
+        }
         /*Admin*/
         public List<Account> GetAdminAccount(string id)
         {

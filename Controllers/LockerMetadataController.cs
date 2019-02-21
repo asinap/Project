@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using test2.Class;
 using test2.DatabaseContext;
 using test2.DatabaseContext.Models;
 using test2.Repositories;
@@ -58,7 +59,7 @@ namespace test2.Controllers
             return NotFound();
         }
 
-        [Route("LockerAll")]
+        [Route("/web/Locker")]
         [HttpGet]
         public IActionResult GetLocker()
         {
@@ -66,6 +67,13 @@ namespace test2.Controllers
             return Ok(list);
         }
 
+        [Route("/web/lockerDetail")]
+        [HttpGet]
+        public JsonResult GetLockerDetail(string mac_address)
+        {
+            LockerDetail lockerDetail = _lockerRepo.GetLockerDetail(mac_address);
+            return Json(lockerDetail);
+        }
         [Route("LockerMac")]
         [HttpGet]
         public IActionResult GetLocker(string mac_address)
