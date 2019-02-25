@@ -18,29 +18,48 @@ namespace test2.Repositories
 
         public Hardware GetHardware(string userID, string code, string mac_address)
         {
-            string location = _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == mac_address).Location;
-            var allreserve = from reservelist in _dbContext.Reservations
-                             where reservelist.Id_account == userID && reservelist.Location == location && reservelist.IsActive==true && (reservelist.Status=="Use"||reservelist.Status=="Unuse")
-                             select reservelist;
-            var reserve = allreserve.FirstOrDefault(x => x.Code == code);
-            if(reserve==null)
+            try
             {
-                Hardware result = new Hardware()
+                if(_dbContext.Accounts.FirstOrDefault(x=>x.Id_account==userID)==null)
                 {
-                    No_vacancy = "None",
-                    Ok = false
-                };
-                return result;
+                    return null;
+                }
+                if (_dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == mac_address) == null)
+                {
+                    return null;
+                }
+                string location = _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == mac_address).Location;
+                var allreserve = from reservelist in _dbContext.Reservations
+                                 where reservelist.Id_account == userID && reservelist.Location == location && reservelist.IsActive == true && (reservelist.Status == "Use" || reservelist.Status == "Unuse")
+                                 select reservelist;
+                var reserve = allreserve.FirstOrDefault(x => x.Code == code);
+                if (reserve == null)
+                {
+                    Hardware result = new Hardware()
+                    {
+                        ReserveID = reserve.Id_reserve,
+                        Status = reserve.Status,
+                        No_vacancy = "None",
+                        Ok = false
+                    };
+                    return result;
+                }
+                else
+                {
+                    string no_vacant = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == reserve.Id_vacancy).No_vacancy;
+                    Hardware result = new Hardware()
+                    {
+                        ReserveID = reserve.Id_reserve,
+                        Status = reserve.Status,
+                        No_vacancy = no_vacant,
+                        Ok = true
+                    };
+                    return result;
+                }
             }
-            else
+            catch (Exception)
             {
-                string no_vacant = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == reserve.Id_vacancy).No_vacancy;
-                Hardware result = new Hardware()
-                {
-                    No_vacancy=no_vacant,
-                    Ok=true
-                };
-                return result;
+                return null;
             }
         }
     }

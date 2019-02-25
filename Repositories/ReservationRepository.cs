@@ -58,37 +58,44 @@ namespace test2.Repositories
 
         public int ReserveByDay(Reservation reserve)
         {
-            //1. check account exist.
-            if (CheckId_account(reserve.Id_account))
+            try
             {
-                return 1;
-            }
+                //1. check account exist.
+                if (CheckId_account(reserve.Id_account))
+                {
+                    return 1;
+                }
 
-            //2. find non-overlap locker; check available day, free vacancy and right location return list of vacancy
-            var nonOverlap = CheckAvailableDay(reserve);
-            if (nonOverlap == null)
-            {
-                return 2;
-            }
+                //2. find non-overlap locker; check available day, free vacancy and right location return list of vacancy
+                var nonOverlap = CheckAvailableDay(reserve);
+                if (nonOverlap == null)
+                {
+                    return 2;
+                }
 
-            //3.find size
-            var inSize = nonOverlap.FirstOrDefault(x => x.Size == reserve.Size.ToUpper());
-            if(inSize==null)
-            {
-                return 3;
+                //3.find size
+                var inSize = nonOverlap.FirstOrDefault(x => x.Size == reserve.Size.ToUpper());
+                if (inSize == null)
+                {
+                    return 3;
+                }
+                reserve.Id_vacancy = inSize.Id_vacancy;
+                reserve.Status = "Unuse";
+                //4.out of point
+                if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Point == 0)
+                {
+                    return 4;
+                }
+                _dbContext.Accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Point -= 5;
+                //reserve.DateModified = DateTime.Now;
+                _dbContext.Reservations.Add(reserve);
+                _dbContext.SaveChanges();
+                return 5;
             }
-            reserve.Id_vacancy = inSize.Id_vacancy;
-            reserve.Status = "Unuse";
-            //4.out of point
-            if(_dbContext.Accounts.FirstOrDefault(x=>x.Id_account==reserve.Id_account).Point==0)
+            catch(Exception)
             {
-                return 4;
+                return 0;
             }
-            _dbContext.Accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Point -= 5;
-            //reserve.DateModified = DateTime.Now;
-            _dbContext.Reservations.Add(reserve);
-            _dbContext.SaveChanges();
-            return 5;
         }
 
         /*not finnish yet!!!!!!!!!!!!!!!*/
@@ -163,6 +170,13 @@ namespace test2.Repositories
                 var list = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id_reserve);
                 if(list.Code.ToLower()=="string")
                 {
+                    var checklist = from revlist in _dbContext.Reservations
+                                    where revlist.Id_account == list.Id_account && revlist.Code == code
+                                    select revlist;
+                    if (checklist != null)
+                    {
+                        return 2;
+                    }
                     list.Code = code;
                     _dbContext.SaveChanges();
                     return 1;
@@ -180,120 +194,194 @@ namespace test2.Repositories
         /*web all activity*/
         public List<WebForm> GetActivities()
         {
-            var list = _dbContext.Reservations.OrderByDescending(x => x.DateModified);
-            List<WebForm> result = new List<WebForm>();
-            foreach (var run in list)
+            try
             {
-                WebForm tmp = new WebForm() {
-                    Status=run.Status,
-                    Id_booking=run.Id_reserve,
-                    Id_user=run.Id_account,
-                    Location=run.Location,
-                    DateModified=run.DateModified
-                };
-                result.Add(tmp);
+                var list = _dbContext.Reservations.OrderByDescending(x => x.DateModified);
+                List<WebForm> result = new List<WebForm>();
+                foreach (var run in list)
+                {
+                    WebForm tmp = new WebForm()
+                    {
+                        Status = run.Status,
+                        Id_booking = run.Id_reserve,
+                        Id_user = run.Id_account,
+                        Location = run.Location,
+                        DateModified = run.DateModified
+                    };
+                    result.Add(tmp);
+                }
+                return result.ToList();
             }
-            return result.ToList();
+            catch (Exception)
+            {
+                return null;
+            }
 
         }
 
         public List<WebForm> GetNotification()
         {
-            var list = _dbContext.Reservations.Where(x => x.Status.ToLower() == "timeup").OrderByDescending(x=>x.DateModified);
-            List<WebForm> result = new List<WebForm>();
-            foreach (var run in list)
+            try
             {
-                WebForm tmp = new WebForm() {
-                    Status=run.Status,
-                    Id_booking=run.Id_reserve,
-                    Id_user=run.Id_account,
-                    Location=run.Location,
-                    DateModified=run.DateModified
-                };
-                result.Add(tmp);
+                var list = _dbContext.Reservations.Where(x => x.Status.ToLower() == "timeup").OrderByDescending(x => x.DateModified);
+                List<WebForm> result = new List<WebForm>();
+                foreach (var run in list)
+                {
+                    WebForm tmp = new WebForm()
+                    {
+                        Status = run.Status,
+                        Id_booking = run.Id_reserve,
+                        Id_user = run.Id_account,
+                        Location = run.Location,
+                        DateModified = run.DateModified
+                    };
+                    result.Add(tmp);
+                }
+                return result.ToList();
             }
-            return result.ToList();
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public List<BookingForm> Pending(string id)//order by recent date
         {
-            var list = GetReserve(id);
-            var intime = list.Where(x => x.EndDay > DateTime.Now).OrderBy(x => x.StartDay); // change; isActive==true
-            List<BookingForm> result = new List<BookingForm>();
-            foreach (var run in intime)
+            try
             {
-                string no_vacancy = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == run.Id_vacancy).No_vacancy;
-                BookingForm tmp = new BookingForm()
+                //var list = GetReserve(id);
+                //if(list==null)
+                //{
+                //    return null;
+                //}
+                //var intime = list.Where(x => x.EndDay > DateTime.Now).OrderBy(x => x.StartDay); // change; isActive==true
+                var intime = from list in _dbContext.Reservations
+                             where list.Id_account == id && list.IsActive == true
+                             orderby list.StartDay
+                             select list;
+                if(intime==null)
                 {
-                    BookingID=run.Id_reserve,
-                    StartDate=run.StartDay,
-                    EndDate=run.EndDay,
-                    Location=run.Location,
-                    Size=run.Size,
-                    NumberVacancy=no_vacancy
-                };
-                result.Add(tmp);
+                    return null;
+                }
+                List < BookingForm > result = new List<BookingForm>();
+                foreach (var run in intime)
+                {
+                    string no_vacancy = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == run.Id_vacancy).No_vacancy;
+                    BookingForm tmp = new BookingForm()
+                    {
+                        BookingID = run.Id_reserve,
+                        StartDate = run.StartDay,
+                        EndDate = run.EndDay,
+                        Location = run.Location,
+                        Size = run.Size,
+                        NumberVacancy = no_vacancy
+                    };
+                    result.Add(tmp);
+                }
+                return result.ToList();
             }
-            return result.ToList();
+            catch(Exception)
+            {
+                return null;
+            }
         }
 
         public List<BookingForm> History(string id)//order by recent day
         {
-            var list = GetReserve(id);
-            var intime = list.Where(x => x.StartDay < DateTime.Now).OrderByDescending(x => x.EndDay); // change; isActive==false
-            List<BookingForm> result = new List<BookingForm>();
-            foreach (var run in intime)
+            try
             {
-                string no_vacancy = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == run.Id_vacancy).No_vacancy;
-                BookingForm tmp = new BookingForm()
+
+                //var list = GetReserve(id);
+                //var intime = list.Where(x => x.StartDay < DateTime.Now).OrderByDescending(x => x.EndDay); // change; isActive==false
+                var intime = from list in _dbContext.Reservations
+                             where list.Id_account == id && list.IsActive == false
+                             orderby list.EndDay descending
+                             select list;
+                if (intime == null)
                 {
-                    BookingID = run.Id_reserve,
-                    StartDate = run.StartDay,
-                    EndDate = run.EndDay,
-                    Location = run.Location,
-                    Size = run.Size,
-                    NumberVacancy = no_vacancy
-                };
-                result.Add(tmp);
+                    return null;
+                }
+                List<BookingForm> result = new List<BookingForm>();
+                foreach (var run in intime)
+                {
+                    string no_vacancy = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == run.Id_vacancy).No_vacancy;
+                    BookingForm tmp = new BookingForm()
+                    {
+                        BookingID = run.Id_reserve,
+                        StartDate = run.StartDay,
+                        EndDate = run.EndDay,
+                        Location = run.Location,
+                        Size = run.Size,
+                        NumberVacancy = no_vacancy
+                    };
+                    result.Add(tmp);
+                }
+                return result.ToList();
             }
-            return result.ToList();
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public BookingForm GetBookingDetail (int id_reserve)
         {
-            var list = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id_reserve);
-            string no_vacancy = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == list.Id_vacancy).No_vacancy;
-            BookingForm result = new BookingForm()
+            try
             {
-                UserID = list.Id_account,
-                BookingID = list.Id_reserve,
-                StartDate = list.StartDay,
-                EndDate = list.EndDay,
-                Location = list.Location,
-                Size = list.Size,
-                NumberVacancy = no_vacancy
-            };
-            return result;
+                var list = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id_reserve);
+                if(list==null)
+                {
+                    return null;
+                }
+                string no_vacancy = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == list.Id_vacancy).No_vacancy;
+                BookingForm result = new BookingForm()
+                {
+                    UserID = list.Id_account,
+                    BookingID = list.Id_reserve,
+                    StartDate = list.StartDay,
+                    EndDate = list.EndDay,
+                    Location = list.Location,
+                    Size = list.Size,
+                    NumberVacancy = no_vacancy
+                };
+                return result;
+            }
+            catch (Exception)
+            {
+                return null; 
+            }
         }
 
         public ReserveDetail GetReserveDetail(int id_reserve)
         {
-            var reserve = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id_reserve); //BookingID,UserID,StartDate,EndDate,DateModified,Location,Size
-            string numberVacant = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == reserve.Id_vacancy).No_vacancy;//NumberVacancy
-            string name = _dbContext.Accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Name;
-            ReserveDetail result = new ReserveDetail() {
-                Id_user=reserve.Id_account,
-                Name=name,
-                BookingID=reserve.Id_reserve,
-                StartDate=reserve.StartDay,
-                EndDate=reserve.EndDay,
-                DateModified=reserve.DateModified,
-                Status=reserve.Status,
-                Location=reserve.Location,
-                Size=reserve.Size,
-                NumberVacancy=numberVacant
-            };
-            return result;
+            try
+            {
+                var reserve = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id_reserve); //BookingID,UserID,StartDate,EndDate,DateModified,Location,Size
+                if(reserve==null)
+                {
+                    return null;
+                }
+                string numberVacant = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == reserve.Id_vacancy).No_vacancy;//NumberVacancy
+                string name = _dbContext.Accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Name;
+                ReserveDetail result = new ReserveDetail()
+                {
+                    Id_user = reserve.Id_account,
+                    Name = name,
+                    BookingID = reserve.Id_reserve,
+                    StartDate = reserve.StartDay,
+                    EndDate = reserve.EndDay,
+                    DateModified = reserve.DateModified,
+                    Status = reserve.Status,
+                    Location = reserve.Location,
+                    Size = reserve.Size,
+                    NumberVacancy = numberVacant
+                };
+                return result;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
 
         }
         public List<Reservation> GetReserve()

@@ -25,7 +25,6 @@ namespace test2.Controllers
         {
             var result = _hardwareRepo.GetHardware(userID, code, mac_address);
             return Json(result);
-
         }
     }
 }

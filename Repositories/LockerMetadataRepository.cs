@@ -190,33 +190,56 @@ namespace test2.Repositories
 
         public LockerDetail GetLockerDetail (string mac_address)
         {
-            var vacantlist = _dbContext.Vacancies.Where(x => x.Mac_address == mac_address);
-            string location = _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == mac_address).Location;
-            List<VacancyDetail> vacancyDetails = GetVacantList(mac_address);
-            LockerDetail lockerDetail = new LockerDetail() {
-                LockerID=mac_address,
-                Location=location,
-                Vacancieslist=vacancyDetails
-            };
-            return lockerDetail;
+            try
+            {
+                if(_dbContext.LockerMetadatas.FirstOrDefault(x=>x.Mac_address==mac_address)==null)
+                {
+                    return null;
+                }
+                var vacantlist = _dbContext.Vacancies.Where(x => x.Mac_address == mac_address);
+                string location = _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == mac_address).Location;
+                List<VacancyDetail> vacancyDetails = GetVacantList(mac_address);
+                LockerDetail lockerDetail = new LockerDetail()
+                {
+                    LockerID = mac_address,
+                    Location = location,
+                    Vacancieslist = vacancyDetails
+                };
+                return lockerDetail;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public List<VacancyDetail> GetVacantList(string mac_address)
         {
-            var vacantlist = _dbContext.Vacancies.Where(x => x.Mac_address == mac_address).OrderBy(x => x.Id_vacancy);
-            List<VacancyDetail> result = new List<VacancyDetail>();
-            foreach (var run in vacantlist)
+            try
             {
-                VacancyDetail lockerDetail = new VacancyDetail()
+                if(_dbContext.LockerMetadatas.FirstOrDefault(x=>x.Mac_address==mac_address)==null)
                 {
-                    VacancyID = run.Id_vacancy,
-                    No_vacancy = run.No_vacancy,
-                    Size = run.Size,
-                    IsActive = run.IsActive
-                };
-                result.Add(lockerDetail);
+                    return null;
+                }
+                var vacantlist = _dbContext.Vacancies.Where(x => x.Mac_address == mac_address).OrderBy(x => x.Id_vacancy);
+                List<VacancyDetail> result = new List<VacancyDetail>();
+                foreach (var run in vacantlist)
+                {
+                    VacancyDetail lockerDetail = new VacancyDetail()
+                    {
+                        VacancyID = run.Id_vacancy,
+                        No_vacancy = run.No_vacancy,
+                        Size = run.Size,
+                        IsActive = run.IsActive
+                    };
+                    result.Add(lockerDetail);
+                }
+                return result;
             }
-            return result;
+            catch(Exception)
+            {
+                return null;
+            }
         }
     }
 }

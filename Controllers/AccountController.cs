@@ -81,17 +81,17 @@ namespace test2.Controllers
 
         [Route("/mobile/UserAccount")]
         [HttpGet]
-        public JsonResult GetUserAccount(string id)
+        public JsonResult GetUserAccount(string id_account)
         {
-            MemberAccount account = _accountRepo.GetUserAccount(id);
+            MemberAccount account = _accountRepo.GetUserAccount(id_account);
             return Json(account);
         }
 
         [Route("/web/UserOverview")]
         [HttpGet]
-        public JsonResult GetUserOverview(string id)
+        public JsonResult GetUserOverview(string id_account)
         {
-            UserOverview user = _accountRepo.GetUserOverview(id);
+            UserOverview user = _accountRepo.GetUserOverview(id_account);
             return Json(user);
         }
 
@@ -105,9 +105,9 @@ namespace test2.Controllers
 
         [Route("UserAccount")]
         [HttpGet]
-        public IActionResult GetUserAccountdev(string id)
+        public IActionResult GetUserAccountdev(string id_account)
         {
-            var list = _accountRepo.GetUserAccountdev(id);
+            var list = _accountRepo.GetUserAccountdev(id_account);
             return Ok(list);
         }
 
@@ -132,9 +132,9 @@ namespace test2.Controllers
 
         [Route("AdminAccount")]
         [HttpGet]
-        public IActionResult GetAdminAccount(string id)
+        public IActionResult GetAdminAccount(string id_account)
         {
-            var list = _accountRepo.GetAdminAccount(id);
+            var list = _accountRepo.GetAdminAccount(id_account);
             return Ok(list); 
         }
 
@@ -151,9 +151,9 @@ namespace test2.Controllers
 
         [Route("Delete")]
         [HttpDelete]
-        public IActionResult Delete (string id)
+        public IActionResult Delete (string id_account)
         {
-            if(_accountRepo.Delete(id))
+            if(_accountRepo.Delete(id_account))
             {
                 return Ok();
             }

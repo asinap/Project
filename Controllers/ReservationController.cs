@@ -104,45 +104,45 @@ namespace test2.Controllers
 
         [Route("ReserveID")]
         [HttpGet]
-        public IActionResult GetReserve(string id)
+        public IActionResult GetReserve(string id_account)
         {
-            var list = _reserveRepo.GetReserve(id);
+            var list = _reserveRepo.GetReserve(id_account);
             return Ok(list);
         }
 
         [Route("/mobile/Pending")]
         [HttpGet]
-        public JsonResult Pending (string id)
+        public JsonResult Pending (string id_account)
         {
-            var list = _reserveRepo.Pending(id);
+            var list = _reserveRepo.Pending(id_account);
             return Json(list);
         }
 
         [Route("/mobile/History")]
         [HttpGet]
-        public JsonResult History (string id)
+        public JsonResult History (string id_account)
         {
-            var list = _reserveRepo.History(id);
+            var list = _reserveRepo.History(id_account);
             return Json(list);
         }
 
         [Route ("/mobile/BookingDetail")]
         [HttpGet]
-        public JsonResult BookingDetail (int id)
+        public JsonResult BookingDetail (int id_reserve)
         {
-            BookingForm result = _reserveRepo.GetBookingDetail(id);
+            BookingForm result = _reserveRepo.GetBookingDetail(id_reserve);
             return Json(result);
         }
 
 
         [Route ("Count")]
         [HttpGet]
-        public JsonResult CountUser (string id)
+        public JsonResult CountUser (string id_account)
         {
-            int unuse = _reserveRepo.Unuse(id);
-            int use = _reserveRepo.Use(id);
-            int penalty = _reserveRepo.TimeUp(id);
-            int expire = _reserveRepo.Expire(id);
+            int unuse = _reserveRepo.Unuse(id_account);
+            int use = _reserveRepo.Use(id_account);
+            int penalty = _reserveRepo.TimeUp(id_account);
+            int expire = _reserveRepo.Expire(id_account);
  //           string result = String.Format("Unuse:{0},Use:{1},Penalty:{2},Expire:{3}",unuse,use,penalty,expire);
             Counter counter = new Counter()
             {
@@ -188,9 +188,9 @@ namespace test2.Controllers
 
         [Route("Delete")]
         [HttpDelete]
-        public IActionResult Delete(int id_noti)
+        public IActionResult Delete(int id_reserve)
         {
-            if (_reserveRepo.Delete(id_noti))
+            if (_reserveRepo.Delete(id_reserve))
             {
                 return Ok();
             }

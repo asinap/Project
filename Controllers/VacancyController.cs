@@ -77,9 +77,9 @@ namespace test2.Controllers
 
         [Route("VacancyId")]
         [HttpGet]
-        public IActionResult GetHistory(int id)
+        public IActionResult GetHistory(int id_vacant)
         {
-            var list = _vacancyRepo.GetVacancy(id);
+            var list = _vacancyRepo.GetVacancy(id_vacant);
             return Ok(list);
         }
 
@@ -96,9 +96,9 @@ namespace test2.Controllers
 
         [Route("Delete")]
         [HttpDelete]
-        public IActionResult Delete(int id_noti)
+        public IActionResult Delete(int id_vacant)
         {
-            if (_vacancyRepo.Delete(id_noti))
+            if (_vacancyRepo.Delete(id_vacant))
             {
                 return Ok();
             }

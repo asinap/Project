@@ -126,50 +126,69 @@ namespace test2.Repositories
 
         public List<NotificationForm> GetNotificationForm (string id_account)
         {
-            if(_dbContext.Accounts.FirstOrDefault(x=>x.Id_account==id_account)==null)
+            try
+            {
+                if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == id_account) == null)
+                {
+                    return null;
+                }
+                var list = _dbContext.Notifications.Where(x => x.Id_account == id_account && x.IsShow == true).OrderByDescending(x => x.Id_notification).ThenBy(x => x.Read);
+                List<NotificationForm> result = new List<NotificationForm>();
+                foreach (var run in list)
+                {
+                    var content = _dbContext.Contents.FirstOrDefault(x => x.Id_content == run.Id_content);
+                    var reservelist = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == run.Id_reserve);
+                    var vacant = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == reservelist.Id_vacancy);
+                    string _content = content.PlainText;
+                    _content = _content.Replace("%p", reservelist.Location);
+                    _content = _content.Replace("%v", vacant.No_vacancy);
+                    NotificationForm form = new NotificationForm()
+                    {
+                        Id_account = run.Id_account,
+                        Id_noti = run.Id_notification,
+                        CreateTime = run.CreateTime,
+                        Content = _content,
+                        Read = run.Read
+                    };
+                    result.Add(form);
+
+                }
+                return result.ToList();
+            }
+            catch (Exception)
             {
                 return null;
             }
-            var list = _dbContext.Notifications.Where(x => x.Id_account == id_account && x.IsShow==true).OrderByDescending(x=>x.Id_notification).ThenBy(x=>x.Read);
-            List<NotificationForm> result = new List<NotificationForm>();
-            foreach (var run in list )
-            {
-                var content = _dbContext.Contents.FirstOrDefault(x => x.Id_content == run.Id_content);
-                var reservelist = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == run.Id_reserve);
-                var vacant = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == reservelist.Id_vacancy);
-                string _content = content.PlainText;
-                _content = _content.Replace("%p", reservelist.Location);
-                _content = _content.Replace("%v", vacant.No_vacancy);
-                NotificationForm form = new NotificationForm() {
-                    Id_account = run.Id_account,
-                    Id_noti =run.Id_notification,
-                    CreateTime = run.CreateTime,
-                    Content=_content,
-                    Read = run.Read
-                };
-                result.Add(form);
-
-            }
-            return result.ToList();
         }
 
         public NotificationForm GetNotificationDetail (int id_noti)
         {
-            var list = _dbContext.Notifications.FirstOrDefault(x => x.Id_notification == id_noti);
-            var content = _dbContext.Contents.FirstOrDefault(x => x.Id_content == list.Id_content);
-            var reservelist = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == list.Id_reserve);
-            var vacant = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == reservelist.Id_vacancy);
-            string _content = content.PlainText;
-            _content = _content.Replace("%p", reservelist.Location);
-            _content = _content.Replace("%v", vacant.No_vacancy);
-            NotificationForm form = new NotificationForm()
+            try
             {
-                Id_account = list.Id_account,
-                CreateTime = list.CreateTime,
-                Content = _content,
-                Read = list.Read
-            };
-            return form;
+                if(_dbContext.Notifications.FirstOrDefault(x=>x.Id_notification==id_noti)==null)
+                {
+                    return null;
+                }
+                var list = _dbContext.Notifications.FirstOrDefault(x => x.Id_notification == id_noti);
+                var content = _dbContext.Contents.FirstOrDefault(x => x.Id_content == list.Id_content);
+                var reservelist = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == list.Id_reserve);
+                var vacant = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == reservelist.Id_vacancy);
+                string _content = content.PlainText;
+                _content = _content.Replace("%p", reservelist.Location);
+                _content = _content.Replace("%v", vacant.No_vacancy);
+                NotificationForm form = new NotificationForm()
+                {
+                    Id_account = list.Id_account,
+                    CreateTime = list.CreateTime,
+                    Content = _content,
+                    Read = list.Read
+                };
+                return form;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         //public List<NotificationForm> GetNotificationForm (string id_account, int id_noti)

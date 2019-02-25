@@ -34,9 +34,9 @@ namespace test2.Controllers
 
         [Route("DeleteContent")]
         [HttpPut]
-        public IActionResult DeleteContent([FromQuery] int id)
+        public IActionResult DeleteContent([FromQuery] int id_content)
         {
-            if (_contentRepo.DeleteContent(id))
+            if (_contentRepo.DeleteContent(id_content))
             {
                 return Ok();
             }
@@ -46,11 +46,11 @@ namespace test2.Controllers
 
         [Route("RestoreContent")]
         [HttpPut]
-        public IActionResult RestoreContent([FromQuery] int id)
+        public IActionResult RestoreContent([FromQuery] int id_content)
         {
-            if (_contentRepo.RestoreContent(id))
+            if (_contentRepo.RestoreContent(id_content))
             {
-                return Ok(id);
+                return Ok(id_content);
             }
             return NotFound();
         }
@@ -73,9 +73,9 @@ namespace test2.Controllers
 
         [Route("ActiveContentID")]
         [HttpGet]
-        public IActionResult GetContent(int id)
+        public IActionResult GetContent(int id_content)
         {
-            var list = _contentRepo.GetContent(id);
+            var list = _contentRepo.GetContent(id_content);
             return Ok(list);
         }
 
@@ -92,9 +92,9 @@ namespace test2.Controllers
 
         [Route("Delete")]
         [HttpDelete]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(int id_content)
         {
-            if (_contentRepo.Delete(id))
+            if (_contentRepo.Delete(id_content))
             {
                 return Ok();
             }

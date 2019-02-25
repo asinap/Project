@@ -131,27 +131,35 @@ namespace test2.Repositories
          * return all account to string */
         public List<Member> GetUserAccount()
         {
-            var userlist = from accountlist in _dbContext.Accounts
-                           where accountlist.Role == "User"
-                           select accountlist;
-            List<Member> resultlist = new List<Member>();
-
-            foreach (var run in userlist)
+            try
             {
-                int usingCount = _dbContext.Reservations.Count(x => x.Id_account==run.Id_account && x.Status.ToLower() == "use");
-                int bookedCount = _dbContext.Reservations.Count(x => x.Id_account == run.Id_account);
-                int timeUpCount = _dbContext.Reservations.Count(x => x.Id_account == run.Id_account && x.Status.ToLower() == "timeup")+_dbContext.Reservations.Count(x => x.Id_account == run.Id_account && x.Status.ToLower() == "expire");
-                Member newby = new Member()
+                var userlist = from accountlist in _dbContext.Accounts
+                               where accountlist.Role == "User"
+                               select accountlist;
+                List<Member> resultlist = new List<Member>();
+
+                foreach (var run in userlist)
                 {
-                    Id_account = run.Id_account,
-                    Name = run.Name,
-                    Using =usingCount,
-                    Booked = bookedCount,
-                    TimeUp = timeUpCount
-                };
-                resultlist.Add(newby);
+                    int usingCount = _dbContext.Reservations.Count(x => x.Id_account == run.Id_account && x.Status.ToLower() == "use");
+                    int bookedCount = _dbContext.Reservations.Count(x => x.Id_account == run.Id_account);
+                    int timeUpCount = _dbContext.Reservations.Count(x => x.Id_account == run.Id_account && x.Status.ToLower() == "timeup") + _dbContext.Reservations.Count(x => x.Id_account == run.Id_account && x.Status.ToLower() == "expire");
+                    Member newby = new Member()
+                    {
+                        Id_account = run.Id_account,
+                        Name = run.Name,
+                        Using = usingCount,
+                        Booked = bookedCount,
+                        TimeUp = timeUpCount
+                    };
+                    resultlist.Add(newby);
+                }
+                return resultlist;
             }
-            return resultlist;
+            catch(Exception)
+            {
+                return null;
+
+            }
         }
 
         /* Get specific User Account 
@@ -159,53 +167,72 @@ namespace test2.Repositories
            return account that has Id_student equal input*/
         public MemberAccount GetUserAccount(string id)
         {
-
-            var user = _dbContext.Accounts.FirstOrDefault(x => x.Id_account == id);
-            MemberAccount newby = new MemberAccount()
+            try
             {
-                Id_account = user.Id_account,
-                Name = user.Name,
-                Point = user.Point
-            };
-            return newby;
+                var user = _dbContext.Accounts.FirstOrDefault(x => x.Id_account == id);
+                if(user==null)
+                {
+                    return null;
+                }
+                MemberAccount newby = new MemberAccount()
+                {
+                    Id_account = user.Id_account,
+                    Name = user.Name,
+                    Point = user.Point
+                };
+                return newby;
+            }
+            catch (Exception)
+            {
+                return null;
+
+            }
         }
 
         
         public UserOverview GetUserOverview (string id_account)
         {
-            var user = _dbContext.Accounts.FirstOrDefault(x => x.Id_account == id_account); // ID,Name,point
-            if(user==null)
+            try
+            {
+                var user = _dbContext.Accounts.FirstOrDefault(x => x.Id_account == id_account); // ID,Name,point
+                if (user == null)
+                {
+                    return null;
+                }
+                int usingCount = _dbContext.Reservations.Count(x => x.Id_account == id_account && x.Status.ToLower() == "use"); //Using count
+                                                                                                                                //TimeUp+Expire count 
+                int timeUpCount = _dbContext.Reservations.Count(x => x.Id_account == id_account && x.Status.ToLower() == "timeup") + _dbContext.Reservations.Count(x => x.Id_account == id_account && x.Status.ToLower() == "expire");
+                //all reservation
+                var reserve = _dbContext.Reservations.Where(x => x.Id_account == id_account).OrderByDescending(x => x.DateModified);
+                List<WebForm> tmp = new List<WebForm>();
+                foreach (var run in reserve)
+                {
+                    WebForm newby = new WebForm()
+                    {
+                        Status = run.Status,
+                        Id_booking = run.Id_reserve,
+                        Id_user = run.Id_account,
+                        Location = run.Location,
+                        DateModified = run.DateModified
+                    };
+                    tmp.Add(newby);
+                }
+
+                UserOverview overview = new UserOverview()
+                {
+                    UserID = user.Id_account,
+                    Name = user.Name,
+                    Using = usingCount,
+                    TimeUp = timeUpCount,
+                    Point = user.Point,
+                    BookingList = tmp
+                };
+                return overview;
+            }
+            catch (Exception)
             {
                 return null;
             }
-            int usingCount = _dbContext.Reservations.Count(x => x.Id_account == id_account && x.Status.ToLower() == "use"); //Using count
-            //TimeUp+Expire count 
-            int timeUpCount = _dbContext.Reservations.Count(x => x.Id_account == id_account && x.Status.ToLower() == "timeup") + _dbContext.Reservations.Count(x => x.Id_account == id_account && x.Status.ToLower() == "expire");
-            //all reservation
-            var reserve = _dbContext.Reservations.Where(x => x.Id_account == id_account).OrderByDescending(x => x.DateModified);
-            List<WebForm> tmp = new List<WebForm>();
-            foreach (var run in reserve)
-            {
-                WebForm newby = new WebForm() {
-                    Status=run.Status,
-                    Id_booking=run.Id_reserve,
-                    Id_user=run.Id_account,
-                    Location=run.Location,
-                    DateModified=run.DateModified
-                };
-                tmp.Add(newby);
-            }
-
-            UserOverview overview = new UserOverview()
-            {
-                UserID = user.Id_account,
-                Name = user.Name,
-                Using = usingCount,
-                TimeUp = timeUpCount,
-                Point = user.Point,
-                BookingList = tmp
-            };
-            return overview;
 
         }
 
@@ -239,18 +266,28 @@ namespace test2.Repositories
 
         public List<Admin> GetAdmins()
         {
-            var adminlist = _dbContext.Accounts.Where(x => x.Role == "Administrator");
-            List<Admin> result = new List<Admin>();
-            foreach (var run in adminlist)
+            try
             {
-                Admin admin = new Admin()
+                var adminlist = _dbContext.Accounts.Where(x => x.Role == "Administrator");
+                List<Admin> result = new List<Admin>();
+                foreach (var run in adminlist)
                 {
-                    Name=run.Name,
-                    Email=run.Email
-                };
-                result.Add(admin);
+                    Admin admin = new Admin()
+                    {
+                        Name = run.Name,
+                        Email = run.Email
+                    };
+                    result.Add(admin);
+                }
+                return result;
             }
-            return result;
+            catch (Exception)
+            {
+                List<Admin> result = new List<Admin>();
+                result = null;
+                return result;
+
+            }
         }
         /*Admin*/
         public List<Account> GetAdminAccount(string id)

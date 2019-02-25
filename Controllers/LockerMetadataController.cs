@@ -111,9 +111,9 @@ namespace test2.Controllers
 
         [Route("Delete")]
         [HttpDelete]
-        public IActionResult Delete(string id)
+        public IActionResult Delete(string mac)
         {
-            if (_lockerRepo.Delete(id))
+            if (_lockerRepo.Delete(mac))
             {
                 return Ok();
             }
