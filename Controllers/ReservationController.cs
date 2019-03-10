@@ -60,14 +60,24 @@ namespace test2.Controllers
 
         [Route ("/mobile/SetCode")]
         [HttpPut]
-        public IActionResult SetCode (int id,string code)
+        public IActionResult SetCode (int id_reserve,string code)
         {
-            if(_reserveRepo.SetCode(id,code)==1)
+            int result = _reserveRepo.SetCode(id_reserve, code);
+            if(result==1)
             {
-                string result = string.Format("id_reserve : {0}, code : {1}",id,code); 
-                return Ok(result);
+                string _result = string.Format("id_reserve : {0}, code : {1}",id_reserve,code); 
+                return Ok(_result);
             }
-            return NotFound("Error to set code");
+            else if(result==2)
+            {
+                return NotFound("Code_is_already_set");
+            }
+            else if (result==3)
+            {
+                return NotFound("Code_is_duplicated");
+            }
+            else
+                return NotFound("Error to set code");
         }
 
         [Route ("/web/Activity")]
@@ -167,6 +177,28 @@ namespace test2.Controllers
             {
                 string result = String.Format("{0}:{1}", reserveID, condition);
                 return Ok(result);
+            }
+            else
+            {
+                return NotFound("Error to Set state");
+            }
+
+        }
+
+        [Route("SetBoolIsActive")]
+        [HttpPut]
+        public IActionResult SetBoolIsActive(int reserveID, bool _trueOr_false)
+        {
+            int result = _reserveRepo.SetBoolIsActive(reserveID, _trueOr_false);
+            if (result == 2)
+            {
+                string _result = String.Format("{0}:{1}", reserveID, _trueOr_false);
+                return Ok(result);
+            }
+            else if (result == 1)
+            {
+
+                return NotFound("No_reserveID");
             }
             else
             {

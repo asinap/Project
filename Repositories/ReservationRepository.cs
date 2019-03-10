@@ -167,21 +167,28 @@ namespace test2.Repositories
         {
             try
             {
-                var list = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id_reserve);
-                if(list.Code.ToLower()=="string")
+                //find owner reservation
+                string accountID = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id_reserve).Id_account;
+                //find all reservation that owner has booked the reservation and check that Code is not replicated.
+                var reservelist = _dbContext.Reservations.FirstOrDefault(x => x.Id_account == accountID && x.Code == code && x.IsActive == true);
+                if (reservelist != null)
                 {
-                    var checklist = from revlist in _dbContext.Reservations
-                                    where revlist.Id_account == list.Id_account && revlist.Code == code
-                                    select revlist;
-                    if (checklist != null)
+                    return 3;
+                }
+                else
+                {
+                    if(_dbContext.Reservations.FirstOrDefault(x=>x.Id_reserve==id_reserve).Code.ToLower()=="string")
+                    {
+                        _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id_reserve).Code = code;
+                        _dbContext.SaveChanges();
+                        return 1;
+                    }
+                    else
                     {
                         return 2;
                     }
-                    list.Code = code;
-                    _dbContext.SaveChanges();
-                    return 1;
                 }
-                return 0;
+
 
             }
             catch (Exception)
@@ -453,6 +460,25 @@ namespace test2.Repositories
 
         }
 
+        public int SetBoolIsActive (int reserveID,bool isActive)
+        {
+            try
+            {
+                var reserve = _dbContext.Reservations.Where(x => x.Id_reserve == reserveID);
+                if (reserve == null)
+                {
+                    return 1;
+                }
+                _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == reserveID).IsActive = isActive;
+                _dbContext.SaveChanges();
+                return 2;
+            }catch (Exception)
+            {
+                Console.WriteLine("Error to set state of IsActive");
+                return 0;
+            }
+        }
+
         public bool Delete()
         {
             try
@@ -492,6 +518,7 @@ namespace test2.Repositories
             }
         }
 
+        
 
     
     }

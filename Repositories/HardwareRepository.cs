@@ -38,7 +38,7 @@ namespace test2.Repositories
                     Hardware result = new Hardware()
                     {
                         ReserveID = reserve.Id_reserve,
-                        Status = reserve.Status,
+                        State = reserve.Status,
                         No_vacancy = "None",
                         Ok = false
                     };
@@ -50,7 +50,7 @@ namespace test2.Repositories
                     Hardware result = new Hardware()
                     {
                         ReserveID = reserve.Id_reserve,
-                        Status = reserve.Status,
+                        State = reserve.Status,
                         No_vacancy = no_vacant,
                         Ok = true
                     };

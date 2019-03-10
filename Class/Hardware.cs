@@ -8,7 +8,7 @@ namespace test2.Class
     public class Hardware
     {
         public int ReserveID { get; set; }
-        public string Status { get; set; }
+        public string State { get; set; }
         public string No_vacancy { get; set; }
         public bool Ok { get; set; }
     }
