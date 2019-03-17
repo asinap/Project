@@ -283,10 +283,23 @@ namespace test2.Repositories
             }
             catch (Exception)
             {
-                List<Admin> result = new List<Admin>();
-                result = null;
-                return result;
+                return null;
 
+            }
+        }
+
+        public bool IsAdmin (string accountID)
+        {
+            try
+            {
+                if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == accountID && x.Role == "Administrator") != null)
+                    return true;
+                else
+                    return false;
+            }catch (Exception)
+            {
+                Console.WriteLine("Error check admin");
+                return false;
             }
         }
         /*Admin*/

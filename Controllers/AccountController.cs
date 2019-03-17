@@ -124,12 +124,25 @@ namespace test2.Controllers
         public IActionResult GetAdmin ()
         {
             var admin = _accountRepo.GetAdmins();
-            if (admin != null)
+            if ((admin != null)&& (admin.Count()!=0))
                 return Ok(admin);
-            else
-                return NotFound("No_admin");
+            else 
+                return NotFound("No_admin"); 
         }
 
+        [Route("/web/IsAdmin")]
+        [HttpGet]
+        public IActionResult IsAdmin(string accountID)
+        {
+            if (_accountRepo.IsAdmin(accountID))
+            {
+                return Ok(accountID);
+            }
+            else
+            {
+                return NotFound("No_admin");
+            }
+        }
         [Route("AdminAccount")]
         [HttpGet]
         public IActionResult GetAdminAccount(string id_account)
