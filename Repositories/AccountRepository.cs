@@ -141,7 +141,7 @@ namespace test2.Repositories
             try
             {
                 var userlist = from accountlist in _dbContext.Accounts
-                               where accountlist.Role.ToString().ToLower() == "user"
+                               where accountlist.Role.ToLower() == "user"
                                select accountlist;
                 List<Member> resultlist = new List<Member>();
 
@@ -275,7 +275,7 @@ namespace test2.Repositories
         {
             try
             {
-                var adminlist = _dbContext.Accounts.Where(x => x.Role == "Administrator");
+                var adminlist = _dbContext.Accounts.Where(x => x.Role.ToLower() == "administrator");
                 List<Admin> result = new List<Admin>();
                 foreach (var run in adminlist)
                 {
@@ -299,7 +299,7 @@ namespace test2.Repositories
         {
             try
             {
-                if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == accountID && x.Role == "Administrator") != null)
+                if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == accountID && x.Role.ToLower() == "administrator") != null)
                     return true;
                 else
                     return false;
