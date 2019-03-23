@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using test2.Class;
 using test2.DatabaseContext;
 using test2.DatabaseContext.Models;
@@ -15,12 +16,14 @@ namespace test2.Controllers
     {
         private readonly ReservationRepository _reserveRepo;
         private readonly LockerDbContext _dbContext;
+        private readonly ILogger<AccountController> _logger;
 
 
-        public ReservationController(LockerDbContext lockerDbContext)
+        public ReservationController(LockerDbContext lockerDbContext, ILogger<AccountController> logger)
         {
             _dbContext = lockerDbContext;
             _reserveRepo = new ReservationRepository(_dbContext);
+            _logger = logger;
         }
 
         [Route("/mobile/AddReserve")]
@@ -30,12 +33,24 @@ namespace test2.Controllers
             int result = _reserveRepo.AddReservation(reserve);
             switch(result)
             {
-                case 1: return NotFound("account_is_not_existed.");
-                case 2: return NotFound("No_avaliable_vacant.");
-                case 3: return NotFound("Cannot_find_size_requirement");
-                case 4: return NotFound("No_point");
-                case 5: return Ok(reserve.Id_reserve);
-                default: return NotFound("Error");
+                case 1:
+                    _logger.LogInformation("Add reservation {userID} {reserveID} account_is_not_existed.", reserve.Id_account, reserve.Id_reserve);
+                    return NotFound("account_is_not_existed.");
+                case 2:
+                    _logger.LogInformation("Add reservation {userID} {reserveID} No_avaliable_vacant.", reserve.Id_account, reserve.Id_reserve);
+                    return NotFound("No_avaliable_vacant.");
+                case 3:
+                    _logger.LogInformation("Add reservation {userID} {reserveID} Cannot_find_size_requirement.", reserve.Id_account, reserve.Id_reserve);
+                    return NotFound("Cannot_find_size_requirement");
+                case 4:
+                    _logger.LogInformation("Add reservation {userID} {reserveID} No_point.", reserve.Id_account, reserve.Id_reserve);
+                    return NotFound("No_point");
+                case 5:
+                    _logger.LogInformation("Add reservation {userID} {reserveID} done.", reserve.Id_account, reserve.Id_reserve);
+                    return Ok(reserve.Id_reserve);
+                default:
+                    _logger.LogInformation("Add reservation {userID} {reserveID} Error.", reserve.Id_account, reserve.Id_reserve);
+                    return NotFound("Error");
 
             }
             //{
@@ -51,10 +66,18 @@ namespace test2.Controllers
             int result = _reserveRepo.CancelReseveration(id);
             switch (result)
             {
-                case 1: return Ok(id);
-                case 2: return NotFound("Cannot_cancel_cause_time");
-                case 3: return NotFound("Reservation_is_not_existed");
-                default: return NotFound("Error");
+                case 1:
+                    _logger.LogInformation("Cancel reservation from mobile {reserveID} done.", id);
+                    return Ok(id);
+                case 2:
+                    _logger.LogInformation("Cancel reservation from mobile {reserveID} Cannot_cancel_cause_time.", id);
+                    return NotFound("Cannot_cancel_cause_time");
+                case 3:
+                    _logger.LogInformation("Cancel reservation from mobile {reserveID} Reservation_is_not_existed.", id);
+                    return NotFound("Reservation_is_not_existed");
+                default:
+                    _logger.LogInformation("Cancel reservation from mobile {reserveID} Error.", id);
+                    return NotFound("Error");
             }
         }
 
@@ -63,21 +86,27 @@ namespace test2.Controllers
         public IActionResult SetCode (int id_reserve,string code)
         {
             int result = _reserveRepo.SetCode(id_reserve, code);
-            if(result==1)
+            if (result == 1)
             {
-                string _result = string.Format("id_reserve : {0}, code : {1}",id_reserve,code); 
+                _logger.LogInformation("Set code reservation from mobile {reserveID} done.", id_reserve);
+                string _result = string.Format("id_reserve : {0}, code : {1}", id_reserve, code);
                 return Ok(_result);
             }
-            else if(result==2)
+            else if (result == 2)
             {
+                _logger.LogInformation("Set code reservation from mobile {reserveID} Code_is_already_set.", id_reserve);
                 return NotFound("Code_is_already_set");
             }
-            else if (result==3)
+            else if (result == 3)
             {
+                _logger.LogInformation("Set code reservation from mobile {reserveID} Code_is_duplicated.", id_reserve);
                 return NotFound("Code_is_duplicated");
             }
             else
+            {
+                _logger.LogInformation("Set code reservation from mobile {reserveID} Error to set code.", id_reserve);
                 return NotFound("Error to set code");
+            }
         }
 
         [Route ("/web/Activity")]
@@ -85,6 +114,7 @@ namespace test2.Controllers
         public JsonResult GetActivity()
         {
             var list = _reserveRepo.GetActivities();
+            _logger.LogInformation("Get Activity from web {DateTime}.", DateTime.Now);
             return Json(list);
         }
 
@@ -93,6 +123,7 @@ namespace test2.Controllers
         public JsonResult GetNotification()
         {
             var list = _reserveRepo.GetNotification();
+            _logger.LogInformation("Get noti from web {DateTime}.", DateTime.Now);
             return Json(list);
         }
 
@@ -101,6 +132,7 @@ namespace test2.Controllers
         public JsonResult GetReserveDetail(int id_reserve)
         {
             ReserveDetail detail = _reserveRepo.GetReserveDetail(id_reserve);
+            _logger.LogInformation("Get reservation detail from web {DateTime} {reserveID}.", DateTime.Now,id_reserve);
             return Json(detail);
         }
 
@@ -125,6 +157,7 @@ namespace test2.Controllers
         public JsonResult Pending (string id_account)
         {
             var list = _reserveRepo.Pending(id_account);
+            _logger.LogInformation("Pending from mobile {userID}.", id_account);
             return Json(list);
         }
 
@@ -133,6 +166,7 @@ namespace test2.Controllers
         public JsonResult History (string id_account)
         {
             var list = _reserveRepo.History(id_account);
+            _logger.LogInformation("History from mobile {userID}.", id_account);
             return Json(list);
         }
 
@@ -141,6 +175,7 @@ namespace test2.Controllers
         public JsonResult BookingDetail (int id_reserve)
         {
             BookingForm result = _reserveRepo.GetBookingDetail(id_reserve);
+            _logger.LogInformation("Booking detail from mobile {reserveID}.", id_reserve);
             return Json(result);
         }
 
@@ -171,15 +206,18 @@ namespace test2.Controllers
             if(_reserveRepo.SetStatus(reserveID,condition)==1)
             {
                 string result = String.Format("{0}:{1}",reserveID,condition);
+                _logger.LogInformation("Set state {reserveID} unuse to use.", reserveID);
                 return Ok(result);
             }
             else if (_reserveRepo.SetStatus(reserveID,condition)==2)
             {
                 string result = String.Format("{0}:{1}", reserveID, condition);
+                _logger.LogInformation("Set state {reserveID} use to use.", reserveID);
                 return Ok(result);
             }
             else
             {
+                _logger.LogInformation("Set state {reserveID} Error to Set state.", reserveID);
                 return NotFound("Error to Set state");
             }
 

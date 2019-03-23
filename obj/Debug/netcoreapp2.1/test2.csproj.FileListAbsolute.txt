@@ -30,4 +30,3 @@ D:\Project\test2\test2\test2\obj\Debug\netcoreapp2.1\Razor\Pages\_ViewStart.g.cs
 D:\Project\test2\test2\test2\obj\Debug\netcoreapp2.1\test2.RazorTargetAssemblyInfo.cs
 D:\Project\test2\test2\test2\obj\Debug\netcoreapp2.1\test2.Views.pdb
 D:\Project\test2\test2\test2\obj\Debug\netcoreapp2.1\test2.csproj.CopyComplete
-D:\Project\test2\test2\test2\obj\Debug\netcoreapp2.1\UserSecretsAssemblyInfo.cs
