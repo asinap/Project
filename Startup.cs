@@ -13,6 +13,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 using test2.DatabaseContext;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
 
 namespace test2
 {
@@ -21,6 +24,11 @@ namespace test2
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel
+                .Information()
+                .WriteTo.RollingFile(".\\wwwroot\\Log\\Log-{Date}.txt", LogEventLevel.Information)
+                .CreateLogger();
         }
 
         public IConfiguration Configuration { get; }
@@ -65,8 +73,11 @@ namespace test2
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddConsole(Configuration.GetSection("Logging"));//
+            loggerFactory.AddDebug();//
+            loggerFactory.AddSerilog();//
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

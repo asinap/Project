@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using test2.Class;
 using test2.DatabaseContext;
 using test2.DatabaseContext.Models;
@@ -15,11 +16,13 @@ namespace test2.Controllers
     {
         private readonly AccountRepository _accountRepo;
         private readonly LockerDbContext _dbContext;
+        private readonly ILogger<AccountController> _logger;
 
-        public AccountController(LockerDbContext lockerDbContext)
+        public AccountController(LockerDbContext lockerDbContext, ILogger<AccountController> logger)
         {
             _dbContext = lockerDbContext;
             _accountRepo = new AccountRepository(_dbContext);
+            _logger = logger;
         }
 
         [Route("/mobile/AddUserAccount")]
@@ -29,11 +32,21 @@ namespace test2.Controllers
             int result = _accountRepo.AddUserAccount(account);
             switch(result)
             {
-                case 1: return NotFound("wrong_domainmail");
-                case 2: return NotFound("not_student");
-                case 3: return NotFound("account_already_exist");
-                case 4: return Ok(account.Id_account);
-                default:return NotFound("Error");
+                case 1:
+                    _logger.LogInformation("Add user from mobile {Name} {email} wrong_domainmail.", account.Name, account.Email);
+                    return NotFound("wrong_domainmail");
+                case 2:
+                    _logger.LogInformation("Add user from mobile {Name} {email} not_student.", account.Name, account.Email);
+                    return NotFound("not_student");
+                case 3:
+                    _logger.LogInformation("Add user from mobile {Name} {email} account_already_exist.", account.Name, account.Email);
+                    return NotFound("account_already_exist");
+                case 4:
+                    _logger.LogInformation("Add user from mobile {Name} {email} done.", account.Name, account.Email);
+                    return Ok(account.Id_account);
+                default:
+                    _logger.LogInformation("Add user from mobile {Name} {email} Error.", account.Name, account.Email);
+                    return NotFound("Error");
             }
         }
 
@@ -41,11 +54,19 @@ namespace test2.Controllers
         [HttpPost]
         public IActionResult AddAdminAccount([FromBody] Account account)
         {
-            if (_accountRepo.AddAdminAccount(account))
+            int result = _accountRepo.AddAdminAccount(account);
+            switch (result)
             {
-                return Ok(account.Id_account);
+                case 1:
+                    _logger.LogInformation("Add admin from web {name} {email} account_already_exist.", account.Name, account.Email);
+                    return NotFound("account_already_exist");
+                case 2:
+                    _logger.LogInformation("Add user from mobile {name} {email} done.", account.Name, account.Email);
+                    return Ok(account.Id_account);
+                default:
+                    _logger.LogInformation("Add user from mobile {name} {email} Error.", account.Name, account.Email);
+                    return NotFound("Error");
             }
-            return NotFound();
         }
 
 
@@ -55,6 +76,7 @@ namespace test2.Controllers
         {
             if (_accountRepo.AddPhoneNumber(id, phone))
             {
+                _logger.LogInformation("Add phone from mobile {name} {email} account_already_exist.", _dbContext.Accounts.FirstOrDefault(x=>x.Id_account==id).Name, phone );
                 return Ok(id);
             }
             return NotFound("CannotAddphone");
@@ -76,6 +98,7 @@ namespace test2.Controllers
         public IActionResult GetUserAccount()
         {
             var list = _accountRepo.GetUserAccount();
+            _logger.LogInformation("Get all user from web {datetime}.", DateTime.Now);
             return Ok(list);
         }
 
@@ -84,6 +107,7 @@ namespace test2.Controllers
         public JsonResult GetUserAccount(string id_account)
         {
             MemberAccount account = _accountRepo.GetUserAccount(id_account);
+            _logger.LogInformation("Get user account from mobile {name}.", _dbContext.Accounts.FirstOrDefault(x=>x.Id_account==id_account).Name);
             return Json(account);
         }
 
@@ -92,6 +116,7 @@ namespace test2.Controllers
         public JsonResult GetUserOverview(string id_account)
         {
             UserOverview user = _accountRepo.GetUserOverview(id_account);
+            _logger.LogInformation("Get user overview from web {name}.", _dbContext.Accounts.FirstOrDefault(x => x.Id_account == id_account).Name);
             return Json(user);
         }
 
@@ -124,10 +149,16 @@ namespace test2.Controllers
         public IActionResult GetAdmin ()
         {
             var admin = _accountRepo.GetAdmins();
-            if ((admin != null)&& (admin.Count()!=0))
+            if ((admin != null) && (admin.Count() != 0))
+            {
+                _logger.LogInformation("Get all admin from web {datetime}.", DateTime.Now);
                 return Ok(admin);
-            else 
-                return NotFound("No_admin"); 
+            }
+            else
+            {
+                _logger.LogInformation("Cannot Get all admin from web {datetime}.", DateTime.Now);
+                return NotFound("No_admin");
+            }
         }
 
         [Route("/web/IsAdmin")]
@@ -136,10 +167,12 @@ namespace test2.Controllers
         {
             if (_accountRepo.IsAdmin(accountID))
             {
+                _logger.LogInformation("check {name} is admin from web {datetime}.",_dbContext.Accounts.FirstOrDefault(x=>x.Id_account==accountID).Name, DateTime.Now);
                 return Ok(accountID);
             }
             else
             {
+                _logger.LogInformation("check {name} is not admin from web {datetime}.", accountID, DateTime.Now);
                 return NotFound("No_admin");
             }
         }

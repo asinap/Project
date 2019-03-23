@@ -11,6 +11,11 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0" />
+    <PackageReference Include="Serilog" Version="2.7.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="2.1.0" />
+    <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
+    <PackageReference Include="Serilog.Sinks.Seq" Version="4.0.0" />
+    <PackageReference Include="Serilog.Sinks.SQLite" Version="4.0.0" />
     <PackageReference Include="SQLitePCL.raw" Version="0.9.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.109.2" />
@@ -18,6 +23,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\DB\" />
+    <Folder Include="wwwroot\Log\" />
   </ItemGroup>
 
 </Project>

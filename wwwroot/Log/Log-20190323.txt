@@ -1,0 +1,21 @@
+2019-03-23 23:03:15.390 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44380/  
+2019-03-23 23:03:15.390 +07:00 [Information] Request starting HTTP/1.1 DEBUG http://localhost:50909/  0
+2019-03-23 23:03:15.490 +07:00 [Information] Request finished in 107.4999ms 200 
+2019-03-23 23:03:15.789 +07:00 [Information] Route matched with "{page = \"/Index\", action = \"\", controller = \"\"}". Executing action "/Index"
+2019-03-23 23:03:15.815 +07:00 [Information] Executing handler method "OnGet" with arguments (null) - ModelState is Valid
+2019-03-23 23:03:15.969 +07:00 [Information] Executed action "/Index" in 169.3767ms
+2019-03-23 23:03:15.988 +07:00 [Information] Request finished in 603.7782ms 200 text/html; charset=utf-8
+2019-03-23 23:03:16.152 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44380/css/site.css  
+2019-03-23 23:03:16.154 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44380/js/site.js?v=4q1jwFhaPaZgr8WAUSrux6hAuh0XDg9kPS3xIVq36I0  
+2019-03-23 23:03:16.210 +07:00 [Information] Sending file. Request path: '"/js/site.js"'. Physical path: '"D:\Project\test2\test2\test2\wwwroot\js\site.js"'
+2019-03-23 23:03:16.220 +07:00 [Information] Request finished in 75.9794ms 200 application/javascript
+2019-03-23 23:03:16.237 +07:00 [Information] Sending file. Request path: '"/css/site.css"'. Physical path: '"D:\Project\test2\test2\test2\wwwroot\css\site.css"'
+2019-03-23 23:03:16.250 +07:00 [Information] Request finished in 106.0133ms 200 text/css
+2019-03-23 23:03:19.952 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44380/swagger/index.html  
+2019-03-23 23:03:20.081 +07:00 [Information] Request finished in 127.9151ms 200 text/html
+2019-03-23 23:03:20.180 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44380/swagger/swagger-ui.css  
+2019-03-23 23:03:20.204 +07:00 [Information] Connection id ""0HLLFL47D7QOG"", Request id ""0HLLFL47D7QOG:00000004"": the application aborted the connection.
+2019-03-23 23:03:20.211 +07:00 [Information] Sending file. Request path: '"/swagger-ui.css"'. Physical path: '"N/A"'
+2019-03-23 23:03:20.220 +07:00 [Information] Request finished in 43.6521ms 200 text/css
+2019-03-23 23:03:20.392 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44380/swagger/v1/swagger.json  
+2019-03-23 23:03:20.534 +07:00 [Information] Request finished in 144.3172ms 200 application/json;charset=utf-8

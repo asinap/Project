@@ -63,25 +63,32 @@ namespace test2.Repositories
          * input = account                                                                                          *
                     attributes => Id_account, Name, Phone, Email, Role, Point                                       *
                     default Point = 100                                                                             */
-        public bool AddAdminAccount(Account account)
+        public int AddAdminAccount(Account account)
         {
             try
             {
                 if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == account.Id_account) != null)
                 {
                     Console.WriteLine("already exist");
-                    return false;
+                    return 1;
                 }
+                int rnd;
+                do
+                {
+                    Random rand = new Random();
+                    rnd = rand.Next(100000000, 999999999);
+                } while (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == rnd.ToString()) != null);
+                account.Id_account = rnd.ToString();
                 account.Point = 0;
                 account.Role = "Administrator";
                 _dbContext.Accounts.Add(account);
                 _dbContext.SaveChanges();
-                return true;
+                return 2;
             }
             catch (Exception)
             {
                 Console.WriteLine("AddAdminAccount Error");
-                return false;
+                return 0;
             }
         }
 
@@ -134,7 +141,7 @@ namespace test2.Repositories
             try
             {
                 var userlist = from accountlist in _dbContext.Accounts
-                               where accountlist.Role == "User"
+                               where accountlist.Role.ToString().ToLower() == "user"
                                select accountlist;
                 List<Member> resultlist = new List<Member>();
 
