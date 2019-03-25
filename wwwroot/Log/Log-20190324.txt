@@ -1,0 +1,13 @@
+2019-03-24 00:08:16.322 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44380/  
+2019-03-24 00:08:16.322 +07:00 [Information] Request starting HTTP/1.1 DEBUG http://localhost:50909/  0
+2019-03-24 00:08:16.423 +07:00 [Information] Request finished in 108.94ms 200 
+2019-03-24 00:08:16.749 +07:00 [Information] Route matched with "{page = \"/Index\", action = \"\", controller = \"\"}". Executing action "/Index"
+2019-03-24 00:08:16.783 +07:00 [Information] Executing handler method "OnGet" with arguments (null) - ModelState is Valid
+2019-03-24 00:08:16.948 +07:00 [Information] Executed action "/Index" in 181.2771ms
+2019-03-24 00:08:16.971 +07:00 [Information] Request finished in 654.5955ms 200 text/html; charset=utf-8
+2019-03-24 00:08:17.093 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44380/js/site.js?v=4q1jwFhaPaZgr8WAUSrux6hAuh0XDg9kPS3xIVq36I0  
+2019-03-24 00:08:17.095 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44380/css/site.css  
+2019-03-24 00:08:17.141 +07:00 [Information] Sending file. Request path: '"/js/site.js"'. Physical path: '"D:\Project\test2\test2\test2\wwwroot\js\site.js"'
+2019-03-24 00:08:17.157 +07:00 [Information] Request finished in 82.5505ms 200 application/javascript
+2019-03-24 00:08:17.171 +07:00 [Information] Sending file. Request path: '"/css/site.css"'. Physical path: '"D:\Project\test2\test2\test2\wwwroot\css\site.css"'
+2019-03-24 00:08:17.179 +07:00 [Information] Request finished in 116.0677ms 200 text/css

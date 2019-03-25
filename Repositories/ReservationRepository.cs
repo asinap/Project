@@ -163,6 +163,22 @@ namespace test2.Repositories
             }
         }
 
+        public int IsSetCode (int reserveID)
+        {
+            try
+            {
+                if(_dbContext.Reservations.FirstOrDefault(x=>x.Id_reserve==reserveID).Code.ToLower()=="string")
+                {
+                    return 1;
+                }
+                return 2;
+            }
+            catch
+            {
+                Console.WriteLine("Error to check code");
+                return 0;
+            }
+        }
         public int SetCode (int id_reserve,string code)
         {
             try

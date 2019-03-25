@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using test2.DatabaseContext;
 using test2.DatabaseContext.Models;
 using test2.Repositories;
@@ -15,13 +16,11 @@ namespace test2.Controllers
     {
         private readonly ContentRepository _contentRepo;
         private readonly LockerDbContext _dbContext;
-        private readonly ILogger<AccountController> _logger;
 
-        public ContentController(LockerDbContext lockerDbContext, ILogger<AccountController> logger)
+        public ContentController(LockerDbContext lockerDbContext)
         {
             _dbContext = lockerDbContext;
             _contentRepo = new ContentRepository(_dbContext);
-            _logger = logger;
         }
 
         [Route("AddContent")]
@@ -30,10 +29,10 @@ namespace test2.Controllers
         {
             if (_contentRepo.AddContent(_cont))
             {
-                _logger.LogInformation("Add content {id} OK.", _cont.Id_content);
+                Log.Information("Add content {id} OK.", _cont.Id_content);
                 return Ok(_cont.Id_content);
             }
-            _logger.LogInformation("Cannot Add content {id}.", _cont.Id_content);
+            Log.Information("Cannot Add content {id}.", _cont.Id_content);
             return NotFound();
         }
 
@@ -43,10 +42,10 @@ namespace test2.Controllers
         {
             if (_contentRepo.DeleteContent(id_content))
             {
-                _logger.LogInformation("Delete content {id} OK.", id_content);
+                Log.Information("Delete content {id} OK.", id_content);
                 return Ok();
             }
-            _logger.LogInformation("Cannot Delete content {id}.", id_content);
+            Log.Information("Cannot Delete content {id}.", id_content);
             return NotFound();
 
         }
@@ -57,10 +56,10 @@ namespace test2.Controllers
         {
             if (_contentRepo.RestoreContent(id_content))
             {
-                _logger.LogInformation("Restore content {id} OK.", id_content);
+                Log.Information("Restore content {id} OK.", id_content);
                 return Ok(id_content);
             }
-            _logger.LogInformation("Cannot Restore content {id}.", id_content);
+            Log.Information("Cannot Restore content {id}.", id_content);
             return NotFound();
         }
 

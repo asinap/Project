@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using test2.Class;
 using test2.DatabaseContext;
 using test2.DatabaseContext.Models;
@@ -17,14 +18,12 @@ namespace test2.Controllers
     {
         private readonly LockerMetadataRepository _lockerRepo;
         private readonly LockerDbContext _dbContext;
-        private readonly ILogger<AccountController> _logger;
 
 
-        public LockerMetadataController(LockerDbContext lockerDbContext, ILogger<AccountController> logger)
+        public LockerMetadataController(LockerDbContext lockerDbContext)
         {
             _dbContext = lockerDbContext;
             _lockerRepo = new LockerMetadataRepository(_dbContext);
-            _logger = logger;
         }
 
         
@@ -34,10 +33,10 @@ namespace test2.Controllers
         {
             if (_lockerRepo.AddLocker(locker))
             {
-                _logger.LogInformation("Add Locker {Location} OK.", locker.Location);
+                Log.Information("Add Locker {Location} OK.", locker.Location);
                 return Ok(locker.Mac_address);
             }
-            _logger.LogInformation("Add Locker {Location} Error.", locker.Location);
+            Log.Information("Add Locker {Location} Error.", locker.Location);
             return NotFound();
         }
 
@@ -47,10 +46,10 @@ namespace test2.Controllers
         {
             if (_lockerRepo.DeleteLocker(Mac_address))
             {
-                _logger.LogInformation("Delete Locker {Location} OK.", _dbContext.LockerMetadatas.FirstOrDefault(x=>x.Mac_address==Mac_address).Location);
+                Log.Information("Delete Locker {Location} OK.", _dbContext.LockerMetadatas.FirstOrDefault(x=>x.Mac_address==Mac_address).Location);
                 return Ok();
             }
-            _logger.LogInformation("Delete Locker {Location} Error.", Mac_address);
+            Log.Information("Delete Locker {Location} Error.", Mac_address);
             return NotFound();
 
         }
@@ -61,10 +60,10 @@ namespace test2.Controllers
         {
             if (_lockerRepo.RestoreLocker(Mac_address))
             {
-                _logger.LogInformation("Restore Locker {Location} OK.", _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == Mac_address).Location);
+                Log.Information("Restore Locker {Location} OK.", _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == Mac_address).Location);
                 return Ok(Mac_address);
             }
-            _logger.LogInformation("Restore Locker {Location} Error.", Mac_address);
+            Log.Information("Restore Locker {Location} Error.", Mac_address);
             return NotFound();
         }
 
@@ -73,7 +72,7 @@ namespace test2.Controllers
         public IActionResult GetLocker()
         {
             var list = _lockerRepo.GetLocker();
-            _logger.LogInformation("Get Locker from web {datetime}.", DateTime.Now);
+            Log.Information("Get Locker from web {datetime}.", DateTime.Now);
             return Ok(list);
         }
 
@@ -82,7 +81,8 @@ namespace test2.Controllers
         public JsonResult GetLockerDetail(string mac_address)
         {
             LockerDetail lockerDetail = _lockerRepo.GetLockerDetail(mac_address);
-            _logger.LogInformation("Get Locker Detail from web {datetime}.", DateTime.Now);
+            Log.Information("Get Locker Detail from web {datetime}.", DateTime.Now);
+            Log.Information("Get Locker Detail from web {datetime}.", DateTime.Now);
             return Json(lockerDetail);
         }
         [Route("LockerMac")]

@@ -25,10 +25,11 @@ namespace test2
         {
             Configuration = configuration;
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel
-                .Information()
-                .WriteTo.RollingFile(".\\wwwroot\\Log\\Log-{Date}.txt", LogEventLevel.Information)
-                .CreateLogger();
+          .MinimumLevel.Debug()
+          .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+          .Enrich.FromLogContext()
+          .WriteTo.File(@"D:\home\LogFiles\http\RawLogs\log.txt")
+          .CreateLogger();
         }
 
         public IConfiguration Configuration { get; }
@@ -36,6 +37,21 @@ namespace test2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            //Log.Logger = new LoggerConfiguration()
+            //    .MinimumLevel
+            //    .Information()
+            //    .WriteTo.RollingFile(".\\wwwroot\\Log\\Log-{Date}.txt", LogEventLevel.Information)
+            //    .CreateLogger();
+            //Log.Logger = new LoggerConfiguration()
+            // .MinimumLevel.Debug()
+            // .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+            // .Enrich.FromLogContext()
+            // .WriteTo.File(@"D:\home\LogFiles\http\RawLogs\log.txt")
+            // .CreateLogger();
+
+            //Log.Information("This will be written to the rolling file set");
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
