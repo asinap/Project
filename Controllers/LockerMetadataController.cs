@@ -46,11 +46,19 @@ namespace test2.Controllers
         {
             if (_lockerRepo.DeleteLocker(Mac_address))
             {
-                Log.Information("Delete Locker {Location} OK.", _dbContext.LockerMetadatas.FirstOrDefault(x=>x.Mac_address==Mac_address).Location);
+                Log.Information("Delete Locker {Location} OK.", _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == Mac_address).Location);
                 return Ok();
             }
-            Log.Information("Delete Locker {Location} Error.", Mac_address);
-            return NotFound();
+            if (_dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == Mac_address) != null)
+            {
+                Log.Information("Delete Locker {Location} Error.", _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == Mac_address).Location);
+                return NotFound();
+            }
+            else
+            {
+                Log.Information("Delete Locker No {Mac_addressn} Error.", Mac_address);
+                return NotFound();
+            }
 
         }
 
@@ -63,8 +71,17 @@ namespace test2.Controllers
                 Log.Information("Restore Locker {Location} OK.", _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == Mac_address).Location);
                 return Ok(Mac_address);
             }
-            Log.Information("Restore Locker {Location} Error.", Mac_address);
-            return NotFound();
+            if (_dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == Mac_address) != null)
+            {
+                Log.Information("Restore Locker {Location} Error.", _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == Mac_address).Location);
+                return NotFound();
+            }
+            else
+            {
+                Log.Information("Restore Locker {Location} Error.", Mac_address);
+                return NotFound();
+            }
+            
         }
 
         [Route("/web/Locker")]
@@ -81,7 +98,6 @@ namespace test2.Controllers
         public JsonResult GetLockerDetail(string mac_address)
         {
             LockerDetail lockerDetail = _lockerRepo.GetLockerDetail(mac_address);
-            Log.Information("Get Locker Detail from web {datetime}.", DateTime.Now);
             Log.Information("Get Locker Detail from web {datetime}.", DateTime.Now);
             return Json(lockerDetail);
         }

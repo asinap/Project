@@ -214,6 +214,27 @@ namespace test2.Repositories
             }
         }
 
+        public string GetCode (int reserveID)
+        {
+            try
+            {
+                var result = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == reserveID);
+                if (result.Code.ToLower() != "string"&&result.IsActive==true)
+                {
+                    return result.Code;
+                }
+                else
+                {
+                    return null;
+                }
+
+            }
+            catch
+            {
+                Console.WriteLine("Error to get code");
+                return null;
+            }
+        }
         /*web all activity*/
         public List<WebForm> GetActivities()
         {

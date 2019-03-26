@@ -27,8 +27,15 @@ namespace test2.Controllers
         public JsonResult GetHardware(string userID, string code, string mac_address)
         {
             var result = _hardwareRepo.GetHardware(userID, code, mac_address);
-            Log.Information("Get hardware from node-red {name} {location}.", _dbContext.Accounts.FirstOrDefault(x => x.Id_account == userID).Name, _dbContext.LockerMetadatas.FirstOrDefault(x=>x.Mac_address==mac_address).Location);
-            return Json(result);
+            if (result == null)
+            {
+                Log.Information("Cannot Get hardware from node-red.");
+            }
+            else
+            {
+                Log.Information("Get hardware from node-red {name} {location}.", _dbContext.Accounts.FirstOrDefault(x => x.Id_account == userID).Name, _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == mac_address).Location);
+            }
+                return Json(result);
         }
     }
 }

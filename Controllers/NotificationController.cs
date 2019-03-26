@@ -58,12 +58,22 @@ namespace test2.Controllers
                     , _dbContext.Notifications.FirstOrDefault(x => x.Id_notification == id_noti).Id_content);
                 return Ok(id_noti);
             }
-            Log.Information("Cannot Delete noti from mobile {Name}, {No}, {Location}, {contentID}."
-                    , _dbContext.Accounts.FirstOrDefault(x => x.Id_account == _dbContext.Notifications.FirstOrDefault(y => y.Id_notification == id_noti).Id_account).Name
-                    , _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.Notifications.FirstOrDefault(z => z.Id_notification == id_noti).Id_reserve).Id_vacancy).No_vacancy
-                    , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.Notifications.FirstOrDefault(z => z.Id_notification == id_noti).Id_reserve).Location
-                    , _dbContext.Notifications.FirstOrDefault(x => x.Id_notification == id_noti).Id_content);
-            return NotFound("Error_Delete");
+            if (_dbContext.Notifications.FirstOrDefault(x => x.Id_notification == id_noti) != null)
+            {
+                Log.Information("Cannot Delete noti from mobile {Name}, {No}, {Location}, {contentID}."
+                        , _dbContext.Accounts.FirstOrDefault(x => x.Id_account == _dbContext.Notifications.FirstOrDefault(y => y.Id_notification == id_noti).Id_account).Name
+                        , _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.Notifications.FirstOrDefault(z => z.Id_notification == id_noti).Id_reserve).Id_vacancy).No_vacancy
+                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.Notifications.FirstOrDefault(z => z.Id_notification == id_noti).Id_reserve).Location
+                        , _dbContext.Notifications.FirstOrDefault(x => x.Id_notification == id_noti).Id_content);
+                return NotFound("Error_Delete");
+            }
+            else
+            {
+                Log.Information("Cannot Delete noti from mobile {id_noti}.",id_noti);
+                return NotFound("Id_noti is not existed.");
+
+            }
+
         }
 
         [Route("/mobile/SetRead")]
@@ -79,12 +89,21 @@ namespace test2.Controllers
                     , _dbContext.Notifications.FirstOrDefault(x => x.Id_notification == id_noti).Id_content);
                 return Ok(id_noti);
             }
-            Log.Information("Cannot Set Read noti from mobile {Name}, {No}, {Location}, {contentID}."
+            if (_dbContext.Notifications.FirstOrDefault(x => x.Id_notification == id_noti) != null)
+            {
+                Log.Information("Cannot Set Read noti from mobile {Name}, {No}, {Location}, {contentID}."
                     , _dbContext.Accounts.FirstOrDefault(x => x.Id_account == _dbContext.Notifications.FirstOrDefault(y => y.Id_notification == id_noti).Id_account).Name
                     , _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.Notifications.FirstOrDefault(z => z.Id_notification == id_noti).Id_reserve).Id_vacancy).No_vacancy
                     , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.Notifications.FirstOrDefault(z => z.Id_notification == id_noti).Id_reserve).Location
                     , _dbContext.Notifications.FirstOrDefault(x => x.Id_notification == id_noti).Id_content);
-            return NotFound("Error_SetRead");
+                return NotFound("Error_SetRead");
+            }
+            else
+            {
+                Log.Information("Cannot Set Read noti from mobile {id_noti}.", id_noti);
+                return NotFound("Id_noti is not existed.");
+
+            }
         }
 
         [Route("NotificationAll")]
