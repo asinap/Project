@@ -22,44 +22,6 @@ namespace test2.Repositories
         {
             try
             {
-                if (!reserve.Optional)
-                {
-                    return ReserveByDay(reserve);
-                }
-                else {
-                    return ReserveByTime(reserve);
-                }
-                //Console.WriteLine("Out of optional");
-                //return 0;
-                //if (CheckId_studentRef(reserve.Id_account))
-                //{
-                //    return false;
-                //}
-                ////else if (CheckId_vacancyRef(reserve.Id_vacancyRef))
-                ////{
-                ////    return false;
-                ////}
-                //else
-                //{
-                //    _dbContext.Reservations.Add(reserve);
-                //    _dbContext.SaveChanges();
-                //    return true;
-                //}
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("AddReservation Error");
-                return 0;
-            }
-
-
-        }
-
-
-        public int ReserveByDay(Reservation reserve)
-        {
-            try
-            {
                 //1. check account exist.
                 if (CheckId_account(reserve.Id_account))
                 {
@@ -87,25 +49,17 @@ namespace test2.Repositories
                     return 4;
                 }
                 _dbContext.Accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Point -= 5;
-                //reserve.DateModified = DateTime.Now;
+                reserve.DateModified = DateTime.Now;
                 _dbContext.Reservations.Add(reserve);
                 _dbContext.SaveChanges();
                 return 5;
             }
-            catch(Exception)
+            catch (Exception)
             {
+                Console.WriteLine("AddReservation Error");
                 return 0;
             }
-        }
-
-        /*not finnish yet!!!!!!!!!!!!!!!*/
-        public int ReserveByTime(Reservation reserve)
-        {
-            if (CheckId_account(reserve.Id_account))
-            {
-                return 0;
-            }
-            return 1;
+        
         }
 
         public bool CheckId_account(string id)
@@ -125,15 +79,6 @@ namespace test2.Repositories
             return availableVacant.ToList();
         }
 
-        //public List<Vacancy> CheckAvailableTime (Reservation reserve)
-        //{
-        //    var overlap = from reservelist in _dbContext.Reservations
-        //                  where 
-        //}
-        //public bool CheckId_vacancyRef(int id)
-        //{
-        //    return _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == id) == null;
-        //}
 
         public int CancelReseveration(int id)
         {

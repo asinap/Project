@@ -16,13 +16,7 @@ namespace test2.DatabaseContext.Models
         public string Status { get; set; }
         public DateTime StartDay { get; set; }
         public DateTime EndDay { get; set; }
-        // reserve by day by day 
-        // maximum for reserve day is 3 days
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
         public DateTime DateModified { get; set; }
-        //  public int CountOpen { get; set; }
-        public bool Optional { get; set; }
         public string Size { get; set; }
         public string Location { get; set; }
         [ForeignKey("Account")]
