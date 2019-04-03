@@ -282,6 +282,7 @@ namespace test2.Controllers
         {
             var list = _reserveRepo.Pending(id_account);
             Log.Information("Pending from mobile {name}.", _dbContext.Accounts.FirstOrDefault(x=>x.Id_account== id_account).Name);
+          
             return Json(list);
         }
 
@@ -291,6 +292,7 @@ namespace test2.Controllers
         {
             var list = _reserveRepo.History(id_account);
             Log.Information("History from mobile {name}.", _dbContext.Accounts.FirstOrDefault(x => x.Id_account == id_account).Name);
+
             return Json(list);
         }
 

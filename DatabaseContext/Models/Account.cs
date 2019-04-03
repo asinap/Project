@@ -15,6 +15,7 @@ namespace test2.DatabaseContext.Models
         public string Email { get; set; }
         public string Role { get; set; }
         public int Point { get; set; }
+        //public string Token { get; set; }
         //public int FineCount { get; set; }
         //public int PayFineCount { get; set; }
     }

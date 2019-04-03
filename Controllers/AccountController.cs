@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Google.Apis.Auth;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.HttpSys;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Core;
@@ -13,6 +16,7 @@ using test2.Repositories;
 
 namespace test2.Controllers
 {
+
     [Route("/api/[Controller]")]
     public class AccountController : Controller
     {
@@ -27,26 +31,28 @@ namespace test2.Controllers
 
         [Route("/mobile/AddUserAccount")]
         [HttpPost]
-        public IActionResult AddUserAccount([FromBody] Account account)
+        public async Task<IActionResult> AddUserAccountAsync([FromBody] Token token)
         {
-            int result = _accountRepo.AddUserAccount(account);
+            int result = await _accountRepo.AddUserAccountAsync(token._Token);
             switch(result)
             {
                 case 1:
-                    Log.Information("Add user from mobile {Name} {email} wrong_domainmail.", account.Name, account.Email);
+                    //Log.Information("Add user from mobile {Name} {email} wrong_domainmail.", account.Name, account.Email);
                     return NotFound("wrong_domainmail");
                 case 2:
-                    Log.Information("Add user from mobile {Name} {email} not_student.", account.Name, account.Email);
+                    //Log.Information("Add user from mobile {Name} {email} not_student.", account.Name, account.Email);
                     return NotFound("not_student");
                 case 3:
-                    Log.Information("Add user from mobile {Name} {email} account_already_exist.", account.Name, account.Email);
+                    //Log.Information("Add user from mobile {Name} {email} account_already_exist.", account.Name, account.Email);
                     return NotFound("account_already_exist");
                 case 4:
-                    Log.Information("Add user from mobile {Name} {email} done.", account.Name, account.Email);
-                    return Ok(account.Id_account);
+                    //Log.Information("Add user from mobile {Name} {email} done.", account.Name, account.Email);
+                    GoogleJsonWebSignature.Payload validPayload = await GoogleJsonWebSignature.ValidateAsync(token._Token);
+                    string name = _dbContext.Accounts.FirstOrDefault(x => x.Email == validPayload.Email).Name;
+                    return Ok(name);
                 default:
-                    Log.Information("Add user from mobile {Name} {email} Error.", account.Name, account.Email);
-                    return NotFound("Error");
+                    //Log.Information("Add user from mobile {Name} {email} Error.", account.Name, account.Email);
+                    return NotFound("Don't know what the Error is");
             }
         }
 
@@ -82,6 +88,17 @@ namespace test2.Controllers
             return NotFound("CannotAddphone");
         }
 
+        [Route("/mobile/Getphone")]
+        [HttpGet]
+        public IActionResult Getphone (string id_account)
+        {
+            string result = _accountRepo.GetPhone(id_account);
+            if (result!=null)
+            {
+                return Ok(result);
+            }
+            return NotFound("Error");
+        }
         //[Route("UpdatePoint")]
         //[HttpPut]
         //public IActionResult UpdatePoint([FromQuery] string id, int num)

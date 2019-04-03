@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Google.Apis.Auth;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,36 +22,70 @@ namespace test2.Repositories
          * input = account 
                     attributes => Id_account, Name, Phone, Email, Role, Point
                     default Point = 100 */
-        public int AddUserAccount(Account account)
+        public async Task<int> AddUserAccountAsync(string token)
         {
             try
             {
+                GoogleJsonWebSignature.Payload validPayload = await GoogleJsonWebSignature.ValidateAsync(token);
                 string id = "";
                 string domainmail = "@kmitl.ac.th";
-                if (!account.Email.Contains(domainmail))
+                if (!validPayload.Email.Contains(domainmail))
                 {
                     // detect domain email
                     return 1;
                 }
-                id = account.Email.Replace(domainmail, "");
-                int numberic;
-                if (!int.TryParse(id, out numberic))
+                id = validPayload.Email.Replace(domainmail, "");
+                if (!int.TryParse(id, out int numberic))
                 {
                     //before email is not studentID
                     return 2;
                 }
-                account.Id_account = id;
-                if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == account.Id_account) != null)
+                if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == id) != null)
                 {
                     //already have account
                     Console.WriteLine("already exist");
                     return 3;
                 }
-                account.Point = 100;
-                account.Role = "User";
+                Account account = new Account()
+                {
+                    Id_account = id,
+                    Email = validPayload.Email,
+                    Name = validPayload.Name,
+                    Phone = "",
+                    Point = 100,
+                    Role="User"
+                };
                 _dbContext.Accounts.Add(account);
                 _dbContext.SaveChanges();
                 return 4;
+                //string id = "";
+                //string domainmail = "@kmitl.ac.th";
+                //if (!account.Email.Contains(domainmail))
+                //{
+                //    // detect domain email
+                //    return 1;
+                //}
+                //id = account.Email.Replace(domainmail, "");
+                //int numberic;
+                //if (!int.TryParse(id, out numberic))
+                //{
+                //    //before email is not studentID
+                //    return 2;
+                //}
+                //account.Id_account = id;
+                //if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == account.Id_account) != null)
+                //{
+                //    //already have account
+                //    Console.WriteLine("already exist");
+                //    return 3;
+                //}
+                //account.Point = 100;
+                //account.Role = "User";
+                //_dbContext.Accounts.Add(account);
+                //_dbContext.SaveChanges();
+                //return 4;
+
+
             }
             catch (Exception)
             {
@@ -113,6 +148,22 @@ namespace test2.Repositories
             }
         }
 
+        public string GetPhone(string id_account)
+        {
+            try
+            {
+                if(_dbContext.Accounts.FirstOrDefault(x=>x.Id_account==id_account)!=null)
+                {
+                    return _dbContext.Accounts.FirstOrDefault(x => x.Id_account == id_account).Phone;
+                }
+                return null;
+            }
+            catch(Exception)
+            {
+                Console.WriteLine("Error Get phone");
+                return null;
+            }
+        }
         /*Not finish yet*/
         //public bool UpdatePoint(string id, int num)
         //{

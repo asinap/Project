@@ -16,6 +16,8 @@ using test2.DatabaseContext;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace test2
 {
@@ -86,6 +88,7 @@ namespace test2
             {
                 options.Filters.Add(new CorsAuthorizationFilterFactory("All"));
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
