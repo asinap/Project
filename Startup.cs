@@ -18,6 +18,9 @@ using Serilog;
 using Serilog.Events;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using test2.Helpers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using test2.Services;
 
 namespace test2
 {
@@ -40,26 +43,13 @@ namespace test2
         public void ConfigureServices(IServiceCollection services)
         {
 
-            //Log.Logger = new LoggerConfiguration()
-            //    .MinimumLevel
-            //    .Information()
-            //    .WriteTo.RollingFile(".\\wwwroot\\Log\\Log-{Date}.txt", LogEventLevel.Information)
-            //    .CreateLogger();
-            //Log.Logger = new LoggerConfiguration()
-            // .MinimumLevel.Debug()
-            // .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-            // .Enrich.FromLogContext()
-            // .WriteTo.File(@"D:\home\LogFiles\http\RawLogs\log.txt")
-            // .CreateLogger();
-
-            //Log.Information("This will be written to the rolling file set");
-
-            services.Configure<CookiePolicyOptions>(options =>
+           services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
@@ -71,23 +61,35 @@ namespace test2
                 //option.UseSqlServer("Server=DESKTOP-D2NINII\\SQLEXPRESS; Database=LeaveManagement;Integrated Security=true");
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddCors(option =>
-            {
-                option.AddPolicy("All", policy =>
-                {
-                    //policy.WithOrigins("*");
-                    policy.AllowAnyOrigin();
-                    policy.AllowAnyMethod();
-                    policy.AllowAnyHeader();
-                }
 
-                );
-            });
-            services.Configure<MvcOptions>(options =>
+            // configure strongly typed settings objects
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
+
+            // configure jwt authentication
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            services.AddAuthentication(x =>
             {
-                options.Filters.Add(new CorsAuthorizationFilterFactory("All"));
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
             });
+
+            // configure DI for application services
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAdminService, AdminService>();
 
         }
 
@@ -106,12 +108,12 @@ namespace test2
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
-
+            //app.UseIdentity();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-            app.UseCors("All");
-
+            app.UseCors(x=> x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseAuthentication();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

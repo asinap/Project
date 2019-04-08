@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using test2.Class;
 using test2.DatabaseContext;
 using test2.DatabaseContext.Models;
+using test2.Entities;
 using test2.Repositories;
 
 namespace test2.Controllers
@@ -25,6 +27,7 @@ namespace test2.Controllers
             _reserveRepo = new ReservationRepository(_dbContext);
         }
 
+        [Authorize(Roles = Role.User)]
         [Route("/mobile/AddReserve")]
         [HttpPost]
         public IActionResult AddReservation([FromBody] Reservation reserve)
@@ -67,6 +70,7 @@ namespace test2.Controllers
             //return NotFound();
         }
 
+        [Authorize(Roles = Role.User)]
         [Route("/mobile/CancelReserve")]
         [HttpDelete]
         public IActionResult CancelReservation([FromQuery] int id)
@@ -99,6 +103,7 @@ namespace test2.Controllers
             }
         }
 
+        [Authorize(Roles = Role.User)]
         [Route ("/mobile/IsSetCode")]
         [HttpGet]
         public IActionResult IsSetCode (int id_reserve)
@@ -141,6 +146,8 @@ namespace test2.Controllers
                 
             }
         }
+
+        [Authorize(Roles = Role.User)]
         [Route ("/mobile/SetCode")]
         [HttpPut]
         public IActionResult SetCode (int id_reserve,string code)
@@ -198,6 +205,7 @@ namespace test2.Controllers
             }
         }
 
+        [Authorize(Roles = Role.User)]
         [Route ("/mobile/GetCode")]
         [HttpGet]
         public IActionResult GetCode (int id_reserve)
@@ -276,6 +284,7 @@ namespace test2.Controllers
             return Ok(list);
         }
 
+        [Authorize(Roles = Role.User)]
         [Route("/mobile/Pending")]
         [HttpGet]
         public JsonResult Pending (string id_account)
@@ -286,6 +295,7 @@ namespace test2.Controllers
             return Json(list);
         }
 
+        [Authorize(Roles = Role.User)]
         [Route("/mobile/History")]
         [HttpGet]
         public JsonResult History (string id_account)
@@ -296,6 +306,7 @@ namespace test2.Controllers
             return Json(list);
         }
 
+        [Authorize(Roles = Role.User)]
         [Route ("/mobile/BookingDetail")]
         [HttpGet]
         public JsonResult BookingDetail (int id_reserve)

@@ -8,7 +8,10 @@ using Serilog;
 using test2.Class;
 using test2.DatabaseContext;
 using test2.DatabaseContext.Models;
+using test2.Entities;
 using test2.Repositories;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Server.HttpSys;
 
 namespace test2.Controllers
 {
@@ -45,6 +48,7 @@ namespace test2.Controllers
             return NotFound();
         }
 
+        [Authorize (Roles = Role.User)]
         [Route("/mobile/DeleteNotificaiton")]
         [HttpPut]
         public IActionResult DeleteNotification(int id_noti)
@@ -76,6 +80,7 @@ namespace test2.Controllers
 
         }
 
+        [Authorize(Roles = Role.User)]
         [Route("/mobile/SetRead")]
         [HttpPut]
         public IActionResult SetRead(int id_noti)
@@ -122,6 +127,7 @@ namespace test2.Controllers
             return Ok(list);
         }
 
+        [Authorize(Roles = Role.User)]
         [Route ("/mobile/UserInbox")]
         [HttpGet]
         public JsonResult GetNotificationForm (string id_account)
@@ -131,6 +137,7 @@ namespace test2.Controllers
             return Json(list);
         }
 
+        [Authorize(Roles = Role.User)]
         [Route("/mobile/UserInboxDetail")]
         [HttpGet]
         public JsonResult GetNotificationDetail (int id_noti)

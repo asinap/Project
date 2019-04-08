@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Google.Apis.Auth;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Server.HttpSys;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -13,49 +13,88 @@ using test2.Class;
 using test2.DatabaseContext;
 using test2.DatabaseContext.Models;
 using test2.Repositories;
+using test2.Services;
+using test2.Entities;
 
 namespace test2.Controllers
 {
-
-    [Route("/api/[Controller]")]
+    //[Authorize]
+    [ApiController]
+    [Route("/api/[controller]")]
+    // [Route("/api/[Controller]")]
     public class AccountController : Controller
     {
         private readonly AccountRepository _accountRepo;
         private readonly LockerDbContext _dbContext;
+        private IUserService _userService;
+        private IAdminService _adminService;
 
-        public AccountController(LockerDbContext lockerDbContext)
+        public AccountController(LockerDbContext lockerDbContext, IUserService userService, IAdminService adminService)
         {
+            _userService = userService;
+            _adminService = adminService;
             _dbContext = lockerDbContext;
             _accountRepo = new AccountRepository(_dbContext);
         }
 
-        [Route("/mobile/AddUserAccount")]
+        [AllowAnonymous]
+        [Route("/mobile/usersauthenticate")]
         [HttpPost]
-        public async Task<IActionResult> AddUserAccountAsync([FromBody] Token token)
+        public async Task<IActionResult> UserAuthenticate([FromBody] Token token)
         {
-            int result = await _accountRepo.AddUserAccountAsync(token._Token);
-            switch(result)
+            var user = await _userService.AuthenticateAsync(token._Token);
+
+            if (user == null)
+                return BadRequest(new { message = "Access Denied." });
+
+            return Ok(user.Token);
+        }
+
+        [AllowAnonymous]
+        [Route("checkToken")]
+        [HttpPost]
+        public IActionResult CheckToken ([FromBody] Token token)
+        {
+            var user = _accountRepo.User_Information(token._Token);
+            if (user == null)
             {
-                case 1:
-                    //Log.Information("Add user from mobile {Name} {email} wrong_domainmail.", account.Name, account.Email);
-                    return NotFound("wrong_domainmail");
-                case 2:
-                    //Log.Information("Add user from mobile {Name} {email} not_student.", account.Name, account.Email);
-                    return NotFound("not_student");
-                case 3:
-                    //Log.Information("Add user from mobile {Name} {email} account_already_exist.", account.Name, account.Email);
-                    return NotFound("account_already_exist");
-                case 4:
-                    //Log.Information("Add user from mobile {Name} {email} done.", account.Name, account.Email);
-                    GoogleJsonWebSignature.Payload validPayload = await GoogleJsonWebSignature.ValidateAsync(token._Token);
-                    string name = _dbContext.Accounts.FirstOrDefault(x => x.Email == validPayload.Email).Name;
-                    return Ok(name);
-                default:
-                    //Log.Information("Add user from mobile {Name} {email} Error.", account.Name, account.Email);
-                    return NotFound("Don't know what the Error is");
+                return NotFound("Access Denied");
+            }
+            else
+            {
+                return Ok(Json(user));
+            }
+        }
+       
+        [AllowAnonymous]
+        [Route("/web/adminsauthenticate")]
+        [HttpPost]
+        public async Task<IActionResult> AdminAuthenticate([FromBody] Token token)
+        {
+            try
+            {
+                GoogleJsonWebSignature.Payload validPayload = await GoogleJsonWebSignature.ValidateAsync(token._Token);
+                var admin = await _adminService.AuthenticateAsync(token._Token);
+                if (admin!=null)
+                {
+
+                    Log.Information("check {name} is admin from web {datetime}.", _dbContext.Accounts.FirstOrDefault(x => x.Email == validPayload.Email).Name, DateTime.Now);
+                    return Ok(admin.Token);
+                }
+                else
+                {
+                    Log.Information("check {name} is not admin from web {datetime}.", validPayload.Email, DateTime.Now);
+                    return BadRequest("No_admin");
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Error");
+                return NotFound("No_admin");
             }
         }
 
+        //[Authorize (Roles = Role.Admin)]
         [Route("/web/AddAdminAccount")]
         [HttpPost]
         public IActionResult AddAdminAccount([FromBody] Account account)
@@ -75,19 +114,20 @@ namespace test2.Controllers
             }
         }
 
-
+        [Authorize (Roles = Role.User)]
         [Route("/mobile/AddPhoneNumber")]
         [HttpPut]
-        public IActionResult AddPhoneNumber([FromQuery] string id, string phone)
+        public IActionResult AddPhoneNumber([FromQuery] string id_account, string phone)
         {
-            if (_accountRepo.AddPhoneNumber(id, phone))
+            if (_accountRepo.AddPhoneNumber(id_account, phone))
             {
-                Log.Information("Add phone from mobile {name} {email} account_already_exist.", _dbContext.Accounts.FirstOrDefault(x=>x.Id_account==id).Name, phone );
-                return Ok(id);
+                Log.Information("Add phone from mobile {name} {email} account_already_exist.", _dbContext.Accounts.FirstOrDefault(x=>x.Id_account==id_account).Name, phone );
+                return Ok(id_account);
             }
             return NotFound("CannotAddphone");
         }
 
+        [Authorize(Roles = Role.User)]
         [Route("/mobile/Getphone")]
         [HttpGet]
         public IActionResult Getphone (string id_account)
@@ -110,39 +150,56 @@ namespace test2.Controllers
         //    return NotFound();
         //}
 
+        //[Authorize(Roles = Role.User)]
         [Route("/web/UserAccountAll")]
         [HttpGet]
         public IActionResult GetUserAccount()
         {
             var list = _accountRepo.GetUserAccount();
             Log.Information("Get all user from web {datetime}.", DateTime.Now);
-            return Ok(list);
+            if (list != null)
+                return Ok(list);
+            else
+                return NotFound("No Account");
         }
 
+        //[AllowAnonymous]
+        [Authorize(Roles = Role.User)]
         [Route("/mobile/UserAccount")]
         [HttpGet]
         public JsonResult GetUserAccount(string id_account)
         {
             MemberAccount account = _accountRepo.GetUserAccount(id_account);
-            Log.Information("Get user account from mobile {name}.", _dbContext.Accounts.FirstOrDefault(x=>x.Id_account==id_account).Name);
-            return Json(account);
-        }
+            Log.Information("Get user account from mobile {name}.", account.Name);
+            if (account != null)
+                return Json(account);
+            else
+                return Json(null);        }
 
+        [Authorize( Roles = Role.Admin)]
         [Route("/web/UserOverview")]
         [HttpGet]
         public JsonResult GetUserOverview(string id_account)
         {
             UserOverview user = _accountRepo.GetUserOverview(id_account);
             Log.Information("Get user overview from web {name}.", _dbContext.Accounts.FirstOrDefault(x => x.Id_account == id_account).Name);
-            return Json(user);
+            if (user != null)
+                return Json(user);
+            else
+                return Json(null);
         }
 
         [Route("UserAccountAll")]
         [HttpGet]
         public IActionResult GetUserAccountdev()
         {
+
             var list = _accountRepo.GetUserAccountdev();
-            return Ok(list);
+            if (list != null)
+                return Ok(list);
+            else
+                return NotFound("No Account");
+
         }
 
         [Route("UserAccount")]
@@ -150,7 +207,11 @@ namespace test2.Controllers
         public IActionResult GetUserAccountdev(string id_account)
         {
             var list = _accountRepo.GetUserAccountdev(id_account);
-            return Ok(list);
+            if (list != null)
+                return Ok(list);
+            else
+                return NotFound("No Account");
+
         }
 
         [Route("AdminAccountAll")]
@@ -158,8 +219,13 @@ namespace test2.Controllers
         public IActionResult GetAdminAccount()
         {
             var list = _accountRepo.GetAdminAccount();
-            return Ok(list);
+            if (list != null)
+                return Ok(list);
+            else
+                return NotFound("No Account");
+
         }
+
 
         [Route("/web/Admin")]
         [HttpGet]
@@ -178,27 +244,18 @@ namespace test2.Controllers
             }
         }
 
-        [Route("/web/IsAdmin")]
-        [HttpGet]
-        public IActionResult IsAdmin(string accountID)
-        {
-            if (_accountRepo.IsAdmin(accountID))
-            {
-                Log.Information("check {name} is admin from web {datetime}.",_dbContext.Accounts.FirstOrDefault(x=>x.Id_account==accountID).Name, DateTime.Now);
-                return Ok(accountID);
-            }
-            else
-            {
-                Log.Information("check {name} is not admin from web {datetime}.", accountID, DateTime.Now);
-                return NotFound("No_admin");
-            }
-        }
+        
+
         [Route("AdminAccount")]
         [HttpGet]
         public IActionResult GetAdminAccount(string id_account)
         {
             var list = _accountRepo.GetAdminAccount(id_account);
-            return Ok(list); 
+            if (list != null)
+                return Ok(list);
+            else
+                return NotFound("No Account");
+
         }
 
         [Route("DeleteAll")]

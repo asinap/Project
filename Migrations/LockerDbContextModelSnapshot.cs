@@ -31,6 +31,8 @@ namespace test2.Migrations
 
                     b.Property<string>("Role");
 
+                    b.Property<string>("Token");
+
                     b.HasKey("Id_account");
 
                     b.ToTable("Accounts");

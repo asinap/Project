@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using test2.Class;
 using test2.DatabaseContext;
 using test2.DatabaseContext.Models;
+using test2.Entities;
 
 namespace test2.Repositories
 {
@@ -102,7 +103,8 @@ namespace test2.Repositories
         {
             try
             {
-                if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == account.Id_account) != null)
+                
+                if (_dbContext.Accounts.FirstOrDefault(x => x.Email == account.Email) != null)
                 {
                     Console.WriteLine("already exist");
                     return 1;
@@ -114,8 +116,9 @@ namespace test2.Repositories
                     rnd = rand.Next(100000000, 999999999);
                 } while (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == rnd.ToString()) != null);
                 account.Id_account = rnd.ToString();
+                account.Phone = "";
                 account.Point = 0;
-                account.Role = "Administrator";
+                account.Role = Role.Admin;
                 _dbContext.Accounts.Add(account);
                 _dbContext.SaveChanges();
                 return 2;
@@ -129,13 +132,13 @@ namespace test2.Repositories
 
         /* Add phone number in setting that belong to each user
          * input = Id_account and Phone Number */
-        public bool AddPhoneNumber(string id, string phone)
+        public bool AddPhoneNumber(string id_account, string phone)
         {
             try
             {
-                if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == id) != null)
+                if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == id_account) != null)
                 {
-                    _dbContext.Accounts.FirstOrDefault(x => x.Id_account == id).Phone = phone;
+                    _dbContext.Accounts.FirstOrDefault(x => x.Id_account == id_account).Phone = phone;
                     _dbContext.SaveChanges();
                     return true;
                 }
@@ -185,6 +188,21 @@ namespace test2.Repositories
         //    }
         //}
 
+        public UserInformation User_Information(string token)
+        {
+            var user = _dbContext.Accounts.SingleOrDefault(x => x.Token.Contains(token));
+            if(user==null)
+            {
+                return null;
+            }
+            UserInformation _user = new UserInformation()
+            {
+                Email=user.Email.ToLower(),
+                Name=user.Name,
+                point=user.Point
+            };
+            return _user;
+        }
         /* Get All User Account 
          * return all account to string */
         public List<Member> GetUserAccount()
@@ -223,11 +241,11 @@ namespace test2.Repositories
         /* Get specific User Account 
          * Input = Id_student 
            return account that has Id_student equal input*/
-        public MemberAccount GetUserAccount(string id)
+        public MemberAccount GetUserAccount(string id_account)
         {
             try
             {
-                var user = _dbContext.Accounts.FirstOrDefault(x => x.Id_account == id);
+                var user = _dbContext.Accounts.SingleOrDefault(x => x.Id_account==id_account);
                 if(user==null)
                 {
                     return null;
@@ -346,11 +364,12 @@ namespace test2.Repositories
             }
         }
 
-        public bool IsAdmin (string accountID)
+        public async Task<bool> IsAdmin (string token)
         {
             try
             {
-                if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == accountID && x.Role.ToLower() == "administrator") != null)
+                GoogleJsonWebSignature.Payload validPayload = await GoogleJsonWebSignature.ValidateAsync(token);
+                if (_dbContext.Accounts.FirstOrDefault(x => x.Email== validPayload.Email && x.Role.ToLower() == "administrator") != null)
                     return true;
                 else
                     return false;

@@ -9,7 +9,7 @@ using test2.DatabaseContext;
 namespace test2.Migrations
 {
     [DbContext(typeof(LockerDbContext))]
-    [Migration("25620327150939_db")]
+    [Migration("25620408100640_db")]
     partial class db
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,8 @@ namespace test2.Migrations
                     b.Property<int>("Point");
 
                     b.Property<string>("Role");
+
+                    b.Property<string>("Token");
 
                     b.HasKey("Id_account");
 

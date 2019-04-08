@@ -16,7 +16,8 @@ namespace test2.Migrations
                     Phone = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: true),
                     Role = table.Column<string>(nullable: true),
-                    Point = table.Column<int>(nullable: false)
+                    Point = table.Column<int>(nullable: false),
+                    Token = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
