@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using test2.Class;
 using test2.DatabaseContext;
 using test2.DatabaseContext.Models;
 using test2.Repositories;
@@ -81,21 +82,21 @@ namespace test2.Controllers
 
         [Route("UpdateSizeVacant")]
         [HttpPost]
-        public IActionResult UpdateSize([FromBody] string No_vacant, string Mac_address, string size)
+        public IActionResult UpdateSize([FromBody] UpdateSize updateSize)
         {
-            if (_vacancyRepo.UpdateSize(No_vacant, Mac_address, size))
+            if (_vacancyRepo.UpdateSize(updateSize.No_vacant, updateSize.Mac_address, updateSize.Size))
             {
-                Log.Information("Set Size vacancy {size}, {no}, {location} OK.",size, No_vacant, _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == Mac_address).Location);
+                Log.Information("Set Size vacancy {size}, {no}, {location} OK.", updateSize.Size, updateSize.No_vacant, _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == updateSize.Mac_address).Location);
                 return Ok();
             }
-            if (_dbContext.Vacancies.FirstOrDefault(x => x.No_vacancy == No_vacant && x.Mac_address == Mac_address&&x.Size==size) != null)
+            if (_dbContext.Vacancies.FirstOrDefault(x => x.No_vacancy == updateSize.No_vacant && x.Mac_address == updateSize.Mac_address && x.Size== updateSize.Size) != null)
             {
-                Log.Information("Cannot Set Size vacancy {size}, {no}, {location} OK.", size, No_vacant, _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == Mac_address).Location);
+                Log.Information("Cannot Set Size vacancy {size}, {no}, {location} OK.", updateSize.Size, updateSize.No_vacant, _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == updateSize.Mac_address).Location);
                 return NotFound();
             }
             else
             {
-                Log.Information("Cannot Set Size vacancy {size}, {no}, {location} OK.", No_vacant, Mac_address, size);
+                Log.Information("Cannot Set Size vacancy {size}, {no}, {location} OK.", updateSize.No_vacant, updateSize.Mac_address, updateSize.Size);
                 return NotFound();
             }
         }

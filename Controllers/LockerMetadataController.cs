@@ -43,44 +43,44 @@ namespace test2.Controllers
         }
 
         [Route("DeleteLocker")]
-        [HttpPut]
-        public IActionResult DeleteLocker([FromQuery] string Mac_address)
+        [HttpPost]
+        public IActionResult DeleteLocker([FromBody] LockerForm locker)
         {
-            if (_lockerRepo.DeleteLocker(Mac_address))
+            if (_lockerRepo.DeleteLocker(locker.Mac_address))
             {
-                Log.Information("Delete Locker {Location} OK.", _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == Mac_address).Location);
+                Log.Information("Delete Locker {Location} OK.", _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == locker.Mac_address).Location);
                 return Ok();
             }
-            if (_dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == Mac_address) != null)
+            if (_dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == locker.Mac_address) != null)
             {
-                Log.Information("Delete Locker {Location} Error.", _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == Mac_address).Location);
+                Log.Information("Delete Locker {Location} Error.", _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == locker.Mac_address).Location);
                 return NotFound();
             }
             else
             {
-                Log.Information("Delete Locker No {Mac_addressn} Error.", Mac_address);
+                Log.Information("Delete Locker No {Mac_addressn} Error.", locker.Mac_address);
                 return NotFound();
             }
 
         }
 
         [Route("RestoreLocker")]
-        [HttpPut]
-        public IActionResult RestoreLocker([FromQuery] string Mac_address)
+        [HttpPost]
+        public IActionResult RestoreLocker([FromBody] LockerForm locker)
         {
-            if (_lockerRepo.RestoreLocker(Mac_address))
+            if (_lockerRepo.RestoreLocker(locker.Mac_address))
             {
-                Log.Information("Restore Locker {Location} OK.", _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == Mac_address).Location);
-                return Ok(Mac_address);
+                Log.Information("Restore Locker {Location} OK.", _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == locker.Mac_address).Location);
+                return Ok(locker.Mac_address);
             }
-            if (_dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == Mac_address) != null)
+            if (_dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == locker.Mac_address) != null)
             {
-                Log.Information("Restore Locker {Location} Error.", _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == Mac_address).Location);
+                Log.Information("Restore Locker {Location} Error.", _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == locker.Mac_address).Location);
                 return NotFound();
             }
             else
             {
-                Log.Information("Restore Locker {Location} Error.", Mac_address);
+                Log.Information("Restore Locker {Location} Error.", locker.Mac_address);
                 return NotFound();
             }
             

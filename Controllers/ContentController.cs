@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using test2.Class;
 using test2.DatabaseContext;
 using test2.DatabaseContext.Models;
 using test2.Repositories;
@@ -38,28 +39,28 @@ namespace test2.Controllers
 
         [Route("DeleteContent")]
         [HttpPost]
-        public IActionResult DeleteContent([FromBody] int id_content)
+        public IActionResult DeleteContent([FromBody] ContentForm _cont)
         {
-            if (_contentRepo.DeleteContent(id_content))
+            if (_contentRepo.DeleteContent(_cont.Id_content))
             {
-                Log.Information("Delete content {id} OK.", id_content);
+                Log.Information("Delete content {id} OK.", _cont.Id_content);
                 return Ok();
             }
-            Log.Information("Cannot Delete content {id}.", id_content);
+            Log.Information("Cannot Delete content {id}.", _cont.Id_content);
             return NotFound();
 
         }
 
         [Route("RestoreContent")]
         [HttpPost]
-        public IActionResult RestoreContent([FromBody] int id_content)
+        public IActionResult RestoreContent([FromBody] ContentForm _cont)
         {
-            if (_contentRepo.RestoreContent(id_content))
+            if (_contentRepo.RestoreContent(_cont.Id_content))
             {
-                Log.Information("Restore content {id} OK.", id_content);
-                return Ok(id_content);
+                Log.Information("Restore content {id} OK.", _cont.Id_content);
+                return Ok(_cont.Id_content);
             }
-            Log.Information("Cannot Restore content {id}.", id_content);
+            Log.Information("Cannot Restore content {id}.", _cont.Id_content);
             return NotFound();
         }
 

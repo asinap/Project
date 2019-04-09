@@ -346,38 +346,38 @@ namespace test2.Controllers
 
         [Route("SetState")]
         [HttpPost]
-        public IActionResult SetState ([FromBody]int reserveID, string condition)
+        public IActionResult SetState ([FromBody]SetState setState)
         {
-            if(_reserveRepo.SetStatus(reserveID,condition)==1)
+            if(_reserveRepo.SetStatus(setState.Id_reserve,setState.Condition)==1)
             {
-                string result = String.Format("{0}:{1}",reserveID,condition);
+                string result = String.Format("{0}:{1}", setState.Id_reserve, setState.Condition);
                 Log.Information("Set state unuse to use. { Name}, { no_number}, { location}, { size}, { createdTime} done."
-                        , _dbContext.Accounts.FirstOrDefault(x => x.Id_account == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == reserveID).Id_account).Name
-                        , _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == reserveID).Id_vacancy).No_vacancy
-                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == reserveID).Location
-                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == reserveID).Size
-                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == reserveID).DateModified);
+                        , _dbContext.Accounts.FirstOrDefault(x => x.Id_account == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).Id_account).Name
+                        , _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).Id_vacancy).No_vacancy
+                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).Location
+                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).Size
+                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).DateModified);
                 return Ok(result);
             }
-            else if (_reserveRepo.SetStatus(reserveID,condition)==2)
+            else if (_reserveRepo.SetStatus(setState.Id_reserve, setState.Condition) ==2)
             {
-                string result = String.Format("{0}:{1}", reserveID, condition);
+                string result = String.Format("{0}:{1}", setState.Id_reserve, setState.Condition);
                 Log.Information("Set state use to use. { Name}, { no_number}, { location}, { size}, { createdTime} done."
-                        , _dbContext.Accounts.FirstOrDefault(x => x.Id_account == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == reserveID).Id_account).Name
-                        , _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == reserveID).Id_vacancy).No_vacancy
-                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == reserveID).Location
-                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == reserveID).Size
-                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == reserveID).DateModified);
+                        , _dbContext.Accounts.FirstOrDefault(x => x.Id_account == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).Id_account).Name
+                        , _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).Id_vacancy).No_vacancy
+                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).Location
+                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).Size
+                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).DateModified);
                 return Ok(result);
             }
             else
             {
                 Log.Information("Set state Error to Set state.{ Name}, { no_number}, { location}, { size}, { createdTime} done."
-                        , _dbContext.Accounts.FirstOrDefault(x => x.Id_account == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == reserveID).Id_account).Name
-                        , _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == reserveID).Id_vacancy).No_vacancy
-                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == reserveID).Location
-                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == reserveID).Size
-                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == reserveID).DateModified);
+                        , _dbContext.Accounts.FirstOrDefault(x => x.Id_account == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).Id_account).Name
+                        , _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).Id_vacancy).No_vacancy
+                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).Location
+                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).Size
+                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).DateModified);
                 return NotFound("Error to Set state");
             }
 
@@ -385,12 +385,12 @@ namespace test2.Controllers
 
         [Route("SetBoolIsActive")]
         [HttpPost]
-        public IActionResult SetBoolIsActive([FromBody]int id_reserve, bool _trueOr_false)
+        public IActionResult SetBoolIsActive([FromBody]SetIsActive setIsActive)
         {
-            int result = _reserveRepo.SetBoolIsActive(id_reserve, _trueOr_false);
+            int result = _reserveRepo.SetBoolIsActive(setIsActive.Id_reserve,setIsActive.IsActive);
             if (result == 2)
             {
-                string _result = String.Format("{0}:{1}", id_reserve, _trueOr_false);
+                string _result = String.Format("{0}:{1}", setIsActive.Id_reserve, setIsActive.IsActive);
                 return Ok(result);
             }
             else if (result == 1)

@@ -59,34 +59,7 @@ namespace test2.Repositories
                 _dbContext.Accounts.Add(account);
                 _dbContext.SaveChanges();
                 return 4;
-                //string id = "";
-                //string domainmail = "@kmitl.ac.th";
-                //if (!account.Email.Contains(domainmail))
-                //{
-                //    // detect domain email
-                //    return 1;
-                //}
-                //id = account.Email.Replace(domainmail, "");
-                //int numberic;
-                //if (!int.TryParse(id, out numberic))
-                //{
-                //    //before email is not studentID
-                //    return 2;
-                //}
-                //account.Id_account = id;
-                //if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == account.Id_account) != null)
-                //{
-                //    //already have account
-                //    Console.WriteLine("already exist");
-                //    return 3;
-                //}
-                //account.Point = 100;
-                //account.Role = "User";
-                //_dbContext.Accounts.Add(account);
-                //_dbContext.SaveChanges();
-                //return 4;
-
-
+               
             }
             catch (Exception)
             {
@@ -104,7 +77,7 @@ namespace test2.Repositories
             try
             {
                 
-                if (_dbContext.Accounts.FirstOrDefault(x => x.Email == account.Email) != null)
+                if (_dbContext.Accounts.FirstOrDefault(x => x.Email.ToLower() == account.Email.ToLower()) != null)
                 {
                     Console.WriteLine("already exist");
                     return 1;
