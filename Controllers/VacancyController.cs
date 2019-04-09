@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using test2.Class;
 using test2.DatabaseContext;
 using test2.DatabaseContext.Models;
+using test2.Entities;
 using test2.Repositories;
 
 namespace test2.Controllers
@@ -24,7 +26,8 @@ namespace test2.Controllers
             _vacancyRepo = new VacancyRepository(_dbContext);
         }
 
-        [Route("AddVacant")]
+        [Authorize(Roles = Role.Admin)]
+        [Route("/web/AddVacant")]
         [HttpPost]
         public IActionResult AddVacancy([FromBody] Vacancy vacant)
         {

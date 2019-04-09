@@ -28,8 +28,8 @@ namespace test2.Controllers
             _lockerRepo = new LockerMetadataRepository(_dbContext);
         }
 
-        
-        [Route("AddLocker")]
+        [Authorize(Roles = Role.Admin)]
+        [Route("/web/AddLocker")]
         [HttpPost]
         public IActionResult AddLocker([FromBody] LockerMetadata locker)
         {
