@@ -149,56 +149,56 @@ namespace test2.Controllers
 
         [Authorize(Roles = Role.User)]
         [Route ("/mobile/SetCode")]
-        [HttpPut]
-        public IActionResult SetCode (int id_reserve,string code)
+        [HttpPost]
+        public IActionResult SetCode ([FromBody]CodeUser codeUser)
         {
-            int result = _reserveRepo.SetCode(id_reserve, code);
+            int result = _reserveRepo.SetCode(codeUser.Id_reserve, codeUser.Code);
             if (result == 1)
             {
                 Log.Information("Set code OK from mobile {Name}, {no_number}, {location}, {size}, {createdTime} done."
-                        , _dbContext.Accounts.FirstOrDefault(x => x.Id_account == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Id_account).Name
-                        , _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Id_vacancy).No_vacancy
-                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Location
-                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Size
-                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).DateModified);
-                string _result = string.Format("id_reserve : {0}, code : {1}", id_reserve, code);
+                        , _dbContext.Accounts.FirstOrDefault(x => x.Id_account == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Id_account).Name
+                        , _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Id_vacancy).No_vacancy
+                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Location
+                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Size
+                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).DateModified);
+                string _result = string.Format("id_reserve : {0}, code : {1}", codeUser.Id_reserve, codeUser.Code);
                 return Ok(_result);
             }
             else if (result == 2)
             {
                 Log.Information("Set code Code_is_already_set from mobile {Name}, {no_number}, {location}, {size}, {createdTime} done."
-                        , _dbContext.Accounts.FirstOrDefault(x => x.Id_account == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Id_account).Name
-                        , _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Id_vacancy).No_vacancy
-                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Location
-                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Size
-                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).DateModified);
+                        , _dbContext.Accounts.FirstOrDefault(x => x.Id_account == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Id_account).Name
+                        , _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Id_vacancy).No_vacancy
+                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Location
+                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Size
+                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).DateModified);
                 return NotFound("Code_is_already_set");
             }
             else if (result == 3)
             {
                 Log.Information("Set code Code_is_duplicated from mobile {Name}, {no_number}, {location}, {size}, {createdTime} done."
-                         , _dbContext.Accounts.FirstOrDefault(x => x.Id_account == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Id_account).Name
-                         , _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Id_vacancy).No_vacancy
-                         , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Location
-                         , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Size
-                         , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).DateModified);
+                         , _dbContext.Accounts.FirstOrDefault(x => x.Id_account == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Id_account).Name
+                         , _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Id_vacancy).No_vacancy
+                         , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Location
+                         , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Size
+                         , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).DateModified);
                 return NotFound("Code_is_duplicated");
             }
             else
             {
-                if (_dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id_reserve) != null)
+                if (_dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == codeUser.Id_reserve) != null)
                 {
                     Log.Information("Set code Error to set code from mobile {Name}, {no_number}, {location}, {size}, {createdTime} done."
-                        , _dbContext.Accounts.FirstOrDefault(x => x.Id_account == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Id_account).Name
-                        , _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Id_vacancy).No_vacancy
-                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Location
-                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Size
-                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).DateModified);
+                        , _dbContext.Accounts.FirstOrDefault(x => x.Id_account == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Id_account).Name
+                        , _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Id_vacancy).No_vacancy
+                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Location
+                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Size
+                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).DateModified);
                     return NotFound("Error to set code");
                 }
                 else
                 {
-                    Log.Information("Set code Error to set code from mobile {id_reserve} done.", id_reserve);
+                    Log.Information("Set code Error to set code from mobile {id_reserve} done.", codeUser.Id_reserve);
                     return NotFound("Error to set code");
                 }
 
@@ -241,6 +241,7 @@ namespace test2.Controllers
             }
         }
 
+        [Authorize(Roles = Role.Admin)]
         [Route ("/web/Activity")]
         [HttpGet]
         public JsonResult GetActivity()
@@ -250,6 +251,7 @@ namespace test2.Controllers
             return Json(list);
         }
 
+        [Authorize(Roles = Role.Admin)]
         [Route("/web/Notification")]
         [HttpGet]
         public JsonResult GetNotification()
@@ -259,6 +261,7 @@ namespace test2.Controllers
             return Json(list);
         }
 
+        [Authorize(Roles = Role.Admin)]
         [Route ("/web/ReserveDetail")]
         [HttpGet]
         public JsonResult GetReserveDetail(int id_reserve)
@@ -342,8 +345,8 @@ namespace test2.Controllers
         }
 
         [Route("SetState")]
-        [HttpPut]
-        public IActionResult SetState (int reserveID, string condition)
+        [HttpPost]
+        public IActionResult SetState ([FromBody]int reserveID, string condition)
         {
             if(_reserveRepo.SetStatus(reserveID,condition)==1)
             {
@@ -381,13 +384,13 @@ namespace test2.Controllers
         }
 
         [Route("SetBoolIsActive")]
-        [HttpPut]
-        public IActionResult SetBoolIsActive(int reserveID, bool _trueOr_false)
+        [HttpPost]
+        public IActionResult SetBoolIsActive([FromBody]int id_reserve, bool _trueOr_false)
         {
-            int result = _reserveRepo.SetBoolIsActive(reserveID, _trueOr_false);
+            int result = _reserveRepo.SetBoolIsActive(id_reserve, _trueOr_false);
             if (result == 2)
             {
-                string _result = String.Format("{0}:{1}", reserveID, _trueOr_false);
+                string _result = String.Format("{0}:{1}", id_reserve, _trueOr_false);
                 return Ok(result);
             }
             else if (result == 1)

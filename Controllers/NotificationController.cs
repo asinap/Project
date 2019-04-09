@@ -82,8 +82,8 @@ namespace test2.Controllers
 
         [Authorize(Roles = Role.User)]
         [Route("/mobile/SetRead")]
-        [HttpPut]
-        public IActionResult SetRead(int id_noti)
+        [HttpPost]
+        public IActionResult SetRead([FromBody]int id_noti)
         {
             if(_notiRepo.SetRead(id_noti))
             {

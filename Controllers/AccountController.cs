@@ -42,12 +42,20 @@ namespace test2.Controllers
         [HttpPost]
         public async Task<IActionResult> UserAuthenticate([FromBody] Token token)
         {
-            var user = await _userService.AuthenticateAsync(token._Token);
+            try
+            {
+                var user = await _userService.AuthenticateAsync(token._Token);
 
-            if (user == null)
-                return BadRequest(new { message = "Access Denied." });
+                if (user == null)
+                    return BadRequest(new { message = "Access Denied." });
 
-            return Ok(user.Token);
+                return Ok(user.Token);
+            }
+            catch 
+            {
+                Console.WriteLine("Error User Authentication");
+                return NotFound("Error User Authentication");
+            }
         }
 
         [AllowAnonymous]
@@ -55,14 +63,22 @@ namespace test2.Controllers
         [HttpPost]
         public IActionResult CheckToken ([FromBody] Token token)
         {
-            var user = _accountRepo.User_Information(token._Token);
-            if (user == null)
+            try
             {
-                return NotFound("Access Denied");
+                var user = _accountRepo.User_Information(token._Token);
+                if (user == null)
+                {
+                    return NotFound("Access Denied");
+                }
+                else
+                {
+                    return Ok(user);
+                }
             }
-            else
+            catch
             {
-                return Ok(Json(user));
+                Console.WriteLine("Error CHECKTOKEN");
+                return NotFound("Error CHECKTOKEN");
             }
         }
        
@@ -116,13 +132,13 @@ namespace test2.Controllers
 
         [Authorize (Roles = Role.User)]
         [Route("/mobile/AddPhoneNumber")]
-        [HttpPut]
-        public IActionResult AddPhoneNumber([FromQuery] string id_account, string phone)
+        [HttpPost]
+        public IActionResult AddPhoneNumber([FromBody] PhoneUser phone)
         {
-            if (_accountRepo.AddPhoneNumber(id_account, phone))
+            if (_accountRepo.AddPhoneNumber(phone.Id_account, phone.Phone))
             {
-                Log.Information("Add phone from mobile {name} {email} account_already_exist.", _dbContext.Accounts.FirstOrDefault(x=>x.Id_account==id_account).Name, phone );
-                return Ok(id_account);
+                Log.Information("Add phone from mobile {name} {email} account_already_exist.", _dbContext.Accounts.FirstOrDefault(x=>x.Id_account==phone.Id_account).Name, phone );
+                return Ok(phone.Id_account);
             }
             return NotFound("CannotAddphone");
         }
@@ -150,7 +166,7 @@ namespace test2.Controllers
         //    return NotFound();
         //}
 
-        //[Authorize(Roles = Role.User)]
+        [Authorize (Roles = Role.Admin)]
         [Route("/web/UserAccountAll")]
         [HttpGet]
         public IActionResult GetUserAccount()
@@ -226,7 +242,7 @@ namespace test2.Controllers
 
         }
 
-
+        [Authorize(Roles = Role.Admin)]
         [Route("/web/Admin")]
         [HttpGet]
         public IActionResult GetAdmin ()

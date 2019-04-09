@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using test2.Class;
 using test2.DatabaseContext;
 using test2.DatabaseContext.Models;
+using test2.Entities;
 using test2.Repositories;
 
 namespace test2.Controllers
@@ -83,7 +85,7 @@ namespace test2.Controllers
             }
             
         }
-
+        [Authorize(Roles = Role.Admin)]
         [Route("/web/Locker")]
         [HttpGet]
         public IActionResult GetLocker()
@@ -92,7 +94,7 @@ namespace test2.Controllers
             Log.Information("Get Locker from web {datetime}.", DateTime.Now);
             return Ok(list);
         }
-
+        [Authorize(Roles = Role.Admin)]
         [Route("/web/lockerDetail")]
         [HttpGet]
         public JsonResult GetLockerDetail(string mac_address)

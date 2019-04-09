@@ -37,8 +37,8 @@ namespace test2.Controllers
         }
 
         [Route("DeleteContent")]
-        [HttpPut]
-        public IActionResult DeleteContent([FromQuery] int id_content)
+        [HttpPost]
+        public IActionResult DeleteContent([FromBody] int id_content)
         {
             if (_contentRepo.DeleteContent(id_content))
             {
@@ -51,8 +51,8 @@ namespace test2.Controllers
         }
 
         [Route("RestoreContent")]
-        [HttpPut]
-        public IActionResult RestoreContent([FromQuery] int id_content)
+        [HttpPost]
+        public IActionResult RestoreContent([FromBody] int id_content)
         {
             if (_contentRepo.RestoreContent(id_content))
             {

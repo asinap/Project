@@ -59,8 +59,8 @@ namespace test2.Controllers
         }
 
         [Route("UpadateActiveVacant")]
-        [HttpPut]
-        public IActionResult UpdateActive([FromQuery] string No_vacant, string Mac_address)
+        [HttpPost]
+        public IActionResult UpdateActive([FromBody] string No_vacant, string Mac_address)
         {
             if (_vacancyRepo.UpdateActive(No_vacant, Mac_address))
             {
@@ -80,8 +80,8 @@ namespace test2.Controllers
         }
 
         [Route("UpdateSizeVacant")]
-        [HttpPut]
-        public IActionResult UpdateSize([FromQuery] string No_vacant, string Mac_address, string size)
+        [HttpPost]
+        public IActionResult UpdateSize([FromBody] string No_vacant, string Mac_address, string size)
         {
             if (_vacancyRepo.UpdateSize(No_vacant, Mac_address, size))
             {

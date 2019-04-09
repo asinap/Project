@@ -188,18 +188,18 @@ namespace test2.Repositories
         //    }
         //}
 
-        public UserInformation User_Information(string token)
+        public MemberAccount User_Information(string token)
         {
             var user = _dbContext.Accounts.SingleOrDefault(x => x.Token.Contains(token));
             if(user==null)
             {
                 return null;
             }
-            UserInformation _user = new UserInformation()
+            MemberAccount _user = new MemberAccount()
             {
-                Email=user.Email.ToLower(),
+                Id_account =user.Id_account,
                 Name=user.Name,
-                point=user.Point
+                Point=user.Point
             };
             return _user;
         }
