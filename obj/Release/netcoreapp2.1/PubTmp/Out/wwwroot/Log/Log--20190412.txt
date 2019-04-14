@@ -1,0 +1,36 @@
+2019-04-12 22:26:49.938 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44380/  
+2019-04-12 22:26:49.938 +07:00 [Information] Request starting HTTP/1.1 DEBUG http://localhost:50909/  0
+2019-04-12 22:26:50.057 +07:00 [Information] Request finished in 125.3207ms 200 
+2019-04-12 22:26:50.346 +07:00 [Information] Request finished in 421.0097ms 404 
+2019-04-12 22:26:57.375 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44380/swagger/index.html  
+2019-04-12 22:26:57.530 +07:00 [Information] Request finished in 154.2444ms 200 text/html
+2019-04-12 22:26:58.065 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44380/swagger/v1/swagger.json  
+2019-04-12 22:26:58.253 +07:00 [Information] Request finished in 190.4949ms 200 application/json;charset=utf-8
+2019-04-12 22:27:00.689 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-12 22:27:00.961 +07:00 [Information] Executed DbCommand ("28"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-12 22:27:00.981 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"r\".\"Id_reserve\", \"r\".\"Code\", \"r\".\"DateModified\", \"r\".\"EndDay\", \"r\".\"Id_account\", \"r\".\"Id_vacancy\", \"r\".\"IsActive\", \"r\".\"Location\", \"r\".\"Size\", \"r\".\"StartDay\", \"r\".\"Status\"
+FROM \"Reservations\" AS \"r\""
+2019-04-12 22:27:01.104 +07:00 [Information] output 04/12/2019 22:27:01
+2019-04-12 22:28:00.135 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-12 22:28:00.147 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-12 22:28:00.156 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"r\".\"Id_reserve\", \"r\".\"Code\", \"r\".\"DateModified\", \"r\".\"EndDay\", \"r\".\"Id_account\", \"r\".\"Id_vacancy\", \"r\".\"IsActive\", \"r\".\"Location\", \"r\".\"Size\", \"r\".\"StartDay\", \"r\".\"Status\"
+FROM \"Reservations\" AS \"r\""
+2019-04-12 22:28:00.157 +07:00 [Information] output 04/12/2019 22:28:00
+2019-04-12 22:29:00.091 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-12 22:29:00.099 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-12 22:29:00.108 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"r\".\"Id_reserve\", \"r\".\"Code\", \"r\".\"DateModified\", \"r\".\"EndDay\", \"r\".\"Id_account\", \"r\".\"Id_vacancy\", \"r\".\"IsActive\", \"r\".\"Location\", \"r\".\"Size\", \"r\".\"StartDay\", \"r\".\"Status\"
+FROM \"Reservations\" AS \"r\""
+2019-04-12 22:29:00.108 +07:00 [Information] output 04/12/2019 22:29:00
+2019-04-12 22:30:00.085 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-12 22:30:00.096 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-12 22:30:00.106 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"r\".\"Id_reserve\", \"r\".\"Code\", \"r\".\"DateModified\", \"r\".\"EndDay\", \"r\".\"Id_account\", \"r\".\"Id_vacancy\", \"r\".\"IsActive\", \"r\".\"Location\", \"r\".\"Size\", \"r\".\"StartDay\", \"r\".\"Status\"
+FROM \"Reservations\" AS \"r\""
+2019-04-12 22:30:00.107 +07:00 [Information] output 04/12/2019 22:30:00

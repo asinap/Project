@@ -26,7 +26,7 @@ namespace test2.Controllers
             _vacancyRepo = new VacancyRepository(_dbContext);
         }
 
-        [Authorize(Roles = Role.Admin)]
+     //   [Authorize(Roles = Role.Admin)]
         [Route("/web/AddVacant")]
         [HttpPost]
         public IActionResult AddVacancy([FromBody] Vacancy vacant)
@@ -37,6 +37,19 @@ namespace test2.Controllers
                 return Ok(vacant.Id_vacancy);
             }
             Log.Information("Cannot Add vacancy {no}, {location} OK.", vacant.No_vacancy, _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == vacant.Mac_address).Location);
+            return NotFound();
+        }
+
+        [Route("/web/EditVancancy")]
+        [HttpPost]
+        public IActionResult EditVacancy([FromBody] Vacancy vacant)
+        {
+            if (_vacancyRepo.EditVacancy(vacant))
+            {
+                Log.Information("Edit Locker {Location} OK.", _dbContext.LockerMetadatas.FirstOrDefault(x=>x.Mac_address== vacant.Mac_address).Location);
+                return Ok(vacant.Mac_address);
+            }
+            Log.Information("Edit Locker {Location} Error.", _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == vacant.Mac_address).Location);
             return NotFound();
         }
 

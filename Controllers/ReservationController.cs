@@ -27,7 +27,7 @@ namespace test2.Controllers
             _reserveRepo = new ReservationRepository(_dbContext);
         }
 
-        [Authorize(Roles = Role.User)]
+     //   [Authorize(Roles = Role.User)]
         [Route("/mobile/AddReserve")]
         [HttpPost]
         public IActionResult AddReservation([FromBody] Reservation reserve)
@@ -70,7 +70,7 @@ namespace test2.Controllers
             //return NotFound();
         }
 
-        [Authorize(Roles = Role.User)]
+     //   [Authorize(Roles = Role.User)]
         [Route("/mobile/CancelReserve")]
         [HttpDelete]
         public IActionResult CancelReservation([FromQuery] int id)
@@ -103,7 +103,7 @@ namespace test2.Controllers
             }
         }
 
-        [Authorize(Roles = Role.User)]
+      //  [Authorize(Roles = Role.User)]
         [Route ("/mobile/IsSetCode")]
         [HttpGet]
         public IActionResult IsSetCode (int id_reserve)
@@ -147,7 +147,7 @@ namespace test2.Controllers
             }
         }
 
-        [Authorize(Roles = Role.User)]
+  //      [Authorize(Roles = Role.User)]
         [Route ("/mobile/SetCode")]
         [HttpPost]
         public IActionResult SetCode ([FromBody]CodeUser codeUser)
@@ -205,7 +205,7 @@ namespace test2.Controllers
             }
         }
 
-        [Authorize(Roles = Role.User)]
+    //    [Authorize(Roles = Role.User)]
         [Route ("/mobile/GetCode")]
         [HttpGet]
         public IActionResult GetCode (int id_reserve)
@@ -241,7 +241,7 @@ namespace test2.Controllers
             }
         }
 
-        [Authorize(Roles = Role.Admin)]
+      //  [Authorize(Roles = Role.Admin)]
         [Route ("/web/Activity")]
         [HttpGet]
         public JsonResult GetActivity()
@@ -251,7 +251,7 @@ namespace test2.Controllers
             return Json(list);
         }
 
-        [Authorize(Roles = Role.Admin)]
+      //  [Authorize(Roles = Role.Admin)]
         [Route("/web/Notification")]
         [HttpGet]
         public JsonResult GetNotification()
@@ -261,7 +261,7 @@ namespace test2.Controllers
             return Json(list);
         }
 
-        [Authorize(Roles = Role.Admin)]
+       // [Authorize(Roles = Role.Admin)]
         [Route ("/web/ReserveDetail")]
         [HttpGet]
         public JsonResult GetReserveDetail(int id_reserve)
@@ -287,7 +287,7 @@ namespace test2.Controllers
             return Ok(list);
         }
 
-        [Authorize(Roles = Role.User)]
+   //     [Authorize(Roles = Role.User)]
         [Route("/mobile/Pending")]
         [HttpGet]
         public JsonResult Pending (string id_account)
@@ -298,7 +298,7 @@ namespace test2.Controllers
             return Json(list);
         }
 
-        [Authorize(Roles = Role.User)]
+     //   [Authorize(Roles = Role.User)]
         [Route("/mobile/History")]
         [HttpGet]
         public JsonResult History (string id_account)
@@ -309,7 +309,7 @@ namespace test2.Controllers
             return Json(list);
         }
 
-        [Authorize(Roles = Role.User)]
+      //  [Authorize(Roles = Role.User)]
         [Route ("/mobile/BookingDetail")]
         [HttpGet]
         public JsonResult BookingDetail (int id_reserve)

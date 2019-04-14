@@ -28,7 +28,7 @@ namespace test2.Controllers
             _lockerRepo = new LockerMetadataRepository(_dbContext);
         }
 
-        [Authorize(Roles = Role.Admin)]
+        //[Authorize(Roles = Role.Admin)]
         [Route("/web/AddLocker")]
         [HttpPost]
         public IActionResult AddLocker([FromBody] LockerMetadata locker)
@@ -39,6 +39,19 @@ namespace test2.Controllers
                 return Ok(locker.Mac_address);
             }
             Log.Information("Add Locker {Location} Error.", locker.Location);
+            return NotFound();
+        }
+
+        [Route("/web/EditLocker")]
+        [HttpPost]
+        public IActionResult EditLocker([FromBody] LockerMetadata locker)
+        {
+            if (_lockerRepo.EditLocker(locker))
+            {
+                Log.Information("Edit Locker {Location} OK.", locker.Location);
+                return Ok(locker.Mac_address);
+            }
+            Log.Information("Edit Locker {Location} Error.", locker.Location);
             return NotFound();
         }
 
@@ -85,7 +98,7 @@ namespace test2.Controllers
             }
             
         }
-        [Authorize(Roles = Role.Admin)]
+       // [Authorize(Roles = Role.Admin)]
         [Route("/web/Locker")]
         [HttpGet]
         public IActionResult GetLocker()
@@ -94,7 +107,7 @@ namespace test2.Controllers
             Log.Information("Get Locker from web {datetime}.", DateTime.Now);
             return Ok(list);
         }
-        [Authorize(Roles = Role.Admin)]
+       // [Authorize(Roles = Role.Admin)]
         [Route("/web/lockerDetail")]
         [HttpGet]
         public JsonResult GetLockerDetail(string mac_address)

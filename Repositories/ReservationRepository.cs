@@ -36,7 +36,7 @@ namespace test2.Repositories
                 }
 
                 //3.find size
-                var inSize = nonOverlap.FirstOrDefault(x => x.Size == reserve.Size.ToUpper());
+                var inSize = nonOverlap.FirstOrDefault(x => x.Size.ToLower() == reserve.Size.ToLower());
                 if (inSize == null)
                 {
                     return 3;
@@ -44,7 +44,7 @@ namespace test2.Repositories
                 reserve.Id_vacancy = inSize.Id_vacancy;
                 reserve.Status = "Unuse";
                 //4.out of point
-                if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Point == 0)
+                if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Point <= 0)
                 {
                     return 4;
                 }
@@ -164,7 +164,11 @@ namespace test2.Repositories
             try
             {
                 var result = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == reserveID);
-                if (result.Code.ToLower() != "string"&&result.IsActive==true)
+                if (result.Code.ToLower() != "string" && result.IsActive == true)
+                {
+                    return result.Code;
+                }
+                else if (result.Code.ToLower() != "string" && result.IsActive == false)
                 {
                     return result.Code;
                 }
@@ -500,6 +504,7 @@ namespace test2.Repositories
             }
         }
 
+       
         
 
     

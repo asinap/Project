@@ -31,7 +31,9 @@ namespace test2.Repositories
                 string location = _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == mac_address).Location;
                 var allreserve = from reservelist in _dbContext.Reservations
                                  where reservelist.Id_account == userID && reservelist.Location == location && reservelist.IsActive == true && (reservelist.Status == "Use" || reservelist.Status == "Unuse")
+                                        && reservelist.StartDay<=DateTime.Now && reservelist.EndDay>=DateTime.Now
                                  select reservelist;
+
                 var reserve = allreserve.FirstOrDefault(x => x.Code == code);
                 if (reserve == null)
                 {

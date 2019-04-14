@@ -23,19 +23,19 @@ namespace test2.Repositories
          * input = account 
                     attributes => Id_account, Name, Phone, Email, Role, Point
                     default Point = 100 */
-        public async Task<int> AddUserAccountAsync(string token)
+        public async Task<int> AddUserAccountAsync(Account account)
         {
             try
             {
-                GoogleJsonWebSignature.Payload validPayload = await GoogleJsonWebSignature.ValidateAsync(token);
+                //GoogleJsonWebSignature.Payload validPayload = await GoogleJsonWebSignature.ValidateAsync(token);
                 string id = "";
                 string domainmail = "@kmitl.ac.th";
-                if (!validPayload.Email.Contains(domainmail))
+                if (!account.Email.Contains(domainmail))
                 {
                     // detect domain email
                     return 1;
                 }
-                id = validPayload.Email.Replace(domainmail, "");
+                id = account.Email.Replace(domainmail, "");
                 if (!int.TryParse(id, out int numberic))
                 {
                     //before email is not studentID
@@ -47,16 +47,16 @@ namespace test2.Repositories
                     Console.WriteLine("already exist");
                     return 3;
                 }
-                Account account = new Account()
+                Account _account = new Account()
                 {
                     Id_account = id,
-                    Email = validPayload.Email,
-                    Name = validPayload.Name,
+                    Email = account.Email,
+                    Name = account.Name,
                     Phone = "",
                     Point = 100,
                     Role="User"
                 };
-                _dbContext.Accounts.Add(account);
+                _dbContext.Accounts.Add(_account);
                 _dbContext.SaveChanges();
                 return 4;
                

@@ -35,6 +35,7 @@ namespace test2.Repositories
                     {
                         return false;
                     }
+                    vacant.Size = vacant.Size.ToLower();
                     _dbContext.Vacancies.Add(vacant);
                     _dbContext.SaveChanges();
                     return true;
@@ -67,6 +68,33 @@ namespace test2.Repositories
             else
                 return true;
 
+        }
+
+        public bool EditVacancy(Vacancy vacant)
+        {
+            try
+            {
+                var _vacant = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == vacant.Id_vacancy);
+                if(vacant!=null)
+                {
+                    _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == vacant.Id_vacancy).IsActive = vacant.IsActive;
+                    _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == vacant.Id_vacancy).Mac_address = vacant.Mac_address;
+                    _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == vacant.Id_vacancy).No_vacancy = vacant.No_vacancy;
+                    _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == vacant.Id_vacancy).Size = vacant.Size;
+                    _dbContext.SaveChanges();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+              
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Cannot Edit Vacancy");
+                return false;
+            }
         }
 
         /* Delete vacancy                                                                           *

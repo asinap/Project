@@ -48,7 +48,7 @@ namespace test2.Controllers
             return NotFound();
         }
 
-        [Authorize (Roles = Role.User)]
+    //   [Authorize (Roles = Role.User)]
         [Route("/mobile/DeleteNotificaiton")]
         [HttpPost]
         public IActionResult DeleteNotification([FromBody]NotificationIForm notification)
@@ -64,11 +64,7 @@ namespace test2.Controllers
             }
             if (_dbContext.Notifications.FirstOrDefault(x => x.Id_notification == notification.Id_noti) != null)
             {
-                Log.Information("Cannot Delete noti from mobile {Name}, {No}, {Location}, {contentID}."
-                        , _dbContext.Accounts.FirstOrDefault(x => x.Id_account == _dbContext.Notifications.FirstOrDefault(y => y.Id_notification == notification.Id_noti).Id_account).Name
-                        , _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.Notifications.FirstOrDefault(z => z.Id_notification == notification.Id_noti).Id_reserve).Id_vacancy).No_vacancy
-                        , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.Notifications.FirstOrDefault(z => z.Id_notification == notification.Id_noti).Id_reserve).Location
-                        , _dbContext.Notifications.FirstOrDefault(x => x.Id_notification == notification.Id_noti).Id_content);
+                Log.Information("Error_Delete.");
                 return NotFound("Error_Delete");
             }
             else
@@ -80,7 +76,7 @@ namespace test2.Controllers
 
         }
 
-        [Authorize(Roles = Role.User)]
+      //  [Authorize(Roles = Role.User)]
         [Route("/mobile/SetRead")]
         [HttpPost]
         public IActionResult SetRead([FromBody]NotificationIForm notification)
@@ -96,11 +92,7 @@ namespace test2.Controllers
             }
             if (_dbContext.Notifications.FirstOrDefault(x => x.Id_notification == notification.Id_noti) != null)
             {
-                Log.Information("Cannot Set Read noti from mobile {Name}, {No}, {Location}, {contentID}."
-                    , _dbContext.Accounts.FirstOrDefault(x => x.Id_account == _dbContext.Notifications.FirstOrDefault(y => y.Id_notification == notification.Id_noti).Id_account).Name
-                    , _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.Notifications.FirstOrDefault(z => z.Id_notification == notification.Id_noti).Id_reserve).Id_vacancy).No_vacancy
-                    , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.Notifications.FirstOrDefault(z => z.Id_notification == notification.Id_noti).Id_reserve).Location
-                    , _dbContext.Notifications.FirstOrDefault(x => x.Id_notification == notification.Id_noti).Id_content);
+                Log.Information("Error_SetRead {noti}.", notification.Id_noti);
                 return NotFound("Error_SetRead");
             }
             else
@@ -127,7 +119,7 @@ namespace test2.Controllers
             return Ok(list);
         }
 
-        [Authorize(Roles = Role.User)]
+     //   [Authorize(Roles = Role.User)]
         [Route ("/mobile/UserInbox")]
         [HttpGet]
         public JsonResult GetNotificationForm (string id_account)
@@ -137,7 +129,7 @@ namespace test2.Controllers
             return Json(list);
         }
 
-        [Authorize(Roles = Role.User)]
+     //   [Authorize(Roles = Role.User)]
         [Route("/mobile/UserInboxDetail")]
         [HttpGet]
         public JsonResult GetNotificationDetail (int id_noti)

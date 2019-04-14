@@ -105,7 +105,32 @@ namespace test2.Repositories
                 return false;
             }
         }
+        public bool EditLocker(LockerMetadata locker)
+        {
+            try
+            {
+                var _locker = _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == locker.Mac_address);
 
+                if(_locker!=null)
+                {
+                    _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == locker.Mac_address).IsActive = locker.IsActive;
+                    _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == locker.Mac_address).Location = locker.Location;
+                    _dbContext.SaveChanges();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Cannot Edit Locker");
+                return false;
+            }
+
+        }
         /* Get all locker                       *
          *  return all locker detail to string  */
         public List<LockerMetadata> GetLocker()

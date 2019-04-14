@@ -21,6 +21,14 @@ using System.Text;
 using test2.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using test2.Services;
+using Microsoft.Extensions.Hosting;
+using test2.Scheduler;
+using Hangfire;
+using Hangfire.SQLite;
+using Hangfire.Common;
+
+//using test2.Services.BackgroundServices;
+
 
 namespace test2
 {
@@ -33,8 +41,11 @@ namespace test2
           .MinimumLevel.Debug()
           .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
           .Enrich.FromLogContext()
-          .WriteTo.File(@"D:\home\LogFiles\http\RawLogs\log.txt")
+          //.WriteTo.File(@"D:\home\LogFiles\http\RawLogs\log.txt")
+          .WriteTo.RollingFile(".\\wwwroot\\Log\\Log-.txt",LogEventLevel.Information)
           .CreateLogger();
+
+
         }
 
         public IConfiguration Configuration { get; }
@@ -42,8 +53,9 @@ namespace test2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            
 
-           services.Configure<CookiePolicyOptions>(options =>
+            services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
@@ -61,7 +73,10 @@ namespace test2
                 //option.UseSqlServer("Server=DESKTOP-D2NINII\\SQLEXPRESS; Database=LeaveManagement;Integrated Security=true");
             });
 
-
+            ////Hangfire
+            //services.AddHangfire(x => x.UseSQLiteStorage(Configuration.GetConnectionString("DefaultConnection")));
+            //services.AddHangfireServer();
+    
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
@@ -87,15 +102,23 @@ namespace test2
                 };
             });
 
+
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAdminService, AdminService>();
-
+            services.AddTransient<IHostedService, SetTimeUp>();
+            services.AddTransient<IHostedService, UseTimeUp>();
+            services.AddTransient<IHostedService, SetExpire>();
+            services.AddTransient<IHostedService, CheckTenMins>();
+            services.AddTransient<IHostedService, CheckFiveMins>();
+            //services.AddHostedService<SetTimeUp>();
+            //BackgroundJob.Schedule<BGservice>(x=>x.Set_TimeUp(), TimeSpan.FromMinutes(1));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, Microsoft.AspNetCore.Hosting.IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));//
             loggerFactory.AddDebug();//
             loggerFactory.AddSerilog();//
@@ -111,9 +134,23 @@ namespace test2
             //app.UseIdentity();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
             app.UseCookiePolicy();
             app.UseCors(x=> x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
+
+          
+            //var options = new SQLiteStorageOptions();
+            //GlobalConfiguration.Configuration.UseSQLiteStorage(Configuration.GetConnectionString("DefaultConnection"), options);
+            //var option = new BackgroundJobServerOptions { WorkerCount = 1 };
+            //app.UseHangfireServer(option);
+            //app.UseHangfireDashboard();
+
+
+            //RecurringJob.AddOrUpdate(() => new Job(unitOfWork).Print(), Cron.MinuteInterval(1));
+
+
+
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
