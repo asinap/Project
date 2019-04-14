@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.1",
-    "signature": "1ffaee7901085f1c4c8ac2fa19c6948442243029"
+    "signature": "9fd8a9bbeaf1ea3e485ef45ce9eecf57e51f824b"
   },
   "compilationOptions": {
     "defines": [
@@ -37,6 +37,7 @@
           "Microsoft.NETCore.App": "2.1.0",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "2.1.0",
           "ncrontab": "3.3.0",
+          "Owin": "1.0.0",
           "SQLitePCL.raw": "0.9.3",
           "Serilog": "2.7.1",
           "Serilog.AspNetCore": "2.1.0",
@@ -667,6 +668,17 @@
         },
         "compile": {
           "lib/netstandard1.6/NuGet.Frameworks.dll": {}
+        }
+      },
+      "Owin/1.0.0": {
+        "runtime": {
+          "lib/net40/Owin.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        },
+        "compile": {
+          "lib/net40/Owin.dll": {}
         }
       },
       "Serilog/2.7.1": {
@@ -4439,6 +4451,13 @@
       "sha512": "sha512-hmWi7oVNV397Luu7CQwCs/Ctxld+sMLUw9uxRBqVODpvDx1y0M+63sBe4Fh5n0urHRRsIlT/++FNj/UVZLz/Tw==",
       "path": "nuget.frameworks/4.7.0-rtm.5148",
       "hashPath": "nuget.frameworks.4.7.0-rtm.5148.nupkg.sha512"
+    },
+    "Owin/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-S87+AKxSxfhXRzIQfm6WBxfGbnzECLG8bmVp3lRiwjeYG9YBJ0AXd+2Xn7I7aqwwj0j4erSpX6H9OhXy+qQ7tw==",
+      "path": "owin/1.0.0",
+      "hashPath": "owin.1.0.0.nupkg.sha512"
     },
     "Serilog/2.7.1": {
       "type": "package",

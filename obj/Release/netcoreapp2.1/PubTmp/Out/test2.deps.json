@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.1",
-    "signature": "6d0f9bdcbdcd3db2a62474b8fe5a9292651e4ffc"
+    "signature": "9fd8a9bbeaf1ea3e485ef45ce9eecf57e51f824b"
   },
   "compilationOptions": {
     "defines": [
@@ -25,6 +25,11 @@
       "test2/1.0.0": {
         "dependencies": {
           "Google.Apis.Auth": "1.37.0",
+          "Hangfire": "1.7.0",
+          "Hangfire.AspNetCore": "1.7.0",
+          "Hangfire.Core": "1.7.0",
+          "Hangfire.SQLite": "1.4.2",
+          "Hangfire.SqlServer": "1.7.0",
           "Microsoft.AspNet.WebApi.Cors": "5.2.7",
           "Microsoft.AspNetCore.App": "2.1.1",
           "Microsoft.EntityFrameworkCore": "2.1.1",
@@ -32,6 +37,7 @@
           "Microsoft.NETCore.App": "2.1.0",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "2.1.0",
           "ncrontab": "3.3.0",
+          "Owin": "1.0.0",
           "SQLitePCL.raw": "0.9.3",
           "Serilog": "2.7.1",
           "Serilog.AspNetCore": "2.1.0",
@@ -39,13 +45,46 @@
           "Serilog.Sinks.SQLite": "4.0.0",
           "Serilog.Sinks.Seq": "4.0.0",
           "Swashbuckle.AspNetCore": "4.0.1",
-          "System.Data.SQLite.Core": "1.0.109.2"
+          "System.Data.SQLite.Core": "1.0.109.2",
+          "System.Data.SQLite.EF6": "1.0.110",
+          "System.Data.SQLite.Linq": "1.0.110"
         },
         "runtime": {
           "test2.dll": {}
         },
         "compile": {
           "test2.dll": {}
+        }
+      },
+      "Dapper/1.50.2": {
+        "dependencies": {
+          "System.Collections": "4.3.0",
+          "System.Collections.Concurrent": "4.3.0",
+          "System.Collections.NonGeneric": "4.3.0",
+          "System.Data.SqlClient": "4.5.1",
+          "System.Dynamic.Runtime": "4.3.0",
+          "System.Linq": "4.3.0",
+          "System.Reflection": "4.3.0",
+          "System.Reflection.Emit": "4.3.0",
+          "System.Reflection.Emit.Lightweight": "4.3.0",
+          "System.Reflection.Extensions": "4.3.0",
+          "System.Reflection.TypeExtensions": "4.3.0",
+          "System.Runtime": "4.3.0",
+          "System.Runtime.Extensions": "4.3.0",
+          "System.Runtime.InteropServices": "4.3.0",
+          "System.Text.RegularExpressions": "4.3.0",
+          "System.Threading": "4.3.0",
+          "System.Xml.XDocument": "4.3.0",
+          "System.Xml.XmlDocument": "4.3.0"
+        },
+        "runtime": {
+          "lib/netstandard1.3/Dapper.dll": {
+            "assemblyVersion": "1.50.2.0",
+            "fileVersion": "1.50.2.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard1.3/Dapper.dll": {}
         }
       },
       "Google.Apis/1.37.0": {
@@ -95,6 +134,91 @@
         },
         "compile": {
           "lib/netstandard2.0/Google.Apis.Core.dll": {}
+        }
+      },
+      "Hangfire/1.7.0": {
+        "dependencies": {
+          "Hangfire.AspNetCore": "1.7.0",
+          "Hangfire.Core": "1.7.0",
+          "Hangfire.SqlServer": "1.7.0"
+        }
+      },
+      "Hangfire.AspNetCore/1.7.0": {
+        "dependencies": {
+          "Hangfire.Core": "1.7.0",
+          "Microsoft.AspNetCore.Antiforgery": "2.1.1",
+          "Microsoft.AspNetCore.Hosting.Abstractions": "2.1.1",
+          "Microsoft.AspNetCore.Http.Abstractions": "2.1.1",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "2.1.1",
+          "Microsoft.Extensions.Logging.Abstractions": "2.1.1"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Hangfire.AspNetCore.dll": {
+            "assemblyVersion": "1.7.0.0",
+            "fileVersion": "1.7.0.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Hangfire.AspNetCore.dll": {}
+        }
+      },
+      "Hangfire.Core/1.7.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "11.0.2"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Hangfire.Core.dll": {
+            "assemblyVersion": "1.7.0.0",
+            "fileVersion": "1.7.0.0"
+          }
+        },
+        "resources": {
+          "lib/netstandard2.0/es/Hangfire.Core.resources.dll": {
+            "locale": "es"
+          },
+          "lib/netstandard2.0/zh-TW/Hangfire.Core.resources.dll": {
+            "locale": "zh-TW"
+          },
+          "lib/netstandard2.0/zh/Hangfire.Core.resources.dll": {
+            "locale": "zh"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Hangfire.Core.dll": {}
+        }
+      },
+      "Hangfire.SQLite/1.4.2": {
+        "dependencies": {
+          "Dapper": "1.50.2",
+          "Hangfire.Core": "1.7.0",
+          "Microsoft.CSharp": "4.5.0",
+          "Microsoft.Data.Sqlite.Core": "2.1.0",
+          "Newtonsoft.Json": "11.0.2",
+          "System.Configuration.ConfigurationManager": "4.4.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Hangfire.SQLite.dll": {
+            "assemblyVersion": "1.4.2.0",
+            "fileVersion": "1.4.2.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Hangfire.SQLite.dll": {}
+        }
+      },
+      "Hangfire.SqlServer/1.7.0": {
+        "dependencies": {
+          "Hangfire.Core": "1.7.0",
+          "System.Data.SqlClient": "4.5.1"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Hangfire.SqlServer.dll": {
+            "assemblyVersion": "1.7.0.0",
+            "fileVersion": "1.7.0.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/Hangfire.SqlServer.dll": {}
         }
       },
       "Microsoft.AspNet.Cors/5.2.7": {
@@ -544,6 +668,17 @@
         },
         "compile": {
           "lib/netstandard1.6/NuGet.Frameworks.dll": {}
+        }
+      },
+      "Owin/1.0.0": {
+        "runtime": {
+          "lib/net40/Owin.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        },
+        "compile": {
+          "lib/net40/Owin.dll": {}
         }
       },
       "Serilog/2.7.1": {
@@ -1017,6 +1152,20 @@
           "lib/netstandard1.0/System.Composition.TypedParts.dll": {}
         }
       },
+      "System.Configuration.ConfigurationManager/4.4.0": {
+        "dependencies": {
+          "System.Security.Cryptography.ProtectedData": "4.4.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/System.Configuration.ConfigurationManager.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.6.25519.3"
+          }
+        },
+        "compile": {
+          "ref/netstandard2.0/System.Configuration.ConfigurationManager.dll": {}
+        }
+      },
       "System.Data.SQLite.Core/1.0.109.2": {
         "runtime": {
           "lib/netstandard2.0/System.Data.SQLite.dll": {
@@ -1048,6 +1197,28 @@
         },
         "compile": {
           "lib/netstandard2.0/System.Data.SQLite.dll": {}
+        }
+      },
+      "System.Data.SQLite.EF6/1.0.110": {
+        "runtime": {
+          "lib/net46/System.Data.SQLite.EF6.dll": {
+            "assemblyVersion": "1.0.110.0",
+            "fileVersion": "1.0.110.0"
+          }
+        },
+        "compile": {
+          "lib/net46/System.Data.SQLite.EF6.dll": {}
+        }
+      },
+      "System.Data.SQLite.Linq/1.0.110": {
+        "runtime": {
+          "lib/net46/System.Data.SQLite.Linq.dll": {
+            "assemblyVersion": "1.0.110.0",
+            "fileVersion": "1.0.110.0"
+          }
+        },
+        "compile": {
+          "lib/net46/System.Data.SQLite.Linq.dll": {}
         }
       },
       "System.Linq.Parallel/4.3.0": {
@@ -1110,6 +1281,22 @@
           "Microsoft.NETCore.Targets": "2.1.0",
           "System.Runtime": "4.3.0",
           "System.Runtime.Handles": "4.3.0"
+        }
+      },
+      "System.Security.Cryptography.ProtectedData/4.4.0": {
+        "runtime": {
+          "lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll": {
+            "assemblyVersion": "4.0.2.0",
+            "fileVersion": "4.6.25519.3"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "4.0.2.0",
+            "fileVersion": "4.6.25519.3"
+          }
         }
       },
       "System.Threading.Timer/4.0.1": {
@@ -4020,6 +4207,13 @@
       "serviceable": false,
       "sha512": ""
     },
+    "Dapper/1.50.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-tbUymSpDXo7ZL9w/0q7xn9P2c0MuLWeuR3t3x+2TMXOi2HoK2fewYiuMOEjVcYKgHON5ideBnH8q/iJ0I3mU1g==",
+      "path": "dapper/1.50.2",
+      "hashPath": "dapper.1.50.2.nupkg.sha512"
+    },
     "Google.Apis/1.37.0": {
       "type": "package",
       "serviceable": true,
@@ -4040,6 +4234,41 @@
       "sha512": "sha512-n6tmGXKOzrPhF8oUgDiFgwlyId83hsSoZr8zfjHhlh9siJFoXxqXdv3H0YvcwF+Iuj/I6KPelRse0DUYq61d8A==",
       "path": "google.apis.core/1.37.0",
       "hashPath": "google.apis.core.1.37.0.nupkg.sha512"
+    },
+    "Hangfire/1.7.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-BAWxZ+I9ORF0NECswaZl3vwL6yIqkqVU6oHqyLGn6lLb4FjNyZtTDGQy+6eb/JbsBY4amaYsqnL7eXQ42E6FHw==",
+      "path": "hangfire/1.7.0",
+      "hashPath": "hangfire.1.7.0.nupkg.sha512"
+    },
+    "Hangfire.AspNetCore/1.7.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-D0fMkJEDwPsjA8fE63Pl8IF83XIglfjCPhHj5bEr9GZNyWNfjj4Hsax3AjrxdPI+94mhVZhB3YSu/SmulivG8w==",
+      "path": "hangfire.aspnetcore/1.7.0",
+      "hashPath": "hangfire.aspnetcore.1.7.0.nupkg.sha512"
+    },
+    "Hangfire.Core/1.7.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-eyTH7qkOnklxN1viCg/WFsno7hu8zpYouHKeq3kjGAa1ypLqImPo2T9gWkhWoqsaabKMmfrZ6k3tgveLfdRTvQ==",
+      "path": "hangfire.core/1.7.0",
+      "hashPath": "hangfire.core.1.7.0.nupkg.sha512"
+    },
+    "Hangfire.SQLite/1.4.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-1JfUWWdayFYbGBn2GQFeeHpm3umkAm1PBt7qLWf9bsjMl1N1sLlhak0msdb1GCHLw8bBNsV57NQLSafBWF8+bA==",
+      "path": "hangfire.sqlite/1.4.2",
+      "hashPath": "hangfire.sqlite.1.4.2.nupkg.sha512"
+    },
+    "Hangfire.SqlServer/1.7.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-oAlC3NTCFDEsl9WH6wOlv4fKxRRJ4UzyhgFKeRNSjhMMbRHuwf/e4uqj/f68A3Q9+TSrR573JcsyO8SkYiN9hw==",
+      "path": "hangfire.sqlserver/1.7.0",
+      "hashPath": "hangfire.sqlserver.1.7.0.nupkg.sha512"
     },
     "Microsoft.AspNet.Cors/5.2.7": {
       "type": "package",
@@ -4223,6 +4452,13 @@
       "path": "nuget.frameworks/4.7.0-rtm.5148",
       "hashPath": "nuget.frameworks.4.7.0-rtm.5148.nupkg.sha512"
     },
+    "Owin/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-S87+AKxSxfhXRzIQfm6WBxfGbnzECLG8bmVp3lRiwjeYG9YBJ0AXd+2Xn7I7aqwwj0j4erSpX6H9OhXy+qQ7tw==",
+      "path": "owin/1.0.0",
+      "hashPath": "owin.1.0.0.nupkg.sha512"
+    },
     "Serilog/2.7.1": {
       "type": "package",
       "serviceable": true,
@@ -4405,12 +4641,33 @@
       "path": "system.composition.typedparts/1.0.31",
       "hashPath": "system.composition.typedparts.1.0.31.nupkg.sha512"
     },
+    "System.Configuration.ConfigurationManager/4.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-RLYB3YOmdz9dE3zMhBFGv3GF74upGjH0nF0G9lFFRLNLsCEMIpiuQsMGv2qE0qdp1JdheVNO8RIRpUKdokiK+g==",
+      "path": "system.configuration.configurationmanager/4.4.0",
+      "hashPath": "system.configuration.configurationmanager.4.4.0.nupkg.sha512"
+    },
     "System.Data.SQLite.Core/1.0.109.2": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-eZuKsu2eriGsxsAAlVslcA4ylLnFmfpA3iWeUyU82RNz4yDYlwLAA/zkbxejCEO+GdTd0zSBN4kDHneM39PEsg==",
       "path": "system.data.sqlite.core/1.0.109.2",
       "hashPath": "system.data.sqlite.core.1.0.109.2.nupkg.sha512"
+    },
+    "System.Data.SQLite.EF6/1.0.110": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Z8ByCBNBXFTfMzIoff4RnQK5CSX5EaX+ucnS5BPYXcbK/AIMnr/zvCKRVmiG2/7si3XS/rte1ZSjIfGPOCMpLQ==",
+      "path": "system.data.sqlite.ef6/1.0.110",
+      "hashPath": "system.data.sqlite.ef6.1.0.110.nupkg.sha512"
+    },
+    "System.Data.SQLite.Linq/1.0.110": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-CQisDxizq0eAgMsJ2XRz3kARJOGqff1em2FDutKV2BQB0u698onuWVivYd4/OgDekYGYVecElYEMKZR8PZqfuQ==",
+      "path": "system.data.sqlite.linq/1.0.110",
+      "hashPath": "system.data.sqlite.linq.1.0.110.nupkg.sha512"
     },
     "System.Linq.Parallel/4.3.0": {
       "type": "package",
@@ -4432,6 +4689,13 @@
       "sha512": "sha512-qOu+hDwFwoZPbzPvwut2qATe3ygjeQBDQj91xlsaqGFQUI5i4ZnZb8yyQuLGpDGivEPIt8EJkd1BVzVoP31FXA==",
       "path": "system.net.primitives/4.3.0",
       "hashPath": "system.net.primitives.4.3.0.nupkg.sha512"
+    },
+    "System.Security.Cryptography.ProtectedData/4.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-WwEexvBd+17yfY7fcS+fBGl+HADEfCJuKeDJqBT7D6j6vKwYvfLyGuq2y/MmrKORC6mbYwth7kjinO1mPhTL3g==",
+      "path": "system.security.cryptography.protecteddata/4.4.0",
+      "hashPath": "system.security.cryptography.protecteddata.4.4.0.nupkg.sha512"
     },
     "System.Threading.Timer/4.0.1": {
       "type": "package",

@@ -26,7 +26,7 @@ namespace test2.Controllers
             _vacancyRepo = new VacancyRepository(_dbContext);
         }
 
-     //   [Authorize(Roles = Role.Admin)]
+        [AllowAnonymous]
         [Route("/web/AddVacant")]
         [HttpPost]
         public IActionResult AddVacancy([FromBody] Vacancy vacant)
@@ -40,6 +40,7 @@ namespace test2.Controllers
             return NotFound();
         }
 
+        [AllowAnonymous]
         [Route("/web/EditVancancy")]
         [HttpPost]
         public IActionResult EditVacancy([FromBody] Vacancy vacant)

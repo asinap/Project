@@ -8025,3 +8025,17 @@ WHERE ((\"list\".\"EndDay\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now', '
 FROM \"Reservations\" AS \"x\"
 WHERE (\"x\".\"Id_account\" = @__ToString_0) AND (lower(\"x\".\"Status\") = 'timeup')"
 2019-04-14 21:35:00.518 +07:00 [Information] Set Expire every 5 min 04/14/2019 21:35:00 "58010776" No data to set.
+2019-04-14 23:59:13.081 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44380/  
+2019-04-14 23:59:13.081 +07:00 [Information] Request starting HTTP/1.1 DEBUG http://localhost:50909/  0
+2019-04-14 23:59:13.179 +07:00 [Information] Request finished in 105.9261ms 200 
+2019-04-14 23:59:13.537 +07:00 [Information] Request finished in 464.3349ms 404 
+2019-04-14 23:59:13.594 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44380/favicon.ico  
+2019-04-14 23:59:13.636 +07:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"D:\Project\test2\test2\test2\wwwroot\favicon.ico"'
+2019-04-14 23:59:13.647 +07:00 [Information] Request finished in 49.3465ms 200 image/x-icon
+2019-04-14 23:59:21.490 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44380/swagger/index.html  
+2019-04-14 23:59:21.640 +07:00 [Information] Request finished in 147.7525ms 200 text/html
+2019-04-14 23:59:21.908 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44380/swagger/favicon-16x16.png  
+2019-04-14 23:59:21.920 +07:00 [Information] Sending file. Request path: '"/favicon-16x16.png"'. Physical path: '"N/A"'
+2019-04-14 23:59:21.928 +07:00 [Information] Request finished in 17.8248ms 200 image/png
+2019-04-14 23:59:21.998 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44380/swagger/v1/swagger.json  
+2019-04-14 23:59:22.142 +07:00 [Information] Request finished in 145.5372ms 200 application/json;charset=utf-8

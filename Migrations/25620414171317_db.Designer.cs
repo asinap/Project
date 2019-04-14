@@ -9,7 +9,7 @@ using test2.DatabaseContext;
 namespace test2.Migrations
 {
     [DbContext(typeof(LockerDbContext))]
-    [Migration("25620408100640_db")]
+    [Migration("25620414171317_db")]
     partial class db
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

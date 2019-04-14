@@ -30,3 +30,4 @@ D:\Project\test2\test2\test2\obj\Debug\netcoreapp2.1\Razor\Repositories\Pages\Sh
 D:\Project\test2\test2\test2\obj\Debug\netcoreapp2.1\Razor\Repositories\Pages\Shared\_ValidationScriptsPartial.g.cshtml.cs
 D:\Project\test2\test2\test2\obj\Debug\netcoreapp2.1\Razor\Repositories\Pages\_ViewImports.g.cshtml.cs
 D:\Project\test2\test2\test2\obj\Debug\netcoreapp2.1\Razor\Repositories\Pages\_ViewStart.g.cshtml.cs
+D:\Project\test2\test2\test2\obj\Debug\netcoreapp2.1\UserSecretsAssemblyInfo.cs

@@ -28,7 +28,7 @@ namespace test2.Controllers
             _lockerRepo = new LockerMetadataRepository(_dbContext);
         }
 
-        //[Authorize(Roles = Role.Admin)]
+        [AllowAnonymous]
         [Route("/web/AddLocker")]
         [HttpPost]
         public IActionResult AddLocker([FromBody] LockerMetadata locker)
@@ -42,6 +42,7 @@ namespace test2.Controllers
             return NotFound();
         }
 
+        [AllowAnonymous]
         [Route("/web/EditLocker")]
         [HttpPost]
         public IActionResult EditLocker([FromBody] LockerMetadata locker)

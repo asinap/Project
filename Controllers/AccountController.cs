@@ -130,7 +130,7 @@ namespace test2.Controllers
             }
         }
 
-        //[Authorize (Roles = Role.Admin)]
+        [Authorize (Roles = Role.Admin)]
         [Route("/web/AddAdminAccount")]
         [HttpPost]
         public IActionResult AddAdminAccount([FromBody] Account account)
@@ -150,7 +150,7 @@ namespace test2.Controllers
             }
         }
 
-        //[Authorize (Roles = Role.User)]
+        [Authorize (Roles = Role.User)]
         [Route("/mobile/AddPhoneNumber")]
         [HttpPost]
         public IActionResult AddPhoneNumber([FromBody] PhoneUser phone)
@@ -163,7 +163,7 @@ namespace test2.Controllers
             return NotFound("CannotAddphone");
         }
 
-        //[Authorize(Roles = Role.User)]
+        [Authorize(Roles = Role.User)]
         [Route("/mobile/Getphone")]
         [HttpGet]
         public IActionResult Getphone (string id_account)
@@ -186,7 +186,7 @@ namespace test2.Controllers
         //    return NotFound();
         //}
 
-        //[Authorize (Roles = Role.Admin)]
+        [Authorize (Roles = Role.Admin)]
         [Route("/web/UserAccountAll")]
         [HttpGet]
         public IActionResult GetUserAccount()
@@ -200,7 +200,7 @@ namespace test2.Controllers
         }
 
         //[AllowAnonymous]
-        //[Authorize(Roles = Role.User)]
+        [Authorize(Roles = Role.User)]
         [Route("/mobile/UserAccount")]
         [HttpGet]
         public JsonResult GetUserAccount(string id_account)
@@ -212,7 +212,7 @@ namespace test2.Controllers
             else
                 return Json(null);        }
 
-        //[Authorize( Roles = Role.Admin)]
+        [Authorize( Roles = Role.Admin)]
         [Route("/web/UserOverview")]
         [HttpGet]
         public JsonResult GetUserOverview(string id_account)
@@ -262,7 +262,7 @@ namespace test2.Controllers
 
         }
 
-        //[Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = Role.Admin)]
         [Route("/web/Admin")]
         [HttpGet]
         public IActionResult GetAdmin ()

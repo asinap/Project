@@ -48,7 +48,7 @@ namespace test2.Controllers
             return NotFound();
         }
 
-    //   [Authorize (Roles = Role.User)]
+        [Authorize (Roles = Role.User)]
         [Route("/mobile/DeleteNotificaiton")]
         [HttpPost]
         public IActionResult DeleteNotification([FromBody]NotificationIForm notification)
@@ -76,7 +76,7 @@ namespace test2.Controllers
 
         }
 
-      //  [Authorize(Roles = Role.User)]
+        [Authorize(Roles = Role.User)]
         [Route("/mobile/SetRead")]
         [HttpPost]
         public IActionResult SetRead([FromBody]NotificationIForm notification)
@@ -119,7 +119,7 @@ namespace test2.Controllers
             return Ok(list);
         }
 
-     //   [Authorize(Roles = Role.User)]
+        [Authorize(Roles = Role.User)]
         [Route ("/mobile/UserInbox")]
         [HttpGet]
         public JsonResult GetNotificationForm (string id_account)
@@ -129,7 +129,7 @@ namespace test2.Controllers
             return Json(list);
         }
 
-     //   [Authorize(Roles = Role.User)]
+        [Authorize(Roles = Role.User)]
         [Route("/mobile/UserInboxDetail")]
         [HttpGet]
         public JsonResult GetNotificationDetail (int id_noti)
