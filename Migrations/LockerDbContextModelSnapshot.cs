@@ -23,6 +23,8 @@ namespace test2.Migrations
 
                     b.Property<string>("Email");
 
+                    b.Property<string>("ExpoToken");
+
                     b.Property<string>("Name");
 
                     b.Property<string>("Phone");
@@ -35,7 +37,7 @@ namespace test2.Migrations
 
                     b.HasKey("Id_account");
 
-                    b.ToTable("Accounts");
+                    b.ToTable("accounts");
                 });
 
             modelBuilder.Entity("test2.DatabaseContext.Models.Content", b =>
@@ -49,7 +51,7 @@ namespace test2.Migrations
 
                     b.HasKey("Id_content");
 
-                    b.ToTable("Contents");
+                    b.ToTable("contents");
                 });
 
             modelBuilder.Entity("test2.DatabaseContext.Models.LockerMetadata", b =>
@@ -63,7 +65,7 @@ namespace test2.Migrations
 
                     b.HasKey("Mac_address");
 
-                    b.ToTable("LockerMetadatas");
+                    b.ToTable("lockerMetadatas");
                 });
 
             modelBuilder.Entity("test2.DatabaseContext.Models.Notification", b =>
@@ -85,7 +87,7 @@ namespace test2.Migrations
 
                     b.HasKey("Id_notification");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("notifications");
                 });
 
             modelBuilder.Entity("test2.DatabaseContext.Models.Reservation", b =>
@@ -115,7 +117,7 @@ namespace test2.Migrations
 
                     b.HasKey("Id_reserve");
 
-                    b.ToTable("Reservations");
+                    b.ToTable("reservations");
                 });
 
             modelBuilder.Entity("test2.DatabaseContext.Models.Vacancy", b =>
@@ -133,7 +135,7 @@ namespace test2.Migrations
 
                     b.HasKey("Id_vacancy");
 
-                    b.ToTable("Vacancies");
+                    b.ToTable("vacancies");
                 });
 #pragma warning restore 612, 618
         }

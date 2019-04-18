@@ -9,7 +9,7 @@ using test2.DatabaseContext;
 namespace test2.Migrations
 {
     [DbContext(typeof(LockerDbContext))]
-    [Migration("25620417091015_db")]
+    [Migration("25620418142726_db")]
     partial class db
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,8 @@ namespace test2.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Email");
+
+                    b.Property<string>("ExpoToken");
 
                     b.Property<string>("Name");
 
@@ -88,18 +90,6 @@ namespace test2.Migrations
                     b.HasKey("Id_notification");
 
                     b.ToTable("notifications");
-                });
-
-            modelBuilder.Entity("test2.DatabaseContext.Models.NotiToken", b =>
-                {
-                    b.Property<string>("Id_account")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("ExpoToken");
-
-                    b.HasKey("Id_account");
-
-                    b.ToTable("notiTokens");
                 });
 
             modelBuilder.Entity("test2.DatabaseContext.Models.Reservation", b =>

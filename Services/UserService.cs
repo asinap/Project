@@ -51,7 +51,7 @@ namespace test2.Services
                     //before email is not studentID
                     return null;
                 }
-                if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == id) != null)
+                if (_dbContext.accounts.FirstOrDefault(x => x.Id_account == id) != null)
                 {
                     var _user = GetToken(id);
                     Console.WriteLine("already exist");
@@ -66,7 +66,7 @@ namespace test2.Services
                     Point = 100,
                     Role = Role.User
                 };
-                _dbContext.Accounts.Add(account);
+                _dbContext.accounts.Add(account);
                 _dbContext.SaveChanges();
                 var user = GetToken(id);
                 return user;
@@ -81,7 +81,7 @@ namespace test2.Services
 
         public Account GetToken (string id_account)
         { 
-            var user = _dbContext.Accounts.SingleOrDefault(x => x.Id_account == id_account);
+            var user = _dbContext.accounts.SingleOrDefault(x => x.Id_account == id_account);
 
             // return null if user not found
             if (user == null)
@@ -109,7 +109,7 @@ namespace test2.Services
         public IEnumerable<Account> GetAll()
         {
             // return users without passwords
-            return _dbContext.Accounts.Where(x =>  x.Token!=null);
+            return _dbContext.accounts.Where(x =>  x.Token!=null);
         }
 
     }

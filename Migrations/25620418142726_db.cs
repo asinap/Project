@@ -8,7 +8,7 @@ namespace test2.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Accounts",
+                name: "accounts",
                 columns: table => new
                 {
                     Id_account = table.Column<string>(nullable: false),
@@ -17,15 +17,16 @@ namespace test2.Migrations
                     Email = table.Column<string>(nullable: true),
                     Role = table.Column<string>(nullable: true),
                     Point = table.Column<int>(nullable: false),
-                    Token = table.Column<string>(nullable: true)
+                    Token = table.Column<string>(nullable: true),
+                    ExpoToken = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Accounts", x => x.Id_account);
+                    table.PrimaryKey("PK_accounts", x => x.Id_account);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Contents",
+                name: "contents",
                 columns: table => new
                 {
                     Id_content = table.Column<int>(nullable: false)
@@ -35,11 +36,11 @@ namespace test2.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Contents", x => x.Id_content);
+                    table.PrimaryKey("PK_contents", x => x.Id_content);
                 });
 
             migrationBuilder.CreateTable(
-                name: "LockerMetadatas",
+                name: "lockerMetadatas",
                 columns: table => new
                 {
                     Mac_address = table.Column<string>(nullable: false),
@@ -48,11 +49,11 @@ namespace test2.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LockerMetadatas", x => x.Mac_address);
+                    table.PrimaryKey("PK_lockerMetadatas", x => x.Mac_address);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Notifications",
+                name: "notifications",
                 columns: table => new
                 {
                     Id_notification = table.Column<int>(nullable: false)
@@ -66,11 +67,11 @@ namespace test2.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Notifications", x => x.Id_notification);
+                    table.PrimaryKey("PK_notifications", x => x.Id_notification);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reservations",
+                name: "reservations",
                 columns: table => new
                 {
                     Id_reserve = table.Column<int>(nullable: false)
@@ -88,11 +89,11 @@ namespace test2.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reservations", x => x.Id_reserve);
+                    table.PrimaryKey("PK_reservations", x => x.Id_reserve);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Vacancies",
+                name: "vacancies",
                 columns: table => new
                 {
                     Id_vacancy = table.Column<int>(nullable: false)
@@ -104,29 +105,29 @@ namespace test2.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Vacancies", x => x.Id_vacancy);
+                    table.PrimaryKey("PK_vacancies", x => x.Id_vacancy);
                 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Accounts");
+                name: "accounts");
 
             migrationBuilder.DropTable(
-                name: "Contents");
+                name: "contents");
 
             migrationBuilder.DropTable(
-                name: "LockerMetadatas");
+                name: "lockerMetadatas");
 
             migrationBuilder.DropTable(
-                name: "Notifications");
+                name: "notifications");
 
             migrationBuilder.DropTable(
-                name: "Reservations");
+                name: "reservations");
 
             migrationBuilder.DropTable(
-                name: "Vacancies");
+                name: "vacancies");
         }
     }
 }

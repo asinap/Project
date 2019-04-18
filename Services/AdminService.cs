@@ -37,7 +37,7 @@ namespace test2.Services
             try
             {
                 GoogleJsonWebSignature.Payload validPayload = await GoogleJsonWebSignature.ValidateAsync(_token);
-                var admin = _dbContext.Accounts.FirstOrDefault(x => x.Email.ToLower() == validPayload.Email.ToLower() && x.Role == Role.Admin);
+                var admin = _dbContext.accounts.FirstOrDefault(x => x.Email.ToLower() == validPayload.Email.ToLower() && x.Role == Role.Admin);
                 if (admin != null)
                 {
                     var _user = GetToken(admin.Id_account);
@@ -59,7 +59,7 @@ namespace test2.Services
 
         public Account GetToken(string id_account)
         {
-            var user = _dbContext.Accounts.SingleOrDefault(x => x.Id_account == id_account);
+            var user = _dbContext.accounts.SingleOrDefault(x => x.Id_account == id_account);
 
             // return null if user not found
             if (user == null)

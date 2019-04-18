@@ -37,6 +37,8 @@ namespace test2.Controllers
             _accountRepo = new AccountRepository(_dbContext);
         }
 
+
+        /*Log in with google account for user*/
         [AllowAnonymous]
         [Route("/mobile/usersauthenticate")]
         [HttpPost]
@@ -48,23 +50,27 @@ namespace test2.Controllers
             {
 
                 var user = await _userService.AuthenticateAsync(token._Token);
-
+                //if there is no user in database
                 if (user == null)
                 {
                     Log.Information("Access Denied. {0}",dateTime);
                     return BadRequest(new { message = "Access Denied." });
                 }
 
+                // there is user in database
                 Log.Information("user access {0}. {1}.",user.Name, dateTime);
                 return Ok(user.Token);
 
             }
             catch 
             {
+ 
                 Log.Information("Error User Authentication", dateTime);
                 return NotFound("Error User Authentication");
             }
         }
+
+        /*TEST Log in with google account for user*/
         [AllowAnonymous]
         [Route("/test/usersauthenticate")]
         [HttpPost]
@@ -76,12 +82,13 @@ namespace test2.Controllers
             {
 
                 int user = await _accountRepo.AddUserAccountAsync(account);
-
+                //if there is no user in database
                 if (user != 4)
                 {
                     Log.Information("Access Denied. {0}", dateTime);
                     return BadRequest(new { message = "Access Denied." });
                 }
+                // there is user in database
                 Log.Information("user access {0}. {1}.", account.Name, dateTime);
                 return Ok(user);
             }
@@ -92,6 +99,7 @@ namespace test2.Controllers
             }
         }
 
+        /*Check token in database for log in automatically in application*/
         [AllowAnonymous]
         [Route("checkToken")]
         [HttpPost]
@@ -102,12 +110,14 @@ namespace test2.Controllers
             try
             {
                 var user = _accountRepo.User_Information(token._Token);
+                //if there is no user in database
                 if (user == null)
                 {
                     Log.Information("Access Denied {0}.", dateTime);
                     return NotFound("Access Denied.");
                 }
                 else
+                // there is user in database
                 {
                     Log.Information("check token {0}., {1}.",user.Name, dateTime);
                     return Ok(user);
@@ -120,34 +130,44 @@ namespace test2.Controllers
             }
         }
 
+        /*Storing each user's notification token in database*/
         [AllowAnonymous]
         [Route("notitoken")]
         [HttpPost]
         public IActionResult NotiToken([FromBody] ExpoToken notiToken)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
+            // if it can add notification token 
             if (_accountRepo.NotiToken(notiToken))
             {
-                //Log.Information("Add vacancy {no}, {location} OK.", vacant.No_vacancy, _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == vacant.Mac_address).Location);
+                Log.Information("Add notification token {0} OK. {1}.", notiToken.Id_account,dateTime);
                 return Ok(notiToken.Id_account);
             }
-            // Log.Information("Cannot Add vacancy {no}, {location} OK.", vacant.No_vacancy, _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == vacant.Mac_address).Location);
-            return NotFound();
+            // if it can not add notification token 
+            Log.Information("Add notification token {0} Error. {1}.", notiToken.Id_account,dateTime);
+            return NotFound("Error to add notification token");
         }
 
+        /*TEST Get each user's notification token*/
         [AllowAnonymous]
         [Route("getnotitoken")]
         [HttpGet]
         public IActionResult GetNotiToken()
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             var list = _accountRepo.GetNotiToken();
             if (list == null)
             {
-                //Log.Information("Add vacancy {no}, {location} OK.", vacant.No_vacancy, _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == vacant.Mac_address).Location);
+                Log.Information("Get notification token Error. {0}.", dateTime);
                 return NotFound();
-            }            // Log.Information("Cannot Add vacancy {no}, {location} OK.", vacant.No_vacancy, _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == vacant.Mac_address).Location);
+            }
+            Log.Information("Get notification token Error. {1}.", dateTime);
             return Ok(list);
         }
 
+        /*Log in with google account for administrator*/
         [AllowAnonymous]
         [Route("/web/adminsauthenticate")]
         [HttpPost]
@@ -232,16 +252,7 @@ namespace test2.Controllers
             Log.Information("Cannot Get phone from mobile {0}.", dateTime);
             return NotFound("Cannot Get phone.");
         }
-        //[Route("UpdatePoint")]
-        //[HttpPut]
-        //public IActionResult UpdatePoint([FromQuery] string id, int num)
-        //{
-        //    if (_accountRepo.UpdatePoint(id, num))
-        //    {
-        //        return Ok(id);
-        //    }
-        //    return NotFound();
-        //}
+  
 
         [Authorize (Roles = Role.Admin)]
         [Route("/web/UserAccountAll")]
