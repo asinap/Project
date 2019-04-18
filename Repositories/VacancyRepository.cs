@@ -36,7 +36,7 @@ namespace test2.Repositories
                         return false;
                     }
                     vacant.Size = vacant.Size.ToLower();
-                    _dbContext.Vacancies.Add(vacant);
+                    _dbContext.vacancies.Add(vacant);
                     _dbContext.SaveChanges();
                     return true;
                 }
@@ -53,12 +53,12 @@ namespace test2.Repositories
          * return true if there is not mac_address in lockermetadata database   */
         public bool CheckMac_address(string mac_address)
         {
-            return _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == mac_address) == null;
+            return _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == mac_address) == null;
         }
 
         public bool CheckNo_vacant (string mac_address, string no_vacant)
         {
-            var list = from vacantlist in _dbContext.Vacancies
+            var list = from vacantlist in _dbContext.vacancies
                        where vacantlist.Mac_address == mac_address && vacantlist.No_vacancy == no_vacant
                        select vacantlist;
             if (list == null)
@@ -74,13 +74,13 @@ namespace test2.Repositories
         {
             try
             {
-                var _vacant = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == vacant.Id_vacancy);
+                var _vacant = _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == vacant.Id_vacancy);
                 if(vacant!=null)
                 {
-                    _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == vacant.Id_vacancy).IsActive = vacant.IsActive;
-                    _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == vacant.Id_vacancy).Mac_address = vacant.Mac_address;
-                    _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == vacant.Id_vacancy).No_vacancy = vacant.No_vacancy;
-                    _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == vacant.Id_vacancy).Size = vacant.Size;
+                    _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == vacant.Id_vacancy).IsActive = vacant.IsActive;
+                    _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == vacant.Id_vacancy).Mac_address = vacant.Mac_address;
+                    _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == vacant.Id_vacancy).No_vacancy = vacant.No_vacancy;
+                    _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == vacant.Id_vacancy).Size = vacant.Size;
                     _dbContext.SaveChanges();
                     return true;
                 }
@@ -104,7 +104,7 @@ namespace test2.Repositories
         {
             try
             {
-                var result = from vacantlist in _dbContext.Vacancies
+                var result = from vacantlist in _dbContext.vacancies
                              where vacantlist.Mac_address == Mac_address
                              select vacantlist;
 
@@ -130,8 +130,8 @@ namespace test2.Repositories
                               where vacantlist.Mac_addressRef == Mac_address
                               select vacantlist;*/
 
-                var result = from vacanlist in _dbContext.Vacancies
-                             join lockerlist in _dbContext.LockerMetadatas on vacanlist.Mac_address equals lockerlist.Mac_address
+                var result = from vacanlist in _dbContext.vacancies
+                             join lockerlist in _dbContext.lockerMetadatas on vacanlist.Mac_address equals lockerlist.Mac_address
                              where lockerlist.IsActive == true && vacanlist.Mac_address == Mac_address
                              select vacanlist;
                 if (result != null)
@@ -156,7 +156,7 @@ namespace test2.Repositories
         {
             try
             {
-                var result = from vacantlist in _dbContext.Vacancies
+                var result = from vacantlist in _dbContext.vacancies
                              where vacantlist.Mac_address == Mac_address && vacantlist.No_vacancy == No_vacant && vacantlist.IsActive == true
                              select vacantlist;
                 if (result != null)
@@ -178,7 +178,7 @@ namespace test2.Repositories
          * return all vacancy   */
         public List<Vacancy> GetVacancy()
         {
-            return _dbContext.Vacancies.ToList();
+            return _dbContext.vacancies.ToList();
         }
 
         /* Get Specific vacancy                     *
@@ -187,7 +187,7 @@ namespace test2.Repositories
         public List<Vacancy> GetVacancy(int id)
         {
 
-            return _dbContext.Vacancies.Where(x => x.Id_vacancy == id).ToList();
+            return _dbContext.vacancies.Where(x => x.Id_vacancy == id).ToList();
         }
 
   
@@ -195,22 +195,22 @@ namespace test2.Repositories
          * return vacancy has IsActive = true   */
         public List<Vacancy> GetActive()
         {
-            return _dbContext.Vacancies.Where(x => x.IsActive == true).ToList();
+            return _dbContext.vacancies.Where(x => x.IsActive == true).ToList();
         }
 
         /* Get inactive vacancy                 *
          * return vacancy has IsActive = false  */
         public List<Vacancy> GetInactive()
         {
-            return _dbContext.Vacancies.Where(x => x.IsActive == false).ToList();
+            return _dbContext.vacancies.Where(x => x.IsActive == false).ToList();
         }
 
         public bool Delete()
         {
             try
             {
-                var data = from list in _dbContext.Vacancies select list;
-                _dbContext.Vacancies.RemoveRange(data);
+                var data = from list in _dbContext.vacancies select list;
+                _dbContext.vacancies.RemoveRange(data);
                 _dbContext.SaveChanges();
                 return true;
 
@@ -226,14 +226,14 @@ namespace test2.Repositories
         {
             try
             {
-                if (_dbContext.Vacancies.Where(x => x.Id_vacancy == id_vacant) == null)
+                if (_dbContext.vacancies.Where(x => x.Id_vacancy == id_vacant) == null)
                 {
                     return false;
                 }
-                var data = from list in _dbContext.Vacancies
+                var data = from list in _dbContext.vacancies
                            where list.Id_vacancy == id_vacant
                            select list;
-                _dbContext.Vacancies.RemoveRange(data);
+                _dbContext.vacancies.RemoveRange(data);
                 _dbContext.SaveChanges();
                 return true;
             }

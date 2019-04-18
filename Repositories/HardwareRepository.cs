@@ -20,16 +20,16 @@ namespace test2.Repositories
         {
             try
             {
-                if(_dbContext.Accounts.FirstOrDefault(x=>x.Id_account==userID)==null)
+                if(_dbContext.accounts.FirstOrDefault(x=>x.Id_account==userID)==null)
                 {
                     return null;
                 }
-                if (_dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == mac_address) == null)
+                if (_dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == mac_address) == null)
                 {
                     return null;
                 }
-                string location = _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == mac_address).Location;
-                var allreserve = from reservelist in _dbContext.Reservations
+                string location = _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == mac_address).Location;
+                var allreserve = from reservelist in _dbContext.reservations
                                  where reservelist.Id_account == userID && reservelist.Location == location && reservelist.IsActive == true && (reservelist.Status == "Use" || reservelist.Status == "Unuse")
                                         && reservelist.StartDay<=DateTime.Now && reservelist.EndDay>=DateTime.Now
                                  select reservelist;
@@ -48,7 +48,7 @@ namespace test2.Repositories
                 }
                 else
                 {
-                    string no_vacant = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == reserve.Id_vacancy).No_vacancy;
+                    string no_vacant = _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == reserve.Id_vacancy).No_vacancy;
                     Hardware result = new Hardware()
                     {
                         ReserveID = reserve.Id_reserve,

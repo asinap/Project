@@ -25,7 +25,7 @@ namespace test2.Repositories
 
             try
             {
-                _dbContext.Contents.Add(_content);
+                _dbContext.contents.Add(_content);
                 _dbContext.SaveChanges();
                 return true;
             }
@@ -43,7 +43,7 @@ namespace test2.Repositories
         {
             try
             {
-                _dbContext.Contents.FirstOrDefault(x => x.Id_content == id).IsActive = false;
+                _dbContext.contents.FirstOrDefault(x => x.Id_content == id).IsActive = false;
                 _dbContext.SaveChanges();
                 return true;
             }
@@ -61,9 +61,9 @@ namespace test2.Repositories
         {
             try
             {
-                if (_dbContext.Contents.FirstOrDefault(x => x.Id_content == id) != null)
+                if (_dbContext.contents.FirstOrDefault(x => x.Id_content == id) != null)
                 {
-                    _dbContext.Contents.FirstOrDefault(x => x.Id_content == id).IsActive = true;
+                    _dbContext.contents.FirstOrDefault(x => x.Id_content == id).IsActive = true;
                     _dbContext.SaveChanges();
                     return true;
                 }
@@ -79,7 +79,7 @@ namespace test2.Repositories
          * return all Content       */
         public List<Content> GetAllContent()
         {
-            return _dbContext.Contents.ToList();
+            return _dbContext.contents.ToList();
         }
 
         /* Get Content                                  *
@@ -88,12 +88,12 @@ namespace test2.Repositories
 
         public List<Content> GetContent()
         {
-            return _dbContext.Contents.Where(x => x.IsActive == true).ToList();
+            return _dbContext.contents.Where(x => x.IsActive == true).ToList();
         }
 
         public List<Content> GetContent(int id)
         {
-            var content = from contentlist in _dbContext.Contents
+            var content = from contentlist in _dbContext.contents
                           where contentlist.Id_content == id && contentlist.IsActive == true
                           select contentlist;
             return content.ToList();
@@ -104,8 +104,8 @@ namespace test2.Repositories
         {
             try
             {
-                var data = from list in _dbContext.Contents select list;
-                _dbContext.Contents.RemoveRange(data);
+                var data = from list in _dbContext.contents select list;
+                _dbContext.contents.RemoveRange(data);
                 _dbContext.SaveChanges();
                 return true;
 
@@ -121,14 +121,14 @@ namespace test2.Repositories
         {
             try
             {
-                if (_dbContext.Contents.Where(x => x.Id_content == id) == null)
+                if (_dbContext.contents.Where(x => x.Id_content == id) == null)
                 {
                     return false;
                 }
-                var data = from list in _dbContext.Contents
+                var data = from list in _dbContext.contents
                            where list.Id_content == id
                            select list;
-                _dbContext.Contents.RemoveRange(data);
+                _dbContext.contents.RemoveRange(data);
                 _dbContext.SaveChanges();
                 return true;
             }

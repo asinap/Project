@@ -34,16 +34,16 @@ namespace test2.Controllers
             if (_notiRepo.AddNotification(detail))
             {
                 Log.Information("Add notification {Name}, {No}, {Location}, {contentID} OK."
-                    , _dbContext.Accounts.FirstOrDefault(x => x.Id_account == detail.Id_account).Name
-                    , _dbContext.Vacancies.FirstOrDefault(y => y.Id_vacancy == _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == detail.Id_reserve).Id_vacancy).No_vacancy
-                    , _dbContext.Reservations.FirstOrDefault(y=>y.Id_reserve==detail.Id_reserve).Location
+                    , _dbContext.accounts.FirstOrDefault(x => x.Id_account == detail.Id_account).Name
+                    , _dbContext.vacancies.FirstOrDefault(y => y.Id_vacancy == _dbContext.reservations.FirstOrDefault(x => x.Id_reserve == detail.Id_reserve).Id_vacancy).No_vacancy
+                    , _dbContext.reservations.FirstOrDefault(y=>y.Id_reserve==detail.Id_reserve).Location
                     , detail.Id_content);
                 return Ok(detail.Id_notification);
             }
             Log.Information("Cannot Add notification {Name}, {No}, {Location}, {contentID}."
-                   , _dbContext.Accounts.FirstOrDefault(x => x.Id_account == detail.Id_account).Name
-                   , _dbContext.Vacancies.FirstOrDefault(y => y.Id_vacancy == _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == detail.Id_reserve).Id_vacancy).No_vacancy
-                   , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == detail.Id_reserve).Location
+                   , _dbContext.accounts.FirstOrDefault(x => x.Id_account == detail.Id_account).Name
+                   , _dbContext.vacancies.FirstOrDefault(y => y.Id_vacancy == _dbContext.reservations.FirstOrDefault(x => x.Id_reserve == detail.Id_reserve).Id_vacancy).No_vacancy
+                   , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == detail.Id_reserve).Location
                    , detail.Id_content);
             return NotFound();
         }
@@ -56,13 +56,13 @@ namespace test2.Controllers
             if (_notiRepo.DeleteNotification(notification.Id_noti))
             {
                 Log.Information("Delete noti from mobile {Name}, {No}, {Location}, {contentID} OK."
-                    , _dbContext.Accounts.FirstOrDefault(x => x.Id_account == _dbContext.Notifications.FirstOrDefault(y => y.Id_notification == notification.Id_noti).Id_account).Name
-                    , _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.Notifications.FirstOrDefault(z => z.Id_notification == notification.Id_noti).Id_reserve).Id_vacancy).No_vacancy
-                    , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.Notifications.FirstOrDefault(z => z.Id_notification == notification.Id_noti).Id_reserve).Location
-                    , _dbContext.Notifications.FirstOrDefault(x => x.Id_notification == notification.Id_noti).Id_content);
+                    , _dbContext.accounts.FirstOrDefault(x => x.Id_account == _dbContext.notifications.FirstOrDefault(y => y.Id_notification == notification.Id_noti).Id_account).Name
+                    , _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.notifications.FirstOrDefault(z => z.Id_notification == notification.Id_noti).Id_reserve).Id_vacancy).No_vacancy
+                    , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.notifications.FirstOrDefault(z => z.Id_notification == notification.Id_noti).Id_reserve).Location
+                    , _dbContext.notifications.FirstOrDefault(x => x.Id_notification == notification.Id_noti).Id_content);
                 return Ok(notification.Id_noti);
             }
-            if (_dbContext.Notifications.FirstOrDefault(x => x.Id_notification == notification.Id_noti) != null)
+            if (_dbContext.notifications.FirstOrDefault(x => x.Id_notification == notification.Id_noti) != null)
             {
                 Log.Information("Error_Delete.");
                 return NotFound("Error_Delete");
@@ -84,13 +84,13 @@ namespace test2.Controllers
             if(_notiRepo.SetRead(notification.Id_noti))
             {
                 Log.Information("Set Read noti from mobile {Name}, {No}, {Location}, {contentID} OK."
-                    , _dbContext.Accounts.FirstOrDefault(x => x.Id_account == _dbContext.Notifications.FirstOrDefault(y => y.Id_notification == notification.Id_noti).Id_account).Name
-                    , _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.Notifications.FirstOrDefault(z => z.Id_notification == notification.Id_noti).Id_reserve).Id_vacancy).No_vacancy
-                    , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.Notifications.FirstOrDefault(z => z.Id_notification == notification.Id_noti).Id_reserve).Location
-                    , _dbContext.Notifications.FirstOrDefault(x => x.Id_notification == notification.Id_noti).Id_content);
+                    , _dbContext.accounts.FirstOrDefault(x => x.Id_account == _dbContext.notifications.FirstOrDefault(y => y.Id_notification == notification.Id_noti).Id_account).Name
+                    , _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.notifications.FirstOrDefault(z => z.Id_notification == notification.Id_noti).Id_reserve).Id_vacancy).No_vacancy
+                    , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.notifications.FirstOrDefault(z => z.Id_notification == notification.Id_noti).Id_reserve).Location
+                    , _dbContext.notifications.FirstOrDefault(x => x.Id_notification == notification.Id_noti).Id_content);
                 return Ok(notification.Id_noti);
             }
-            if (_dbContext.Notifications.FirstOrDefault(x => x.Id_notification == notification.Id_noti) != null)
+            if (_dbContext.notifications.FirstOrDefault(x => x.Id_notification == notification.Id_noti) != null)
             {
                 Log.Information("Error_SetRead {noti}.", notification.Id_noti);
                 return NotFound("Error_SetRead");
@@ -125,7 +125,7 @@ namespace test2.Controllers
         public JsonResult GetNotificationForm (string id_account)
         {
             var list = _notiRepo.GetNotificationForm(id_account);
-            Log.Information("Get user inbox from mobile {Name} OK.", _dbContext.Accounts.FirstOrDefault(x => x.Id_account == id_account).Name);
+            Log.Information("Get user inbox from mobile {Name} OK.", _dbContext.accounts.FirstOrDefault(x => x.Id_account == id_account).Name);
             return Json(list);
         }
 
@@ -136,10 +136,10 @@ namespace test2.Controllers
         {
             NotificationForm form = _notiRepo.GetNotificationDetail(id_noti);
             Log.Information("Get user inbox detail from mobile {Name} , {No}, {Location}, {contentID} Ok."
-                 , _dbContext.Accounts.FirstOrDefault(x => x.Id_account == _dbContext.Notifications.FirstOrDefault(y => y.Id_notification == id_noti).Id_account).Name
-                    , _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.Notifications.FirstOrDefault(z => z.Id_notification == id_noti).Id_reserve).Id_vacancy).No_vacancy
-                    , _dbContext.Reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.Notifications.FirstOrDefault(z => z.Id_notification == id_noti).Id_reserve).Location
-                    , _dbContext.Notifications.FirstOrDefault(x => x.Id_notification == id_noti).Id_content);
+                 , _dbContext.accounts.FirstOrDefault(x => x.Id_account == _dbContext.notifications.FirstOrDefault(y => y.Id_notification == id_noti).Id_account).Name
+                    , _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.notifications.FirstOrDefault(z => z.Id_notification == id_noti).Id_reserve).Id_vacancy).No_vacancy
+                    , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.notifications.FirstOrDefault(z => z.Id_notification == id_noti).Id_reserve).Location
+                    , _dbContext.notifications.FirstOrDefault(x => x.Id_notification == id_noti).Id_content);
             return Json(form);
         }
 
@@ -168,6 +168,7 @@ namespace test2.Controllers
         {
             if (_notiRepo.Delete(id_noti))
             {
+                Log.Information("Ok.");
                 return Ok();
             }
             return NotFound();

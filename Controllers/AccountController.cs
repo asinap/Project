@@ -42,18 +42,26 @@ namespace test2.Controllers
         [HttpPost]
         public async Task<IActionResult> UserAuthenticate([FromBody] Token token)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             try
             {
+
                 var user = await _userService.AuthenticateAsync(token._Token);
 
                 if (user == null)
+                {
+                    Log.Information("Access Denied. {0}",dateTime);
                     return BadRequest(new { message = "Access Denied." });
+                }
 
+                Log.Information("user access {0}. {1}.",user.Name, dateTime);
                 return Ok(user.Token);
+
             }
             catch 
             {
-                Console.WriteLine("Error User Authentication");
+                Log.Information("Error User Authentication", dateTime);
                 return NotFound("Error User Authentication");
             }
         }
@@ -62,18 +70,24 @@ namespace test2.Controllers
         [HttpPost]
         public async Task<IActionResult> AddUser([FromBody] Account account)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             try
             {
+
                 int user = await _accountRepo.AddUserAccountAsync(account);
 
                 if (user != 4)
+                {
+                    Log.Information("Access Denied. {0}", dateTime);
                     return BadRequest(new { message = "Access Denied." });
-
+                }
+                Log.Information("user access {0}. {1}.", account.Name, dateTime);
                 return Ok(user);
             }
             catch
             {
-                Console.WriteLine("Error User Authentication");
+                Log.Information("Error User Authentication");
                 return NotFound("Error User Authentication");
             }
         }
@@ -83,30 +97,64 @@ namespace test2.Controllers
         [HttpPost]
         public IActionResult CheckToken ([FromBody] Token token)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             try
             {
                 var user = _accountRepo.User_Information(token._Token);
                 if (user == null)
                 {
-                    return NotFound("Access Denied");
+                    Log.Information("Access Denied {0}.", dateTime);
+                    return NotFound("Access Denied.");
                 }
                 else
                 {
+                    Log.Information("check token {0}., {1}.",user.Name, dateTime);
                     return Ok(user);
                 }
             }
             catch
             {
-                Console.WriteLine("Error CHECKTOKEN");
+                Log.Information("Error CHECKTOKEN");
                 return NotFound("Error CHECKTOKEN");
             }
         }
-       
+
+        [AllowAnonymous]
+        [Route("notitoken")]
+        [HttpPost]
+        public IActionResult NotiToken([FromBody] ExpoToken notiToken)
+        {
+            if (_accountRepo.NotiToken(notiToken))
+            {
+                //Log.Information("Add vacancy {no}, {location} OK.", vacant.No_vacancy, _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == vacant.Mac_address).Location);
+                return Ok(notiToken.Id_account);
+            }
+            // Log.Information("Cannot Add vacancy {no}, {location} OK.", vacant.No_vacancy, _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == vacant.Mac_address).Location);
+            return NotFound();
+        }
+
+        [AllowAnonymous]
+        [Route("getnotitoken")]
+        [HttpGet]
+        public IActionResult GetNotiToken()
+        {
+            var list = _accountRepo.GetNotiToken();
+            if (list == null)
+            {
+                //Log.Information("Add vacancy {no}, {location} OK.", vacant.No_vacancy, _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == vacant.Mac_address).Location);
+                return NotFound();
+            }            // Log.Information("Cannot Add vacancy {no}, {location} OK.", vacant.No_vacancy, _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == vacant.Mac_address).Location);
+            return Ok(list);
+        }
+
         [AllowAnonymous]
         [Route("/web/adminsauthenticate")]
         [HttpPost]
         public async Task<IActionResult> AdminAuthenticate([FromBody] Token token)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             try
             {
                 GoogleJsonWebSignature.Payload validPayload = await GoogleJsonWebSignature.ValidateAsync(token._Token);
@@ -114,39 +162,41 @@ namespace test2.Controllers
                 if (admin!=null)
                 {
 
-                    Log.Information("check {name} is admin from web {datetime}.", _dbContext.Accounts.FirstOrDefault(x => x.Email == validPayload.Email).Name, DateTime.Now);
+                    Log.Information("Admin access {0}., {1}.", admin.Name, dateTime);
                     return Ok(admin.Token);
                 }
                 else
                 {
-                    Log.Information("check {name} is not admin from web {datetime}.", validPayload.Email, DateTime.Now);
-                    return BadRequest("No_admin");
+                    Log.Information("Access Denied {0}.", dateTime);
+                    return BadRequest("Access Denied.");
                 }
             }
             catch
             {
-                Console.WriteLine("Error");
-                return NotFound("No_admin");
+                Log.Information("Error Admin Authentication");
+                return NotFound("Error Admin Authentication");
             }
         }
 
-        [Authorize (Roles = Role.Admin)]
+        [AllowAnonymous]
         [Route("/web/AddAdminAccount")]
         [HttpPost]
         public IActionResult AddAdminAccount([FromBody] Account account)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             int result = _accountRepo.AddAdminAccount(account);
             switch (result)
             {
                 case 1:
-                    Log.Information("Add admin from web {name} {email} account_already_exist.", account.Name, account.Email);
-                    return NotFound("account_already_exist");
+                    Log.Information("Add admin from web {Email} account already existed. {0}.", account.Email,dateTime);
+                    return BadRequest("Account already existed.");
                 case 2:
-                    Log.Information("Add user from mobile {name} {email} done.", account.Name, account.Email);
+                    Log.Information("Add user from mobile {name} done. {0}.", account.Name, dateTime);
                     return Ok(account.Id_account);
                 default:
-                    Log.Information("Add user from mobile {name} {email} Error.", account.Name, account.Email);
-                    return NotFound("Error");
+                    Log.Information("Add user from mobile {name} error. {0}.", account.Name, dateTime);
+                    return NotFound("Error add admin");
             }
         }
 
@@ -155,12 +205,15 @@ namespace test2.Controllers
         [HttpPost]
         public IActionResult AddPhoneNumber([FromBody] PhoneUser phone)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             if (_accountRepo.AddPhoneNumber(phone.Id_account, phone.Phone))
             {
-                Log.Information("Add phone from mobile {name} {email} account_already_exist.", _dbContext.Accounts.FirstOrDefault(x=>x.Id_account==phone.Id_account).Name, phone );
+                Log.Information("Add phone from mobile {name}. {0}.", _dbContext.accounts.FirstOrDefault(x=>x.Id_account==phone.Id_account).Name, dateTime );
                 return Ok(phone.Id_account);
             }
-            return NotFound("CannotAddphone");
+            Log.Information("Cannot Add phone from mobile {0}.", dateTime);
+            return NotFound("Cannot Add phone.");
         }
 
         [Authorize(Roles = Role.User)]
@@ -168,12 +221,16 @@ namespace test2.Controllers
         [HttpGet]
         public IActionResult Getphone (string id_account)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             string result = _accountRepo.GetPhone(id_account);
             if (result!=null)
             {
+                Log.Information("Get phone from mobile {name}. {0}.", _dbContext.accounts.FirstOrDefault(x => x.Id_account == id_account).Name, dateTime);
                 return Ok(result);
             }
-            return NotFound("Error");
+            Log.Information("Cannot Get phone from mobile {0}.", dateTime);
+            return NotFound("Cannot Get phone.");
         }
         //[Route("UpdatePoint")]
         //[HttpPut]
@@ -191,12 +248,20 @@ namespace test2.Controllers
         [HttpGet]
         public IActionResult GetUserAccount()
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             var list = _accountRepo.GetUserAccount();
-            Log.Information("Get all user from web {datetime}.", DateTime.Now);
+
             if (list != null)
+            {
+                Log.Information("Get all user from web {0}.", dateTime);
                 return Ok(list);
+            }
             else
-                return NotFound("No Account");
+            {
+                Log.Information("There is not user account in system {0}.", dateTime);
+                return NotFound("There is not user account in system.");
+            }
         }
 
         //[AllowAnonymous]
@@ -205,24 +270,42 @@ namespace test2.Controllers
         [HttpGet]
         public JsonResult GetUserAccount(string id_account)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             MemberAccount account = _accountRepo.GetUserAccount(id_account);
-            Log.Information("Get user account from mobile {name}.", account.Name);
+
             if (account != null)
+            {
+                Log.Information("Get user account from mobile {0}. {1).", account.Name,dateTime);
                 return Json(account);
+            }
             else
-                return Json(null);        }
+            {
+                Log.Information("Get user account from mobile (0}.", dateTime);
+                return Json(null);
+            }
+        }
 
         [Authorize( Roles = Role.Admin)]
         [Route("/web/UserOverview")]
         [HttpGet]
         public JsonResult GetUserOverview(string id_account)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             UserOverview user = _accountRepo.GetUserOverview(id_account);
-            Log.Information("Get user overview from web {name}.", _dbContext.Accounts.FirstOrDefault(x => x.Id_account == id_account).Name);
+            
             if (user != null)
+            {
+                //Log.Information("Get user overview from web {name}.", _dbContext.accounts.FirstOrDefault(x => x.Id_account == id_account).Name);
                 return Json(user);
+            }
             else
+            {
+                //Log.Information("Get user overview from web {name}.", _dbContext.accounts.FirstOrDefault(x => x.Id_account == id_account).Name);
                 return Json(null);
+            }
+                
         }
 
         [Route("UserAccountAll")]

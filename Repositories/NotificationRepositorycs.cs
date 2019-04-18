@@ -33,8 +33,11 @@ namespace test2.Repositories
                     return false;
                 }
                 /*search reservation for create notification and assign no_vacancy and mac_address*/
+                TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+                DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
+                _noti.CreateTime = dateTime;
                 _noti.Read = false;
-                _dbContext.Notifications.Add(_noti);
+                _dbContext.notifications.Add(_noti);
                 _dbContext.SaveChanges();
                 return true;
             }
@@ -50,7 +53,7 @@ namespace test2.Repositories
          * return true if there aren't id_content in database           */
         public bool CheckId_content (int id_content)
         {
-            var list = from contentlist in _dbContext.Contents
+            var list = from contentlist in _dbContext.contents
                        where contentlist.Id_content == id_content && contentlist.IsActive == true
                        select contentlist;
             if (list==null)
@@ -69,7 +72,7 @@ namespace test2.Repositories
          * return true if there aren't id_account in database           */
         public bool CheckId_account (string id_account)
         {
-            return _dbContext.Accounts.FirstOrDefault(x => x.Id_account == id_account) == null;
+            return _dbContext.accounts.FirstOrDefault(x => x.Id_account == id_account) == null;
         }
 
         /* DeleteMessage            *
@@ -79,7 +82,7 @@ namespace test2.Repositories
         {
             try
             {
-                _dbContext.Notifications.FirstOrDefault(x => x.Id_notification == id).IsShow = false;
+                _dbContext.notifications.FirstOrDefault(x => x.Id_notification == id).IsShow = false;
                 _dbContext.SaveChanges();
                 return true;
             }
@@ -94,7 +97,7 @@ namespace test2.Repositories
         {
             try
             {
-                _dbContext.Notifications.FirstOrDefault(x => x.Id_notification == id).Read = true;
+                _dbContext.notifications.FirstOrDefault(x => x.Id_notification == id).Read = true;
                 _dbContext.SaveChanges();
                 return true;
             }
@@ -109,7 +112,7 @@ namespace test2.Repositories
          * return all message detail to string  */
         public List<Notification> GetNotification()
         {
-            return _dbContext.Notifications.ToList();
+            return _dbContext.notifications.ToList();
         }
 
         /* Get specific message                             *
@@ -117,7 +120,7 @@ namespace test2.Repositories
          * return message that has Id_message = id_message  */
         public List<Notification> GetNotification(int id_noti)
         {
-            var usernotilist = from notilist in _dbContext.Notifications
+            var usernotilist = from notilist in _dbContext.notifications
                                  where notilist.Id_notification == id_noti
                                  select notilist;
             return usernotilist.ToList();
@@ -128,17 +131,17 @@ namespace test2.Repositories
         {
             try
             {
-                if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == id_account) == null)
+                if (_dbContext.accounts.FirstOrDefault(x => x.Id_account == id_account) == null)
                 {
                     return null;
                 }
-                var list = _dbContext.Notifications.Where(x => x.Id_account == id_account && x.IsShow == true).OrderByDescending(x => x.Id_notification).ThenBy(x => x.Read);
+                var list = _dbContext.notifications.Where(x => x.Id_account == id_account && x.IsShow == true).OrderByDescending(x => x.Id_notification).ThenBy(x => x.Read);
                 List<NotificationForm> result = new List<NotificationForm>();
                 foreach (var run in list)
                 {
-                    var content = _dbContext.Contents.FirstOrDefault(x => x.Id_content == run.Id_content);
-                    var reservelist = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == run.Id_reserve);
-                    var vacant = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == reservelist.Id_vacancy);
+                    var content = _dbContext.contents.FirstOrDefault(x => x.Id_content == run.Id_content);
+                    var reservelist = _dbContext.reservations.FirstOrDefault(x => x.Id_reserve == run.Id_reserve);
+                    var vacant = _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == reservelist.Id_vacancy);
                     string _content = content.PlainText;
                     _content = _content.Replace("%p", reservelist.Location);
                     _content = _content.Replace("%v", vacant.No_vacancy);
@@ -165,14 +168,14 @@ namespace test2.Repositories
         {
             try
             {
-                if(_dbContext.Notifications.FirstOrDefault(x=>x.Id_notification==id_noti)==null)
+                if(_dbContext.notifications.FirstOrDefault(x=>x.Id_notification==id_noti)==null)
                 {
                     return null;
                 }
-                var list = _dbContext.Notifications.FirstOrDefault(x => x.Id_notification == id_noti);
-                var content = _dbContext.Contents.FirstOrDefault(x => x.Id_content == list.Id_content);
-                var reservelist = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == list.Id_reserve);
-                var vacant = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == reservelist.Id_vacancy);
+                var list = _dbContext.notifications.FirstOrDefault(x => x.Id_notification == id_noti);
+                var content = _dbContext.contents.FirstOrDefault(x => x.Id_content == list.Id_content);
+                var reservelist = _dbContext.reservations.FirstOrDefault(x => x.Id_reserve == list.Id_reserve);
+                var vacant = _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == reservelist.Id_vacancy);
                 string _content = content.PlainText;
                 _content = _content.Replace("%p", reservelist.Location);
                 _content = _content.Replace("%v", vacant.No_vacancy);
@@ -206,7 +209,7 @@ namespace test2.Repositories
          * return idActivemessage to list                   */
         public List<Notification> GetActiveNoti (string id_account)
         {
-            var userActiveNoti = from notilist in _dbContext.Notifications
+            var userActiveNoti = from notilist in _dbContext.notifications
                                   where notilist.Id_account == id_account && notilist.IsShow == true
                                   select notilist;
             return userActiveNoti.ToList();
@@ -217,8 +220,8 @@ namespace test2.Repositories
         {
             try
             {
-                var data = from list in _dbContext.Notifications select list;
-                _dbContext.Notifications.RemoveRange(data);
+                var data = from list in _dbContext.notifications select list;
+                _dbContext.notifications.RemoveRange(data);
                 _dbContext.SaveChanges();
                 return true;
 
@@ -234,14 +237,14 @@ namespace test2.Repositories
         {
             try
             {
-                if (_dbContext.Notifications.Where(x => x.Id_notification == id_noti) == null)
+                if (_dbContext.notifications.Where(x => x.Id_notification == id_noti) == null)
                 {
                     return false;
                 }
-                var data = from list in _dbContext.Notifications
+                var data = from list in _dbContext.notifications
                            where list.Id_notification == id_noti
                            select list;
-                _dbContext.Notifications.RemoveRange(data);
+                _dbContext.notifications.RemoveRange(data);
                 _dbContext.SaveChanges();
                 return true;
             }

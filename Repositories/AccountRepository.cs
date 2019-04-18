@@ -41,7 +41,7 @@ namespace test2.Repositories
                     //before email is not studentID
                     return 2;
                 }
-                if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == id) != null)
+                if (_dbContext.accounts.FirstOrDefault(x => x.Id_account == id) != null)
                 {
                     //already have account
                     Console.WriteLine("already exist");
@@ -56,7 +56,7 @@ namespace test2.Repositories
                     Point = 100,
                     Role="User"
                 };
-                _dbContext.Accounts.Add(_account);
+                _dbContext.accounts.Add(_account);
                 _dbContext.SaveChanges();
                 return 4;
                
@@ -77,7 +77,7 @@ namespace test2.Repositories
             try
             {
                 
-                if (_dbContext.Accounts.FirstOrDefault(x => x.Email.ToLower() == account.Email.ToLower()) != null)
+                if (_dbContext.accounts.FirstOrDefault(x => x.Email.ToLower() == account.Email.ToLower()) != null)
                 {
                     Console.WriteLine("already exist");
                     return 1;
@@ -87,12 +87,12 @@ namespace test2.Repositories
                 {
                     Random rand = new Random();
                     rnd = rand.Next(100000000, 999999999);
-                } while (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == rnd.ToString()) != null);
+                } while (_dbContext.accounts.FirstOrDefault(x => x.Id_account == rnd.ToString()) != null);
                 account.Id_account = rnd.ToString();
                 account.Phone = "";
                 account.Point = 0;
                 account.Role = Role.Admin;
-                _dbContext.Accounts.Add(account);
+                _dbContext.accounts.Add(account);
                 _dbContext.SaveChanges();
                 return 2;
             }
@@ -109,9 +109,9 @@ namespace test2.Repositories
         {
             try
             {
-                if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == id_account) != null)
+                if (_dbContext.accounts.FirstOrDefault(x => x.Id_account == id_account) != null)
                 {
-                    _dbContext.Accounts.FirstOrDefault(x => x.Id_account == id_account).Phone = phone;
+                    _dbContext.accounts.FirstOrDefault(x => x.Id_account == id_account).Phone = phone;
                     _dbContext.SaveChanges();
                     return true;
                 }
@@ -128,9 +128,9 @@ namespace test2.Repositories
         {
             try
             {
-                if(_dbContext.Accounts.FirstOrDefault(x=>x.Id_account==id_account)!=null)
+                if(_dbContext.accounts.FirstOrDefault(x=>x.Id_account==id_account)!=null)
                 {
-                    return _dbContext.Accounts.FirstOrDefault(x => x.Id_account == id_account).Phone;
+                    return _dbContext.accounts.FirstOrDefault(x => x.Id_account == id_account).Phone;
                 }
                 return null;
             }
@@ -140,30 +140,64 @@ namespace test2.Repositories
                 return null;
             }
         }
-        /*Not finish yet*/
-        //public bool UpdatePoint(string id, int num)
-        //{
-        //    try
-        //    {
-        //        if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == id) != null)
-        //        {
-        //            _dbContext.Accounts.FirstOrDefault(x => x.Id_account == id).Point = num;
-        //            _dbContext.SaveChanges();
-        //            return true;
+        public bool NotiToken(ExpoToken _token)
+        {
 
-        //        }
-        //        return false;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        Console.WriteLine("Cannot update point");
-        //        return false;
-        //    }
-        //}
+            try
+            {
+                if (_dbContext.accounts.FirstOrDefault(x => x.Id_account == _token.Id_account) != null)
+                {
+                    _dbContext.accounts.FirstOrDefault(x => x.Id_account == _token.Id_account).ExpoToken = _token.Expotoken;
+                }
+                else
+                {
+                    return false;
+                }
+                _dbContext.SaveChanges();
+                // SendPushNotification(_token.ExpoToken);
+                return true;
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Cannot add notitoken");
+                return false;
+            }
+        }
+
+        public List<ExpoToken> GetNotiToken()
+        {
+
+            try
+            {
+                var list = _dbContext.accounts.ToList();
+                List<ExpoToken> expolist = new List<ExpoToken>();
+                foreach (var run in list)
+                {
+                    ExpoToken expoToken = new ExpoToken()
+                    {
+                        Id_account=run.Id_account,
+                        Expotoken=run.ExpoToken
+                    };
+                    expolist.Add(expoToken);
+                }
+                if (expolist.Count() == 0)
+                {
+                    return null;
+                }
+                else
+                {
+                    return expolist;
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
 
         public MemberAccount User_Information(string token)
         {
-            var user = _dbContext.Accounts.SingleOrDefault(x => x.Token.Contains(token));
+            var user = _dbContext.accounts.SingleOrDefault(x => x.Token.Contains(token));
             if(user==null)
             {
                 return null;
@@ -182,16 +216,16 @@ namespace test2.Repositories
         {
             try
             {
-                var userlist = from accountlist in _dbContext.Accounts
+                var userlist = from accountlist in _dbContext.accounts
                                where accountlist.Role.ToLower() == "user"
                                select accountlist;
                 List<Member> resultlist = new List<Member>();
 
                 foreach (var run in userlist)
                 {
-                    int usingCount = _dbContext.Reservations.Count(x => x.Id_account == run.Id_account && x.Status.ToLower() == "use");
-                    int bookedCount = _dbContext.Reservations.Count(x => x.Id_account == run.Id_account);
-                    int timeUpCount = _dbContext.Reservations.Count(x => x.Id_account == run.Id_account && x.Status.ToLower() == "timeup") + _dbContext.Reservations.Count(x => x.Id_account == run.Id_account && x.Status.ToLower() == "expire");
+                    int usingCount = _dbContext.reservations.Count(x => x.Id_account == run.Id_account && x.Status.ToLower() == "use");
+                    int bookedCount = _dbContext.reservations.Count(x => x.Id_account == run.Id_account);
+                    int timeUpCount = _dbContext.reservations.Count(x => x.Id_account == run.Id_account && x.Status.ToLower() == "timeup") + _dbContext.reservations.Count(x => x.Id_account == run.Id_account && x.Status.ToLower() == "expire");
                     Member newby = new Member()
                     {
                         Id_account = run.Id_account,
@@ -218,7 +252,7 @@ namespace test2.Repositories
         {
             try
             {
-                var user = _dbContext.Accounts.SingleOrDefault(x => x.Id_account==id_account);
+                var user = _dbContext.accounts.SingleOrDefault(x => x.Id_account==id_account);
                 if(user==null)
                 {
                     return null;
@@ -243,16 +277,16 @@ namespace test2.Repositories
         {
             try
             {
-                var user = _dbContext.Accounts.FirstOrDefault(x => x.Id_account == id_account); // ID,Name,point
+                var user = _dbContext.accounts.FirstOrDefault(x => x.Id_account == id_account); // ID,Name,point
                 if (user == null)
                 {
                     return null;
                 }
-                int usingCount = _dbContext.Reservations.Count(x => x.Id_account == id_account && x.Status.ToLower() == "use"); //Using count
+                int usingCount = _dbContext.reservations.Count(x => x.Id_account == id_account && x.Status.ToLower() == "use"); //Using count
                                                                                                                                 //TimeUp+Expire count 
-                int timeUpCount = _dbContext.Reservations.Count(x => x.Id_account == id_account && x.Status.ToLower() == "timeup") + _dbContext.Reservations.Count(x => x.Id_account == id_account && x.Status.ToLower() == "expire");
+                int timeUpCount = _dbContext.reservations.Count(x => x.Id_account == id_account && x.Status.ToLower() == "timeup") + _dbContext.reservations.Count(x => x.Id_account == id_account && x.Status.ToLower() == "expire");
                 //all reservation
-                var reserve = _dbContext.Reservations.Where(x => x.Id_account == id_account).OrderByDescending(x => x.DateModified);
+                var reserve = _dbContext.reservations.Where(x => x.Id_account == id_account).OrderByDescending(x => x.DateModified);
                 List<WebForm> tmp = new List<WebForm>();
                 foreach (var run in reserve)
                 {
@@ -288,7 +322,7 @@ namespace test2.Repositories
         /*user*/
         public List<Account> GetUserAccountdev()
         {
-            var adminlist = from accountlist in _dbContext.Accounts
+            var adminlist = from accountlist in _dbContext.accounts
                             where accountlist.Role == "User"
                             select accountlist;
             return adminlist.ToList();
@@ -297,7 +331,7 @@ namespace test2.Repositories
         /*Admin*/
         public List<Account> GetUserAccountdev(string id)
         {
-            var adminlist = from accountlist in _dbContext.Accounts
+            var adminlist = from accountlist in _dbContext.accounts
                             where accountlist.Role == "User" && accountlist.Id_account == id
                             select accountlist;
             return adminlist.ToList();
@@ -306,7 +340,7 @@ namespace test2.Repositories
         /*Admin*/
         public List<Account> GetAdminAccount()
         {
-            var adminlist = from accountlist in _dbContext.Accounts
+            var adminlist = from accountlist in _dbContext.accounts
                             where accountlist.Role == "Administrator"
                             select accountlist;
             return adminlist.ToList();
@@ -317,7 +351,7 @@ namespace test2.Repositories
         {
             try
             {
-                var adminlist = _dbContext.Accounts.Where(x => x.Role.ToLower() == "administrator");
+                var adminlist = _dbContext.accounts.Where(x => x.Role.ToLower() == "administrator");
                 List<Admin> result = new List<Admin>();
                 foreach (var run in adminlist)
                 {
@@ -342,7 +376,7 @@ namespace test2.Repositories
             try
             {
                 GoogleJsonWebSignature.Payload validPayload = await GoogleJsonWebSignature.ValidateAsync(token);
-                if (_dbContext.Accounts.FirstOrDefault(x => x.Email== validPayload.Email && x.Role.ToLower() == "administrator") != null)
+                if (_dbContext.accounts.FirstOrDefault(x => x.Email== validPayload.Email && x.Role.ToLower() == "administrator") != null)
                     return true;
                 else
                     return false;
@@ -355,7 +389,7 @@ namespace test2.Repositories
         /*Admin*/
         public List<Account> GetAdminAccount(string id)
         {
-            var adminlist = from accountlist in _dbContext.Accounts
+            var adminlist = from accountlist in _dbContext.accounts
                             where accountlist.Role == "Administrator" && accountlist.Id_account == id
                             select accountlist;
             return adminlist.ToList();
@@ -367,8 +401,8 @@ namespace test2.Repositories
         {
             try
             {
-                var data = from list in _dbContext.Accounts select list;
-                _dbContext.Accounts.RemoveRange(data);
+                var data = from list in _dbContext.accounts select list;
+                _dbContext.accounts.RemoveRange(data);
                 _dbContext.SaveChanges();
                 return true;
 
@@ -384,14 +418,14 @@ namespace test2.Repositories
         {
             try
             {
-                if(_dbContext.Accounts.Where(x=>x.Id_account==id)==null)
+                if(_dbContext.accounts.Where(x=>x.Id_account==id)==null)
                 {
                     return false;
                 }
-                var data = from list in _dbContext.Accounts
+                var data = from list in _dbContext.accounts
                            where list.Id_account == id
                            select list;
-                _dbContext.Accounts.RemoveRange(data);
+                _dbContext.accounts.RemoveRange(data);
                 _dbContext.SaveChanges();
                 return true;
             }

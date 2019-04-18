@@ -14,12 +14,14 @@ namespace test2.DatabaseContext
             
         }
         
-        public DbSet<Reservation> Reservations { get; set; }
-        public DbSet<Vacancy> Vacancies { get; set; }
-        public DbSet<LockerMetadata> LockerMetadatas { get; set; }
-        public DbSet<Content> Contents { get; set; }
-        public DbSet<Notification> Notifications { get; set; }
-        public DbSet<Account> Accounts { get; set; }
+        public DbSet<Reservation> reservations { get; set; }
+        public DbSet<Vacancy> vacancies { get; set; }
+        public DbSet<LockerMetadata> lockerMetadatas { get; set; }
+        public DbSet<Content> contents { get; set; }
+        public DbSet<Notification> notifications { get; set; }
+        public DbSet<Account> accounts { get; set; }
+        
+            
 
     }
 }

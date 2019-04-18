@@ -39,7 +39,7 @@ namespace test2.Controllers
                 return Ok(locker.Mac_address);
             }
             Log.Information("Add Locker {Location} Error.", locker.Location);
-            return NotFound();
+            return NotFound(locker.Mac_address);
         }
 
         [AllowAnonymous]
@@ -53,43 +53,45 @@ namespace test2.Controllers
                 return Ok(locker.Mac_address);
             }
             Log.Information("Edit Locker {Location} Error.", locker.Location);
-            return NotFound();
+            return NotFound(locker.Mac_address);
         }
 
-        [Route("DeleteLocker")]
+        [AllowAnonymous]
+        [Route("/web/DeleteLocker")]
         [HttpPost]
         public IActionResult DeleteLocker([FromBody] LockerForm locker)
         {
             if (_lockerRepo.DeleteLocker(locker.Mac_address))
             {
-                Log.Information("Delete Locker {Location} OK.", _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == locker.Mac_address).Location);
-                return Ok();
+                Log.Information("Delete Locker {Location} OK.", _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == locker.Mac_address).Location);
+                return Ok(locker.Mac_address);
             }
-            if (_dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == locker.Mac_address) != null)
+            if (_dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == locker.Mac_address) != null)
             {
-                Log.Information("Delete Locker {Location} Error.", _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == locker.Mac_address).Location);
-                return NotFound();
+                Log.Information("Delete Locker {Location} Error.", _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == locker.Mac_address).Location);
+                return NotFound(locker.Mac_address);
             }
             else
             {
                 Log.Information("Delete Locker No {Mac_addressn} Error.", locker.Mac_address);
-                return NotFound();
+                return NotFound(locker.Mac_address);
             }
 
         }
 
-        [Route("RestoreLocker")]
+        [AllowAnonymous]
+        [Route("/web/RestoreLocker")]
         [HttpPost]
         public IActionResult RestoreLocker([FromBody] LockerForm locker)
         {
             if (_lockerRepo.RestoreLocker(locker.Mac_address))
             {
-                Log.Information("Restore Locker {Location} OK.", _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == locker.Mac_address).Location);
+                Log.Information("Restore Locker {Location} OK.", _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == locker.Mac_address).Location);
                 return Ok(locker.Mac_address);
             }
-            if (_dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == locker.Mac_address) != null)
+            if (_dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == locker.Mac_address) != null)
             {
-                Log.Information("Restore Locker {Location} Error.", _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == locker.Mac_address).Location);
+                Log.Information("Restore Locker {Location} Error.", _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == locker.Mac_address).Location);
                 return NotFound();
             }
             else
@@ -99,7 +101,7 @@ namespace test2.Controllers
             }
             
         }
-       // [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = Role.Admin)]
         [Route("/web/Locker")]
         [HttpGet]
         public IActionResult GetLocker()
@@ -108,7 +110,7 @@ namespace test2.Controllers
             Log.Information("Get Locker from web {datetime}.", DateTime.Now);
             return Ok(list);
         }
-       // [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = Role.Admin)]
         [Route("/web/lockerDetail")]
         [HttpGet]
         public JsonResult GetLockerDetail(string mac_address)

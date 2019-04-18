@@ -1,0 +1,569 @@
+2019-04-16 00:12:21.877 +07:00 [Information] Request starting HTTP/1.1 DEBUG http://localhost:50909/  0
+2019-04-16 00:12:21.877 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44380/  
+2019-04-16 00:12:21.995 +07:00 [Information] Request finished in 111.3576ms 200 
+2019-04-16 00:12:22.329 +07:00 [Information] Request finished in 457.7618ms 404 
+2019-04-16 00:12:27.518 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:50909/  
+2019-04-16 00:12:27.531 +07:00 [Information] Request finished in 9.9052ms 307 
+2019-04-16 00:12:27.585 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44380/  
+2019-04-16 00:12:27.599 +07:00 [Information] Request finished in 11.2122ms 404 
+2019-04-16 00:38:09.571 +07:00 [Information] Request starting HTTP/1.1 DEBUG http://localhost:50909/  0
+2019-04-16 00:38:09.571 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44380/  
+2019-04-16 00:38:09.661 +07:00 [Information] Request finished in 101.8858ms 200 
+2019-04-16 00:38:09.971 +07:00 [Information] Request finished in 414.6643ms 404 
+2019-04-16 00:38:15.872 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44380/swagger/index.html  
+2019-04-16 00:38:15.988 +07:00 [Information] Request finished in 116.2569ms 200 text/html
+2019-04-16 00:38:16.307 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44380/swagger/v1/swagger.json  
+2019-04-16 00:38:16.473 +07:00 [Information] Request finished in 167.7607ms 200 application/json;charset=utf-8
+2019-04-16 00:39:00.486 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:39:00.487 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:39:00.488 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:39:00.489 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:39:00.732 +07:00 [Information] Executed DbCommand ("15"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:39:00.732 +07:00 [Information] Executed DbCommand ("15"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:39:00.732 +07:00 [Information] Executed DbCommand ("15"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:39:00.732 +07:00 [Information] Executed DbCommand ("15"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:39:00.748 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"row\".\"Id_reserve\", \"row\".\"Code\", \"row\".\"DateModified\", \"row\".\"EndDay\", \"row\".\"Id_account\", \"row\".\"Id_vacancy\", \"row\".\"IsActive\", \"row\".\"Location\", \"row\".\"Size\", \"row\".\"StartDay\", \"row\".\"Status\"
+FROM \"Reservations\" AS \"row\"
+WHERE \"row\".\"IsActive\" = 1"
+2019-04-16 00:39:00.754 +07:00 [Information] Executed DbCommand ("6"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"list\".\"Id_reserve\", \"list\".\"Code\", \"list\".\"DateModified\", \"list\".\"EndDay\", \"list\".\"Id_account\", \"list\".\"Id_vacancy\", \"list\".\"IsActive\", \"list\".\"Location\", \"list\".\"Size\", \"list\".\"StartDay\", \"list\".\"Status\"
+FROM \"Reservations\" AS \"list\"
+WHERE ((\"list\".\"EndDay\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now', 'localtime'), '0'), '.')) AND (\"list\".\"IsActive\" = 1)) AND (lower(\"list\".\"Status\") = 'use')"
+2019-04-16 00:39:00.762 +07:00 [Information] Executed DbCommand ("9"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"row\".\"Id_reserve\", \"row\".\"Code\", \"row\".\"DateModified\", \"row\".\"EndDay\", \"row\".\"Id_account\", \"row\".\"Id_vacancy\", \"row\".\"IsActive\", \"row\".\"Location\", \"row\".\"Size\", \"row\".\"StartDay\", \"row\".\"Status\"
+FROM \"Reservations\" AS \"row\"
+WHERE \"row\".\"IsActive\" = 1"
+2019-04-16 00:39:00.763 +07:00 [Information] Executed DbCommand ("9"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"list\".\"Id_reserve\", \"list\".\"Code\", \"list\".\"DateModified\", \"list\".\"EndDay\", \"list\".\"Id_account\", \"list\".\"Id_vacancy\", \"list\".\"IsActive\", \"list\".\"Location\", \"list\".\"Size\", \"list\".\"StartDay\", \"list\".\"Status\"
+FROM \"Reservations\" AS \"list\"
+WHERE ((\"list\".\"EndDay\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now', 'localtime'), '0'), '.')) AND (\"list\".\"IsActive\" = 1)) AND (lower(\"list\".\"Status\") = 'unuse')"
+2019-04-16 00:40:00.320 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:40:00.341 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:40:00.344 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:40:00.348 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:40:00.357 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:40:00.360 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:40:00.365 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:40:00.374 +07:00 [Information] Executed DbCommand ("4"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"row\".\"Id_reserve\", \"row\".\"Code\", \"row\".\"DateModified\", \"row\".\"EndDay\", \"row\".\"Id_account\", \"row\".\"Id_vacancy\", \"row\".\"IsActive\", \"row\".\"Location\", \"row\".\"Size\", \"row\".\"StartDay\", \"row\".\"Status\"
+FROM \"Reservations\" AS \"row\"
+WHERE \"row\".\"IsActive\" = 1"
+2019-04-16 00:40:00.377 +07:00 [Information] Executed DbCommand ("7"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"row\".\"Id_reserve\", \"row\".\"Code\", \"row\".\"DateModified\", \"row\".\"EndDay\", \"row\".\"Id_account\", \"row\".\"Id_vacancy\", \"row\".\"IsActive\", \"row\".\"Location\", \"row\".\"Size\", \"row\".\"StartDay\", \"row\".\"Status\"
+FROM \"Reservations\" AS \"row\"
+WHERE \"row\".\"IsActive\" = 1"
+2019-04-16 00:40:00.382 +07:00 [Information] Executed DbCommand ("5"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"list\".\"Id_reserve\", \"list\".\"Code\", \"list\".\"DateModified\", \"list\".\"EndDay\", \"list\".\"Id_account\", \"list\".\"Id_vacancy\", \"list\".\"IsActive\", \"list\".\"Location\", \"list\".\"Size\", \"list\".\"StartDay\", \"list\".\"Status\"
+FROM \"Reservations\" AS \"list\"
+WHERE ((\"list\".\"EndDay\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now', 'localtime'), '0'), '.')) AND (\"list\".\"IsActive\" = 1)) AND (lower(\"list\".\"Status\") = 'unuse')"
+2019-04-16 00:40:00.387 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:40:00.393 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:40:00.399 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"list\".\"Id_reserve\", \"list\".\"Code\", \"list\".\"DateModified\", \"list\".\"EndDay\", \"list\".\"Id_account\", \"list\".\"Id_vacancy\", \"list\".\"IsActive\", \"list\".\"Location\", \"list\".\"Size\", \"list\".\"StartDay\", \"list\".\"Status\"
+FROM \"Reservations\" AS \"list\"
+WHERE ((\"list\".\"EndDay\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now', 'localtime'), '0'), '.')) AND (\"list\".\"IsActive\" = 1)) AND (lower(\"list\".\"Status\") = 'use')"
+2019-04-16 00:40:00.406 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:40:00.412 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT DISTINCT \"row\".\"Id_account\"
+FROM \"Reservations\" AS \"row\"
+WHERE lower(\"row\".\"Status\") = 'timeup'"
+2019-04-16 00:40:00.457 +07:00 [Information] Executed DbCommand ("8"ms) [Parameters=["@__ToString_0='?' (Size = 8)"], CommandType='Text', CommandTimeout='30']"
+""SELECT COUNT(*)
+FROM \"Reservations\" AS \"x\"
+WHERE (\"x\".\"Id_account\" = @__ToString_0) AND (lower(\"x\".\"Status\") = 'timeup')"
+2019-04-16 00:40:00.466 +07:00 [Information] Set Expire every 5 min 04/16/2019 00:40:00 "58010776" No data to set.
+2019-04-16 00:40:39.482 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44380/  
+2019-04-16 00:40:39.482 +07:00 [Information] Request starting HTTP/1.1 DEBUG http://localhost:50909/  0
+2019-04-16 00:40:39.560 +07:00 [Information] Request finished in 91.3501ms 200 
+2019-04-16 00:40:39.855 +07:00 [Information] Request finished in 386.3934ms 404 
+2019-04-16 00:40:40.184 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44380/favicon.ico  
+2019-04-16 00:40:40.205 +07:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"D:\Project\test2\test2\Project-master\Project-master\wwwroot\favicon.ico"'
+2019-04-16 00:40:40.210 +07:00 [Information] Request finished in 27.8097ms 200 image/x-icon
+2019-04-16 00:44:39.549 +07:00 [Information] Request starting HTTP/1.1 DEBUG http://localhost:50909/  0
+2019-04-16 00:44:39.549 +07:00 [Information] Request starting HTTP/1.1 GET http://localhost:44380/  
+2019-04-16 00:44:39.628 +07:00 [Information] Request finished in 90.1118ms 200 
+2019-04-16 00:44:39.945 +07:00 [Information] Request finished in 407.2934ms 404 
+2019-04-16 00:45:00.788 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:45:00.788 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:45:00.798 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:45:00.798 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:45:00.803 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:45:01.146 +07:00 [Information] Executed DbCommand ("21"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:45:01.146 +07:00 [Information] Executed DbCommand ("22"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:45:01.146 +07:00 [Information] Executed DbCommand ("22"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:45:01.146 +07:00 [Information] Executed DbCommand ("21"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:45:01.146 +07:00 [Information] Executed DbCommand ("21"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:45:01.174 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"row\".\"Id_reserve\", \"row\".\"Code\", \"row\".\"DateModified\", \"row\".\"EndDay\", \"row\".\"Id_account\", \"row\".\"Id_vacancy\", \"row\".\"IsActive\", \"row\".\"Location\", \"row\".\"Size\", \"row\".\"StartDay\", \"row\".\"Status\"
+FROM \"Reservations\" AS \"row\"
+WHERE \"row\".\"IsActive\" = 1"
+2019-04-16 00:45:01.183 +07:00 [Information] Executed DbCommand ("5"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"row\".\"Id_reserve\", \"row\".\"Code\", \"row\".\"DateModified\", \"row\".\"EndDay\", \"row\".\"Id_account\", \"row\".\"Id_vacancy\", \"row\".\"IsActive\", \"row\".\"Location\", \"row\".\"Size\", \"row\".\"StartDay\", \"row\".\"Status\"
+FROM \"Reservations\" AS \"row\"
+WHERE \"row\".\"IsActive\" = 1"
+2019-04-16 00:45:01.184 +07:00 [Information] Executed DbCommand ("5"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"list\".\"Id_reserve\", \"list\".\"Code\", \"list\".\"DateModified\", \"list\".\"EndDay\", \"list\".\"Id_account\", \"list\".\"Id_vacancy\", \"list\".\"IsActive\", \"list\".\"Location\", \"list\".\"Size\", \"list\".\"StartDay\", \"list\".\"Status\"
+FROM \"Reservations\" AS \"list\"
+WHERE ((\"list\".\"EndDay\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now', 'localtime'), '0'), '.')) AND (\"list\".\"IsActive\" = 1)) AND (lower(\"list\".\"Status\") = 'use')"
+2019-04-16 00:45:01.194 +07:00 [Information] Executed DbCommand ("3"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"list\".\"Id_reserve\", \"list\".\"Code\", \"list\".\"DateModified\", \"list\".\"EndDay\", \"list\".\"Id_account\", \"list\".\"Id_vacancy\", \"list\".\"IsActive\", \"list\".\"Location\", \"list\".\"Size\", \"list\".\"StartDay\", \"list\".\"Status\"
+FROM \"Reservations\" AS \"list\"
+WHERE ((\"list\".\"EndDay\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now', 'localtime'), '0'), '.')) AND (\"list\".\"IsActive\" = 1)) AND (lower(\"list\".\"Status\") = 'unuse')"
+2019-04-16 00:45:01.196 +07:00 [Information] Executed DbCommand ("6"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT DISTINCT \"row\".\"Id_account\"
+FROM \"Reservations\" AS \"row\"
+WHERE lower(\"row\".\"Status\") = 'timeup'"
+2019-04-16 00:45:01.276 +07:00 [Information] Executed DbCommand ("15"ms) [Parameters=["@__ToString_0='?' (Size = 8)"], CommandType='Text', CommandTimeout='30']"
+""SELECT COUNT(*)
+FROM \"Reservations\" AS \"x\"
+WHERE (\"x\".\"Id_account\" = @__ToString_0) AND (lower(\"x\".\"Status\") = 'timeup')"
+2019-04-16 00:45:01.286 +07:00 [Information] Set Expire every 5 min 04/16/2019 00:45:01 "58010776" No data to set.
+2019-04-16 00:45:49.817 +07:00 [Information] Connection id ""0HLM1P8O0T3MD"" request processing ended abnormally.
+System.IO.IOException: The decryption operation failed, see inner exception. ---> System.ComponentModel.Win32Exception: An unknown error occurred while processing the certificate
+   --- End of inner exception stack trace ---
+   at System.Net.Security.SslStreamInternal.ReadAsyncInternal[TReadAdapter](TReadAdapter adapter, Memory`1 buffer)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Adapter.Internal.AdaptedPipeline.ReadInputAsync(Stream stream)
+   at System.IO.Pipelines.PipeCompletion.ThrowLatchedException()
+   at System.IO.Pipelines.Pipe.GetReadResult(ReadResult& result)
+   at System.IO.Pipelines.Pipe.ReadAsync(CancellationToken token)
+   at System.IO.Pipelines.Pipe.DefaultPipeReader.ReadAsync(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.Http1Connection.BeginRead(ValueTask`1& awaitable)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequests[TContext](IHttpApplication`1 application)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequestsAsync[TContext](IHttpApplication`1 application)
+2019-04-16 00:45:53.977 +07:00 [Information] Connection id ""0HLM1P8O0T3ME"" request processing ended abnormally.
+System.IO.IOException: The decryption operation failed, see inner exception. ---> System.ComponentModel.Win32Exception: An unknown error occurred while processing the certificate
+   --- End of inner exception stack trace ---
+   at System.Net.Security.SslStreamInternal.ReadAsyncInternal[TReadAdapter](TReadAdapter adapter, Memory`1 buffer)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Adapter.Internal.AdaptedPipeline.ReadInputAsync(Stream stream)
+   at System.IO.Pipelines.PipeCompletion.ThrowLatchedException()
+   at System.IO.Pipelines.Pipe.GetReadResult(ReadResult& result)
+   at System.IO.Pipelines.Pipe.GetReadAsyncResult()
+   at System.IO.Pipelines.Pipe.DefaultPipeReader.GetResult(Int16 token)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequests[TContext](IHttpApplication`1 application)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequestsAsync[TContext](IHttpApplication`1 application)
+2019-04-16 00:45:53.991 +07:00 [Information] Connection id ""0HLM1P8O0T3MF"" request processing ended abnormally.
+System.IO.IOException: The decryption operation failed, see inner exception. ---> System.ComponentModel.Win32Exception: An unknown error occurred while processing the certificate
+   --- End of inner exception stack trace ---
+   at System.Net.Security.SslStreamInternal.ReadAsyncInternal[TReadAdapter](TReadAdapter adapter, Memory`1 buffer)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Adapter.Internal.AdaptedPipeline.ReadInputAsync(Stream stream)
+   at System.IO.Pipelines.PipeCompletion.ThrowLatchedException()
+   at System.IO.Pipelines.Pipe.GetReadResult(ReadResult& result)
+   at System.IO.Pipelines.Pipe.GetReadAsyncResult()
+   at System.IO.Pipelines.Pipe.DefaultPipeReader.GetResult(Int16 token)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequests[TContext](IHttpApplication`1 application)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequestsAsync[TContext](IHttpApplication`1 application)
+2019-04-16 00:45:56.914 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/  
+2019-04-16 00:45:57.252 +07:00 [Information] Request finished in 336.1725ms 404 
+2019-04-16 00:45:57.338 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/favicon.ico  
+2019-04-16 00:45:57.361 +07:00 [Information] Sending file. Request path: '"/favicon.ico"'. Physical path: '"D:\Project\test2\test2\Project-master\Project-master\wwwroot\favicon.ico"'
+2019-04-16 00:45:57.366 +07:00 [Information] Request finished in 29.5459ms 200 image/x-icon
+2019-04-16 00:46:00.718 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:46:00.718 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:46:00.720 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:46:00.721 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:46:01.007 +07:00 [Information] Executed DbCommand ("17"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:46:01.007 +07:00 [Information] Executed DbCommand ("17"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:46:01.007 +07:00 [Information] Executed DbCommand ("17"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:46:01.007 +07:00 [Information] Executed DbCommand ("17"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:46:01.043 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"list\".\"Id_reserve\", \"list\".\"Code\", \"list\".\"DateModified\", \"list\".\"EndDay\", \"list\".\"Id_account\", \"list\".\"Id_vacancy\", \"list\".\"IsActive\", \"list\".\"Location\", \"list\".\"Size\", \"list\".\"StartDay\", \"list\".\"Status\"
+FROM \"Reservations\" AS \"list\"
+WHERE ((\"list\".\"EndDay\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now', 'localtime'), '0'), '.')) AND (\"list\".\"IsActive\" = 1)) AND (lower(\"list\".\"Status\") = 'unuse')"
+2019-04-16 00:46:01.044 +07:00 [Information] Executed DbCommand ("6"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"list\".\"Id_reserve\", \"list\".\"Code\", \"list\".\"DateModified\", \"list\".\"EndDay\", \"list\".\"Id_account\", \"list\".\"Id_vacancy\", \"list\".\"IsActive\", \"list\".\"Location\", \"list\".\"Size\", \"list\".\"StartDay\", \"list\".\"Status\"
+FROM \"Reservations\" AS \"list\"
+WHERE ((\"list\".\"EndDay\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now', 'localtime'), '0'), '.')) AND (\"list\".\"IsActive\" = 1)) AND (lower(\"list\".\"Status\") = 'use')"
+2019-04-16 00:46:01.051 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"row\".\"Id_reserve\", \"row\".\"Code\", \"row\".\"DateModified\", \"row\".\"EndDay\", \"row\".\"Id_account\", \"row\".\"Id_vacancy\", \"row\".\"IsActive\", \"row\".\"Location\", \"row\".\"Size\", \"row\".\"StartDay\", \"row\".\"Status\"
+FROM \"Reservations\" AS \"row\"
+WHERE \"row\".\"IsActive\" = 1"
+2019-04-16 00:46:01.053 +07:00 [Information] Executed DbCommand ("6"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"row\".\"Id_reserve\", \"row\".\"Code\", \"row\".\"DateModified\", \"row\".\"EndDay\", \"row\".\"Id_account\", \"row\".\"Id_vacancy\", \"row\".\"IsActive\", \"row\".\"Location\", \"row\".\"Size\", \"row\".\"StartDay\", \"row\".\"Status\"
+FROM \"Reservations\" AS \"row\"
+WHERE \"row\".\"IsActive\" = 1"
+2019-04-16 00:46:01.134 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/sw  
+2019-04-16 00:46:01.147 +07:00 [Information] Request finished in 11.7033ms 404 
+2019-04-16 00:46:06.011 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/swagger  
+2019-04-16 00:46:06.018 +07:00 [Information] Request finished in 5.962ms 301 
+2019-04-16 00:46:06.046 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/swagger/index.html  
+2019-04-16 00:46:06.153 +07:00 [Information] Request finished in 105.666ms 200 text/html
+2019-04-16 00:46:06.260 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/swagger/swagger-ui.css  
+2019-04-16 00:46:06.301 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/swagger/swagger-ui-bundle.js  
+2019-04-16 00:46:06.313 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/swagger/swagger-ui-standalone-preset.js  
+2019-04-16 00:46:06.325 +07:00 [Information] Sending file. Request path: '"/swagger-ui.css"'. Physical path: '"N/A"'
+2019-04-16 00:46:06.331 +07:00 [Information] Request finished in 72.9071ms 200 text/css
+2019-04-16 00:46:06.359 +07:00 [Information] Sending file. Request path: '"/swagger-ui-standalone-preset.js"'. Physical path: '"N/A"'
+2019-04-16 00:46:06.365 +07:00 [Information] Request finished in 50.2185ms 200 application/javascript
+2019-04-16 00:46:06.398 +07:00 [Information] Sending file. Request path: '"/swagger-ui-bundle.js"'. Physical path: '"N/A"'
+2019-04-16 00:46:06.414 +07:00 [Information] Request finished in 136.9879ms 200 application/javascript
+2019-04-16 00:46:06.628 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/swagger/favicon-16x16.png  
+2019-04-16 00:46:06.634 +07:00 [Information] Sending file. Request path: '"/favicon-16x16.png"'. Physical path: '"N/A"'
+2019-04-16 00:46:06.641 +07:00 [Information] Request finished in 12.5927ms 200 image/png
+2019-04-16 00:46:06.731 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/swagger/v1/swagger.json  
+2019-04-16 00:46:06.889 +07:00 [Information] Request finished in 156.7328ms 200 application/json;charset=utf-8
+2019-04-16 00:46:44.212 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/swagger/index.html  
+2019-04-16 00:46:44.217 +07:00 [Information] Request finished in 9.073ms 200 text/html
+2019-04-16 00:46:44.353 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/swagger/swagger-ui.css  
+2019-04-16 00:46:44.363 +07:00 [Information] Sending file. Request path: '"/swagger-ui.css"'. Physical path: '"N/A"'
+2019-04-16 00:46:44.381 +07:00 [Information] Request finished in 17.1411ms 200 text/css
+2019-04-16 00:46:44.388 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/swagger/swagger-ui-standalone-preset.js  
+2019-04-16 00:46:44.429 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/swagger/swagger-ui-bundle.js  
+2019-04-16 00:46:44.493 +07:00 [Information] Sending file. Request path: '"/swagger-ui-standalone-preset.js"'. Physical path: '"N/A"'
+2019-04-16 00:46:44.498 +07:00 [Information] Request finished in 111.7728ms 200 application/javascript
+2019-04-16 00:46:44.521 +07:00 [Information] Sending file. Request path: '"/swagger-ui-bundle.js"'. Physical path: '"N/A"'
+2019-04-16 00:46:44.527 +07:00 [Information] Request finished in 132.9563ms 200 application/javascript
+2019-04-16 00:46:44.911 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/swagger/favicon-16x16.png  
+2019-04-16 00:46:44.918 +07:00 [Information] Sending file. Request path: '"/favicon-16x16.png"'. Physical path: '"N/A"'
+2019-04-16 00:46:44.924 +07:00 [Information] Request finished in 13.3226ms 200 image/png
+2019-04-16 00:46:45.024 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/swagger/v1/swagger.json  
+2019-04-16 00:46:45.038 +07:00 [Information] Request finished in 15.1641ms 200 application/json;charset=utf-8
+2019-04-16 00:47:46.911 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/  
+2019-04-16 00:47:47.294 +07:00 [Information] Request finished in 386.1637ms 404 
+2019-04-16 00:47:50.634 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/swagger/  
+2019-04-16 00:47:50.641 +07:00 [Information] Request finished in 6.9615ms 301 
+2019-04-16 00:47:50.658 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/swagger/index.html  
+2019-04-16 00:47:50.776 +07:00 [Information] Request finished in 117.5173ms 200 text/html
+2019-04-16 00:47:50.884 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/swagger/swagger-ui.css  
+2019-04-16 00:47:50.906 +07:00 [Information] Connection id ""0HLM1P9M6EK1L"", Request id ""0HLM1P9M6EK1L:00000004"": the application aborted the connection.
+2019-04-16 00:47:50.915 +07:00 [Information] Sending file. Request path: '"/swagger-ui.css"'. Physical path: '"N/A"'
+2019-04-16 00:47:50.924 +07:00 [Information] Request finished in 37.5575ms 0 text/css
+2019-04-16 00:47:51.284 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/swagger/v1/swagger.json  
+2019-04-16 00:47:51.469 +07:00 [Information] Request finished in 173.5131ms 200 application/json;charset=utf-8
+2019-04-16 00:47:57.415 +07:00 [Information] Request starting HTTP/1.1 POST https://161.246.5.52:5566/web/AddAdminAccount application/json-patch+json 145
+2019-04-16 00:47:57.422 +07:00 [Information] Policy execution successful.
+2019-04-16 00:47:57.473 +07:00 [Information] Route matched with "{action = \"AddAdminAccount\", controller = \"Account\"}". Executing action "test2.Controllers.AccountController.AddAdminAccount (test2)"
+2019-04-16 00:47:57.775 +07:00 [Information] Executing action method "test2.Controllers.AccountController.AddAdminAccount (test2)" with arguments (["test2.DatabaseContext.Models.Account"]) - Validation state: Valid
+2019-04-16 00:47:57.989 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:47:58.235 +07:00 [Information] Executed DbCommand ("15"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:47:58.267 +07:00 [Information] Executed DbCommand ("9"ms) [Parameters=["@__ToLower_0='?' (Size = 6)"], CommandType='Text', CommandTimeout='30']"
+""SELECT \"x\".\"Id_account\", \"x\".\"Email\", \"x\".\"Name\", \"x\".\"Phone\", \"x\".\"Point\", \"x\".\"Role\", \"x\".\"Token\"
+FROM \"Accounts\" AS \"x\"
+WHERE lower(\"x\".\"Email\") = @__ToLower_0
+LIMIT 1"
+2019-04-16 00:47:58.293 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:47:58.300 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=["@__ToString_0='?' (Size = 9)"], CommandType='Text', CommandTimeout='30']"
+""SELECT \"x\".\"Id_account\", \"x\".\"Email\", \"x\".\"Name\", \"x\".\"Phone\", \"x\".\"Point\", \"x\".\"Role\", \"x\".\"Token\"
+FROM \"Accounts\" AS \"x\"
+WHERE \"x\".\"Id_account\" = @__ToString_0
+LIMIT 1"
+2019-04-16 00:47:58.339 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:47:58.366 +07:00 [Information] Executed DbCommand ("2"ms) [Parameters=["@p0='?' (Size = 9), @p1='?' (Size = 6), @p2='?' (Size = 6), @p3='?', @p4='?', @p5='?' (Size = 13), @p6='?' (Size = 6)"], CommandType='Text', CommandTimeout='30']"
+""INSERT INTO \"Accounts\" (\"Id_account\", \"Email\", \"Name\", \"Phone\", \"Point\", \"Role\", \"Token\")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6);"
+2019-04-16 00:47:58.460 +07:00 [Information] Add user from mobile "string" "string" done.
+2019-04-16 00:47:58.472 +07:00 [Information] Executed action method "test2.Controllers.AccountController.AddAdminAccount (test2)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult" in 685.3819ms.
+2019-04-16 00:47:58.487 +07:00 [Information] Executing ObjectResult, writing value of type '"System.String"'.
+2019-04-16 00:47:58.502 +07:00 [Information] Executed action "test2.Controllers.AccountController.AddAdminAccount (test2)" in 1017.8157ms
+2019-04-16 00:47:58.507 +07:00 [Information] Request finished in 1093.5754ms 200 application/json; charset=utf-8
+2019-04-16 00:48:00.430 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:48:00.433 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:48:00.439 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:48:00.441 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:48:00.470 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:48:00.473 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:48:00.476 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:48:00.480 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:48:00.489 +07:00 [Information] Executed DbCommand ("2"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"row\".\"Id_reserve\", \"row\".\"Code\", \"row\".\"DateModified\", \"row\".\"EndDay\", \"row\".\"Id_account\", \"row\".\"Id_vacancy\", \"row\".\"IsActive\", \"row\".\"Location\", \"row\".\"Size\", \"row\".\"StartDay\", \"row\".\"Status\"
+FROM \"Reservations\" AS \"row\"
+WHERE \"row\".\"IsActive\" = 1"
+2019-04-16 00:48:00.491 +07:00 [Information] Executed DbCommand ("4"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"row\".\"Id_reserve\", \"row\".\"Code\", \"row\".\"DateModified\", \"row\".\"EndDay\", \"row\".\"Id_account\", \"row\".\"Id_vacancy\", \"row\".\"IsActive\", \"row\".\"Location\", \"row\".\"Size\", \"row\".\"StartDay\", \"row\".\"Status\"
+FROM \"Reservations\" AS \"row\"
+WHERE \"row\".\"IsActive\" = 1"
+2019-04-16 00:48:00.500 +07:00 [Information] Executed DbCommand ("4"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"list\".\"Id_reserve\", \"list\".\"Code\", \"list\".\"DateModified\", \"list\".\"EndDay\", \"list\".\"Id_account\", \"list\".\"Id_vacancy\", \"list\".\"IsActive\", \"list\".\"Location\", \"list\".\"Size\", \"list\".\"StartDay\", \"list\".\"Status\"
+FROM \"Reservations\" AS \"list\"
+WHERE ((\"list\".\"EndDay\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now', 'localtime'), '0'), '.')) AND (\"list\".\"IsActive\" = 1)) AND (lower(\"list\".\"Status\") = 'unuse')"
+2019-04-16 00:48:00.502 +07:00 [Information] Executed DbCommand ("4"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"list\".\"Id_reserve\", \"list\".\"Code\", \"list\".\"DateModified\", \"list\".\"EndDay\", \"list\".\"Id_account\", \"list\".\"Id_vacancy\", \"list\".\"IsActive\", \"list\".\"Location\", \"list\".\"Size\", \"list\".\"StartDay\", \"list\".\"Status\"
+FROM \"Reservations\" AS \"list\"
+WHERE ((\"list\".\"EndDay\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now', 'localtime'), '0'), '.')) AND (\"list\".\"IsActive\" = 1)) AND (lower(\"list\".\"Status\") = 'use')"
+2019-04-16 00:49:00.039 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:49:00.046 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:49:00.052 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"row\".\"Id_reserve\", \"row\".\"Code\", \"row\".\"DateModified\", \"row\".\"EndDay\", \"row\".\"Id_account\", \"row\".\"Id_vacancy\", \"row\".\"IsActive\", \"row\".\"Location\", \"row\".\"Size\", \"row\".\"StartDay\", \"row\".\"Status\"
+FROM \"Reservations\" AS \"row\"
+WHERE \"row\".\"IsActive\" = 1"
+2019-04-16 00:49:00.057 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:49:00.063 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:49:00.068 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"list\".\"Id_reserve\", \"list\".\"Code\", \"list\".\"DateModified\", \"list\".\"EndDay\", \"list\".\"Id_account\", \"list\".\"Id_vacancy\", \"list\".\"IsActive\", \"list\".\"Location\", \"list\".\"Size\", \"list\".\"StartDay\", \"list\".\"Status\"
+FROM \"Reservations\" AS \"list\"
+WHERE ((\"list\".\"EndDay\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now', 'localtime'), '0'), '.')) AND (\"list\".\"IsActive\" = 1)) AND (lower(\"list\".\"Status\") = 'use')"
+2019-04-16 00:49:00.155 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:49:00.156 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:49:00.165 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:49:00.166 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:49:00.174 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"row\".\"Id_reserve\", \"row\".\"Code\", \"row\".\"DateModified\", \"row\".\"EndDay\", \"row\".\"Id_account\", \"row\".\"Id_vacancy\", \"row\".\"IsActive\", \"row\".\"Location\", \"row\".\"Size\", \"row\".\"StartDay\", \"row\".\"Status\"
+FROM \"Reservations\" AS \"row\"
+WHERE \"row\".\"IsActive\" = 1"
+2019-04-16 00:49:00.177 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"list\".\"Id_reserve\", \"list\".\"Code\", \"list\".\"DateModified\", \"list\".\"EndDay\", \"list\".\"Id_account\", \"list\".\"Id_vacancy\", \"list\".\"IsActive\", \"list\".\"Location\", \"list\".\"Size\", \"list\".\"StartDay\", \"list\".\"Status\"
+FROM \"Reservations\" AS \"list\"
+WHERE ((\"list\".\"EndDay\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now', 'localtime'), '0'), '.')) AND (\"list\".\"IsActive\" = 1)) AND (lower(\"list\".\"Status\") = 'unuse')"
+2019-04-16 00:50:00.246 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:50:00.247 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:50:00.253 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:50:00.278 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:50:00.281 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:50:00.287 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:50:00.293 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:50:00.295 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:50:00.306 +07:00 [Information] Executed DbCommand ("4"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"list\".\"Id_reserve\", \"list\".\"Code\", \"list\".\"DateModified\", \"list\".\"EndDay\", \"list\".\"Id_account\", \"list\".\"Id_vacancy\", \"list\".\"IsActive\", \"list\".\"Location\", \"list\".\"Size\", \"list\".\"StartDay\", \"list\".\"Status\"
+FROM \"Reservations\" AS \"list\"
+WHERE ((\"list\".\"EndDay\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now', 'localtime'), '0'), '.')) AND (\"list\".\"IsActive\" = 1)) AND (lower(\"list\".\"Status\") = 'use')"
+2019-04-16 00:50:00.308 +07:00 [Information] Executed DbCommand ("3"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"list\".\"Id_reserve\", \"list\".\"Code\", \"list\".\"DateModified\", \"list\".\"EndDay\", \"list\".\"Id_account\", \"list\".\"Id_vacancy\", \"list\".\"IsActive\", \"list\".\"Location\", \"list\".\"Size\", \"list\".\"StartDay\", \"list\".\"Status\"
+FROM \"Reservations\" AS \"list\"
+WHERE ((\"list\".\"EndDay\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now', 'localtime'), '0'), '.')) AND (\"list\".\"IsActive\" = 1)) AND (lower(\"list\".\"Status\") = 'unuse')"
+2019-04-16 00:50:00.310 +07:00 [Information] Executed DbCommand ("2"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"row\".\"Id_reserve\", \"row\".\"Code\", \"row\".\"DateModified\", \"row\".\"EndDay\", \"row\".\"Id_account\", \"row\".\"Id_vacancy\", \"row\".\"IsActive\", \"row\".\"Location\", \"row\".\"Size\", \"row\".\"StartDay\", \"row\".\"Status\"
+FROM \"Reservations\" AS \"row\"
+WHERE \"row\".\"IsActive\" = 1"
+2019-04-16 00:50:00.313 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:50:00.317 +07:00 [Information] Executed DbCommand ("2"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:50:00.321 +07:00 [Information] Executed DbCommand ("4"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"row\".\"Id_reserve\", \"row\".\"Code\", \"row\".\"DateModified\", \"row\".\"EndDay\", \"row\".\"Id_account\", \"row\".\"Id_vacancy\", \"row\".\"IsActive\", \"row\".\"Location\", \"row\".\"Size\", \"row\".\"StartDay\", \"row\".\"Status\"
+FROM \"Reservations\" AS \"row\"
+WHERE \"row\".\"IsActive\" = 1"
+2019-04-16 00:50:00.327 +07:00 [Information] Executed DbCommand ("2"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT DISTINCT \"row\".\"Id_account\"
+FROM \"Reservations\" AS \"row\"
+WHERE lower(\"row\".\"Status\") = 'timeup'"
+2019-04-16 00:50:00.357 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=["@__ToString_0='?' (Size = 8)"], CommandType='Text', CommandTimeout='30']"
+""SELECT COUNT(*)
+FROM \"Reservations\" AS \"x\"
+WHERE (\"x\".\"Id_account\" = @__ToString_0) AND (lower(\"x\".\"Status\") = 'timeup')"
+2019-04-16 00:50:00.361 +07:00 [Information] Set Expire every 5 min 04/16/2019 00:50:00 "58010776" No data to set.
+2019-04-16 00:50:07.325 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/web/AddAdminAccount application/json 164
+2019-04-16 00:50:07.332 +07:00 [Information] Request finished in 7.8781ms 404 
+2019-04-16 00:50:07.341 +07:00 [Information] Connection id ""0HLM1P9M6EK1P"", Request id ""0HLM1P9M6EK1P:00000001"": the application completed without reading the entire request body.
+2019-04-16 00:50:18.705 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/web/AddAdminAccount application/json 164
+2019-04-16 00:50:18.712 +07:00 [Information] Request finished in 5.654ms 404 
+2019-04-16 00:50:18.718 +07:00 [Information] Connection id ""0HLM1P9M6EK1P"", Request id ""0HLM1P9M6EK1P:00000002"": the application completed without reading the entire request body.
+2019-04-16 00:51:00.009 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:51:00.015 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:51:00.023 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"list\".\"Id_reserve\", \"list\".\"Code\", \"list\".\"DateModified\", \"list\".\"EndDay\", \"list\".\"Id_account\", \"list\".\"Id_vacancy\", \"list\".\"IsActive\", \"list\".\"Location\", \"list\".\"Size\", \"list\".\"StartDay\", \"list\".\"Status\"
+FROM \"Reservations\" AS \"list\"
+WHERE ((\"list\".\"EndDay\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now', 'localtime'), '0'), '.')) AND (\"list\".\"IsActive\" = 1)) AND (lower(\"list\".\"Status\") = 'unuse')"
+2019-04-16 00:51:00.066 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:51:00.068 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:51:00.070 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:51:00.078 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:51:00.083 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:51:00.084 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:51:00.092 +07:00 [Information] Executed DbCommand ("3"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"list\".\"Id_reserve\", \"list\".\"Code\", \"list\".\"DateModified\", \"list\".\"EndDay\", \"list\".\"Id_account\", \"list\".\"Id_vacancy\", \"list\".\"IsActive\", \"list\".\"Location\", \"list\".\"Size\", \"list\".\"StartDay\", \"list\".\"Status\"
+FROM \"Reservations\" AS \"list\"
+WHERE ((\"list\".\"EndDay\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now', 'localtime'), '0'), '.')) AND (\"list\".\"IsActive\" = 1)) AND (lower(\"list\".\"Status\") = 'use')"
+2019-04-16 00:51:00.097 +07:00 [Information] Executed DbCommand ("3"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"row\".\"Id_reserve\", \"row\".\"Code\", \"row\".\"DateModified\", \"row\".\"EndDay\", \"row\".\"Id_account\", \"row\".\"Id_vacancy\", \"row\".\"IsActive\", \"row\".\"Location\", \"row\".\"Size\", \"row\".\"StartDay\", \"row\".\"Status\"
+FROM \"Reservations\" AS \"row\"
+WHERE \"row\".\"IsActive\" = 1"
+2019-04-16 00:51:00.098 +07:00 [Information] Executed DbCommand ("5"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"row\".\"Id_reserve\", \"row\".\"Code\", \"row\".\"DateModified\", \"row\".\"EndDay\", \"row\".\"Id_account\", \"row\".\"Id_vacancy\", \"row\".\"IsActive\", \"row\".\"Location\", \"row\".\"Size\", \"row\".\"StartDay\", \"row\".\"Status\"
+FROM \"Reservations\" AS \"row\"
+WHERE \"row\".\"IsActive\" = 1"
+2019-04-16 00:51:16.111 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/web/AddAdminAccount  
+2019-04-16 00:51:16.119 +07:00 [Information] Request finished in 7.4553ms 404 
+2019-04-16 00:51:20.263 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/web/AddAdminAccount  
+2019-04-16 00:51:20.268 +07:00 [Information] Request finished in 4.5475ms 404 
+2019-04-16 00:51:39.924 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/api/Account/UserAccountAll  
+2019-04-16 00:51:39.931 +07:00 [Information] Route matched with "{action = \"GetUserAccountdev\", controller = \"Account\"}". Executing action "test2.Controllers.AccountController.GetUserAccountdev (test2)"
+2019-04-16 00:51:39.968 +07:00 [Information] Executing action method "test2.Controllers.AccountController.GetUserAccountdev (test2)" - Validation state: Valid
+2019-04-16 00:51:40.974 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:51:40.982 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:51:40.989 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"accountlist\".\"Id_account\", \"accountlist\".\"Email\", \"accountlist\".\"Name\", \"accountlist\".\"Phone\", \"accountlist\".\"Point\", \"accountlist\".\"Role\", \"accountlist\".\"Token\"
+FROM \"Accounts\" AS \"accountlist\"
+WHERE \"accountlist\".\"Role\" = 'User'"
+2019-04-16 00:51:40.997 +07:00 [Information] Executed action method "test2.Controllers.AccountController.GetUserAccountdev (test2)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult" in 1024.4385ms.
+2019-04-16 00:51:41.003 +07:00 [Information] Executing ObjectResult, writing value of type '"System.Collections.Generic.List`1[[test2.DatabaseContext.Models.Account, test2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"'.
+2019-04-16 00:51:41.012 +07:00 [Information] Executed action "test2.Controllers.AccountController.GetUserAccountdev (test2)" in 1075.4699ms
+2019-04-16 00:51:41.017 +07:00 [Information] Request finished in 1094.1225ms 200 application/json; charset=utf-8
+2019-04-16 00:51:48.054 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/api/Account/UserAccountAll  
+2019-04-16 00:51:48.059 +07:00 [Information] Route matched with "{action = \"GetUserAccountdev\", controller = \"Account\"}". Executing action "test2.Controllers.AccountController.GetUserAccountdev (test2)"
+2019-04-16 00:51:48.087 +07:00 [Information] Executing action method "test2.Controllers.AccountController.GetUserAccountdev (test2)" - Validation state: Valid
+2019-04-16 00:51:48.093 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:51:48.099 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:51:48.106 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"accountlist\".\"Id_account\", \"accountlist\".\"Email\", \"accountlist\".\"Name\", \"accountlist\".\"Phone\", \"accountlist\".\"Point\", \"accountlist\".\"Role\", \"accountlist\".\"Token\"
+FROM \"Accounts\" AS \"accountlist\"
+WHERE \"accountlist\".\"Role\" = 'User'"
+2019-04-16 00:51:48.111 +07:00 [Information] Executed action method "test2.Controllers.AccountController.GetUserAccountdev (test2)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult" in 18.7651ms.
+2019-04-16 00:51:48.116 +07:00 [Information] Executing ObjectResult, writing value of type '"System.Collections.Generic.List`1[[test2.DatabaseContext.Models.Account, test2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"'.
+2019-04-16 00:51:48.124 +07:00 [Information] Executed action "test2.Controllers.AccountController.GetUserAccountdev (test2)" in 56.9368ms
+2019-04-16 00:51:48.132 +07:00 [Information] Request finished in 76.2874ms 200 application/json; charset=utf-8
+2019-04-16 00:52:00.162 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:52:00.164 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:52:00.169 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:52:00.176 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:52:00.181 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:52:00.184 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:52:00.194 +07:00 [Information] Executed DbCommand ("2"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"list\".\"Id_reserve\", \"list\".\"Code\", \"list\".\"DateModified\", \"list\".\"EndDay\", \"list\".\"Id_account\", \"list\".\"Id_vacancy\", \"list\".\"IsActive\", \"list\".\"Location\", \"list\".\"Size\", \"list\".\"StartDay\", \"list\".\"Status\"
+FROM \"Reservations\" AS \"list\"
+WHERE ((\"list\".\"EndDay\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now', 'localtime'), '0'), '.')) AND (\"list\".\"IsActive\" = 1)) AND (lower(\"list\".\"Status\") = 'unuse')"
+2019-04-16 00:52:00.197 +07:00 [Information] Executed DbCommand ("5"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"row\".\"Id_reserve\", \"row\".\"Code\", \"row\".\"DateModified\", \"row\".\"EndDay\", \"row\".\"Id_account\", \"row\".\"Id_vacancy\", \"row\".\"IsActive\", \"row\".\"Location\", \"row\".\"Size\", \"row\".\"StartDay\", \"row\".\"Status\"
+FROM \"Reservations\" AS \"row\"
+WHERE \"row\".\"IsActive\" = 1"
+2019-04-16 00:52:00.203 +07:00 [Information] Executed DbCommand ("5"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"list\".\"Id_reserve\", \"list\".\"Code\", \"list\".\"DateModified\", \"list\".\"EndDay\", \"list\".\"Id_account\", \"list\".\"Id_vacancy\", \"list\".\"IsActive\", \"list\".\"Location\", \"list\".\"Size\", \"list\".\"StartDay\", \"list\".\"Status\"
+FROM \"Reservations\" AS \"list\"
+WHERE ((\"list\".\"EndDay\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now', 'localtime'), '0'), '.')) AND (\"list\".\"IsActive\" = 1)) AND (lower(\"list\".\"Status\") = 'use')"
+2019-04-16 00:52:00.239 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:52:00.244 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:52:00.248 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"row\".\"Id_reserve\", \"row\".\"Code\", \"row\".\"DateModified\", \"row\".\"EndDay\", \"row\".\"Id_account\", \"row\".\"Id_vacancy\", \"row\".\"IsActive\", \"row\".\"Location\", \"row\".\"Size\", \"row\".\"StartDay\", \"row\".\"Status\"
+FROM \"Reservations\" AS \"row\"
+WHERE \"row\".\"IsActive\" = 1"
+2019-04-16 00:52:21.472 +07:00 [Information] Request starting HTTP/1.1 POST https://161.246.5.52:5566/web/AddAdminAccount application/json 164
+2019-04-16 00:52:21.479 +07:00 [Information] Route matched with "{action = \"AddAdminAccount\", controller = \"Account\"}". Executing action "test2.Controllers.AccountController.AddAdminAccount (test2)"
+2019-04-16 00:52:21.519 +07:00 [Information] Executing action method "test2.Controllers.AccountController.AddAdminAccount (test2)" with arguments (["test2.DatabaseContext.Models.Account"]) - Validation state: Valid
+2019-04-16 00:52:21.527 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:52:21.536 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:52:21.540 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=["@__ToLower_0='?' (Size = 14)"], CommandType='Text', CommandTimeout='30']"
+""SELECT \"x\".\"Id_account\", \"x\".\"Email\", \"x\".\"Name\", \"x\".\"Phone\", \"x\".\"Point\", \"x\".\"Role\", \"x\".\"Token\"
+FROM \"Accounts\" AS \"x\"
+WHERE lower(\"x\".\"Email\") = @__ToLower_0
+LIMIT 1"
+2019-04-16 00:52:21.546 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:52:21.552 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=["@__ToString_0='?' (Size = 9)"], CommandType='Text', CommandTimeout='30']"
+""SELECT \"x\".\"Id_account\", \"x\".\"Email\", \"x\".\"Name\", \"x\".\"Phone\", \"x\".\"Point\", \"x\".\"Role\", \"x\".\"Token\"
+FROM \"Accounts\" AS \"x\"
+WHERE \"x\".\"Id_account\" = @__ToString_0
+LIMIT 1"
+2019-04-16 00:52:21.558 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:52:21.565 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=["@p0='?' (Size = 9), @p1='?' (Size = 14), @p2='?' (Size = 9), @p3='?', @p4='?', @p5='?' (Size = 13), @p6='?' (Size = 6)"], CommandType='Text', CommandTimeout='30']"
+""INSERT INTO \"Accounts\" (\"Id_account\", \"Email\", \"Name\", \"Phone\", \"Point\", \"Role\", \"Token\")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6);"
+2019-04-16 00:52:21.701 +07:00 [Information] Add user from mobile "erer erre" "test@gmail.com" done.
+2019-04-16 00:52:21.706 +07:00 [Information] Executed action method "test2.Controllers.AccountController.AddAdminAccount (test2)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult" in 182.364ms.
+2019-04-16 00:52:21.711 +07:00 [Information] Executing ObjectResult, writing value of type '"System.String"'.
+2019-04-16 00:52:21.716 +07:00 [Information] Executed action "test2.Controllers.AccountController.AddAdminAccount (test2)" in 232.5624ms
+2019-04-16 00:52:21.722 +07:00 [Information] Request finished in 254.6387ms 200 text/plain; charset=utf-8
+2019-04-16 00:52:32.930 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/api/Account/UserAccountAll application/json 164
+2019-04-16 00:52:32.939 +07:00 [Information] Route matched with "{action = \"GetUserAccountdev\", controller = \"Account\"}". Executing action "test2.Controllers.AccountController.GetUserAccountdev (test2)"
+2019-04-16 00:52:32.978 +07:00 [Information] Executing action method "test2.Controllers.AccountController.GetUserAccountdev (test2)" - Validation state: Valid
+2019-04-16 00:52:32.984 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:52:32.994 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:52:33.001 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"accountlist\".\"Id_account\", \"accountlist\".\"Email\", \"accountlist\".\"Name\", \"accountlist\".\"Phone\", \"accountlist\".\"Point\", \"accountlist\".\"Role\", \"accountlist\".\"Token\"
+FROM \"Accounts\" AS \"accountlist\"
+WHERE \"accountlist\".\"Role\" = 'User'"
+2019-04-16 00:52:33.006 +07:00 [Information] Executed action method "test2.Controllers.AccountController.GetUserAccountdev (test2)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult" in 23.4572ms.
+2019-04-16 00:52:33.011 +07:00 [Information] Executing ObjectResult, writing value of type '"System.Collections.Generic.List`1[[test2.DatabaseContext.Models.Account, test2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"'.
+2019-04-16 00:52:33.022 +07:00 [Information] Executed action "test2.Controllers.AccountController.GetUserAccountdev (test2)" in 73.5123ms
+2019-04-16 00:52:33.027 +07:00 [Information] Request finished in 99.0467ms 200 application/json; charset=utf-8
+2019-04-16 00:52:33.036 +07:00 [Information] Connection id ""0HLM1P9M6EK1P"", Request id ""0HLM1P9M6EK1P:00000004"": the application completed without reading the entire request body.
+2019-04-16 00:52:54.825 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/api/Account/AdminAccountAll  
+2019-04-16 00:52:54.835 +07:00 [Information] Route matched with "{action = \"GetAdminAccount\", controller = \"Account\"}". Executing action "test2.Controllers.AccountController.GetAdminAccount (test2)"
+2019-04-16 00:52:54.868 +07:00 [Information] Executing action method "test2.Controllers.AccountController.GetAdminAccount (test2)" - Validation state: Valid
+2019-04-16 00:52:54.874 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:52:54.885 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:52:54.891 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"accountlist\".\"Id_account\", \"accountlist\".\"Email\", \"accountlist\".\"Name\", \"accountlist\".\"Phone\", \"accountlist\".\"Point\", \"accountlist\".\"Role\", \"accountlist\".\"Token\"
+FROM \"Accounts\" AS \"accountlist\"
+WHERE \"accountlist\".\"Role\" = 'Administrator'"
+2019-04-16 00:52:54.896 +07:00 [Information] Executed action method "test2.Controllers.AccountController.GetAdminAccount (test2)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult" in 22.9262ms.
+2019-04-16 00:52:54.902 +07:00 [Information] Executing ObjectResult, writing value of type '"System.Collections.Generic.List`1[[test2.DatabaseContext.Models.Account, test2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"'.
+2019-04-16 00:52:54.908 +07:00 [Information] Executed action "test2.Controllers.AccountController.GetAdminAccount (test2)" in 67.4263ms
+2019-04-16 00:52:54.913 +07:00 [Information] Request finished in 88.8932ms 200 application/json; charset=utf-8
+2019-04-16 00:53:00.150 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:53:00.153 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:53:00.161 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:53:00.163 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:53:00.171 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:53:00.173 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:53:00.185 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:53:00.189 +07:00 [Information] Executed DbCommand ("3"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"list\".\"Id_reserve\", \"list\".\"Code\", \"list\".\"DateModified\", \"list\".\"EndDay\", \"list\".\"Id_account\", \"list\".\"Id_vacancy\", \"list\".\"IsActive\", \"list\".\"Location\", \"list\".\"Size\", \"list\".\"StartDay\", \"list\".\"Status\"
+FROM \"Reservations\" AS \"list\"
+WHERE ((\"list\".\"EndDay\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now', 'localtime'), '0'), '.')) AND (\"list\".\"IsActive\" = 1)) AND (lower(\"list\".\"Status\") = 'unuse')"
+2019-04-16 00:53:00.191 +07:00 [Information] Executed DbCommand ("2"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"row\".\"Id_reserve\", \"row\".\"Code\", \"row\".\"DateModified\", \"row\".\"EndDay\", \"row\".\"Id_account\", \"row\".\"Id_vacancy\", \"row\".\"IsActive\", \"row\".\"Location\", \"row\".\"Size\", \"row\".\"StartDay\", \"row\".\"Status\"
+FROM \"Reservations\" AS \"row\"
+WHERE \"row\".\"IsActive\" = 1"
+2019-04-16 00:53:00.194 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:53:00.198 +07:00 [Information] Executed DbCommand ("5"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"list\".\"Id_reserve\", \"list\".\"Code\", \"list\".\"DateModified\", \"list\".\"EndDay\", \"list\".\"Id_account\", \"list\".\"Id_vacancy\", \"list\".\"IsActive\", \"list\".\"Location\", \"list\".\"Size\", \"list\".\"StartDay\", \"list\".\"Status\"
+FROM \"Reservations\" AS \"list\"
+WHERE ((\"list\".\"EndDay\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now', 'localtime'), '0'), '.')) AND (\"list\".\"IsActive\" = 1)) AND (lower(\"list\".\"Status\") = 'use')"
+2019-04-16 00:53:00.203 +07:00 [Information] Executed DbCommand ("3"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"row\".\"Id_reserve\", \"row\".\"Code\", \"row\".\"DateModified\", \"row\".\"EndDay\", \"row\".\"Id_account\", \"row\".\"Id_vacancy\", \"row\".\"IsActive\", \"row\".\"Location\", \"row\".\"Size\", \"row\".\"StartDay\", \"row\".\"Status\"
+FROM \"Reservations\" AS \"row\"
+WHERE \"row\".\"IsActive\" = 1"
+2019-04-16 00:53:05.761 +07:00 [Information] Request starting HTTP/1.1 GET https://161.246.5.52:5566/api/Account/AdminAccountAll application/json 164
+2019-04-16 00:53:05.776 +07:00 [Information] Route matched with "{action = \"GetAdminAccount\", controller = \"Account\"}". Executing action "test2.Controllers.AccountController.GetAdminAccount (test2)"
+2019-04-16 00:53:05.821 +07:00 [Information] Executing action method "test2.Controllers.AccountController.GetAdminAccount (test2)" - Validation state: Valid
+2019-04-16 00:53:05.827 +07:00 [Information] Entity Framework Core "2.1.3-rtm-32065" initialized '"LockerDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "None"
+2019-04-16 00:53:05.836 +07:00 [Information] Executed DbCommand ("0"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""PRAGMA foreign_keys=ON;"
+2019-04-16 00:53:05.842 +07:00 [Information] Executed DbCommand ("1"ms) [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"accountlist\".\"Id_account\", \"accountlist\".\"Email\", \"accountlist\".\"Name\", \"accountlist\".\"Phone\", \"accountlist\".\"Point\", \"accountlist\".\"Role\", \"accountlist\".\"Token\"
+FROM \"Accounts\" AS \"accountlist\"
+WHERE \"accountlist\".\"Role\" = 'Administrator'"
+2019-04-16 00:53:05.849 +07:00 [Information] Executed action method "test2.Controllers.AccountController.GetAdminAccount (test2)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult" in 20.8194ms.
+2019-04-16 00:53:05.855 +07:00 [Information] Executing ObjectResult, writing value of type '"System.Collections.Generic.List`1[[test2.DatabaseContext.Models.Account, test2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"'.
+2019-04-16 00:53:05.860 +07:00 [Information] Executed action "test2.Controllers.AccountController.GetAdminAccount (test2)" in 78.7333ms
+2019-04-16 00:53:05.867 +07:00 [Information] Request finished in 106.8877ms 200 application/json; charset=utf-8
+2019-04-16 00:53:05.873 +07:00 [Information] Connection id ""0HLM1P9M6EK1P"", Request id ""0HLM1P9M6EK1P:00000005"": the application completed without reading the entire request body.

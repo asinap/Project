@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,7 +31,7 @@ namespace test2.Repositories
 
                 //2. find non-overlap locker; check available day, free vacancy and right location return list of vacancy
                 var nonOverlap = CheckAvailableDay(reserve);
-                if (nonOverlap == null)
+                if (nonOverlap.Count() == 0)
                 {
                     return 2;
                 }
@@ -44,13 +45,19 @@ namespace test2.Repositories
                 reserve.Id_vacancy = inSize.Id_vacancy;
                 reserve.Status = "Unuse";
                 //4.out of point
-                if (_dbContext.Accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Point <= 0)
+                if (_dbContext.accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Point <= 0)
                 {
                     return 4;
                 }
-                _dbContext.Accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Point -= 5;
-                reserve.DateModified = DateTime.Now;
-                _dbContext.Reservations.Add(reserve);
+
+                _dbContext.accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Point -= 5;
+
+                TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+                DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
+                //reserve.DateModified = DateTime.Now;
+                reserve.DateModified = dateTime;
+                //Log.Information("{0}", dateTime);
+                _dbContext.reservations.Add(reserve);
                 _dbContext.SaveChanges();
                 return 5;
             }
@@ -64,15 +71,15 @@ namespace test2.Repositories
 
         public bool CheckId_account(string id)
         {
-            return _dbContext.Accounts.FirstOrDefault(x => x.Id_account == id) == null;
+            return _dbContext.accounts.FirstOrDefault(x => x.Id_account == id) == null;
         }
 
         public List<Vacancy> CheckAvailableDay (Reservation reserve)
         {
-            var overlap = from reservelist in _dbContext.Reservations
+            var overlap = from reservelist in _dbContext.reservations
                              where reservelist.StartDay <= reserve.StartDay && reservelist.EndDay >= reserve.StartDay
                              select reservelist;
-            var availableVacant = from vacantlist in _dbContext.Vacancies join lockerlist in _dbContext.LockerMetadatas
+            var availableVacant = from vacantlist in _dbContext.vacancies join lockerlist in _dbContext.lockerMetadatas
                                   on vacantlist.Mac_address equals lockerlist.Mac_address
                                   where !(overlap.Any(x => x.Id_vacancy == vacantlist.Id_vacancy)) && lockerlist.Location == reserve.Location
                                   select vacantlist;
@@ -84,15 +91,15 @@ namespace test2.Repositories
         {
             try
             {
-                if (_dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id) != null)
+                if (_dbContext.reservations.FirstOrDefault(x => x.Id_reserve == id) != null)
                 {
                     DateTime date = DateTime.Now;
-                    var reserve = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id);
+                    var reserve = _dbContext.reservations.FirstOrDefault(x => x.Id_reserve == id);
                     if(reserve.StartDay>date)
                     {
-                        _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id).IsActive = false;
-                        _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id).Status = "Cancel";
-                        _dbContext.Accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Point += 5;
+                        _dbContext.reservations.FirstOrDefault(x => x.Id_reserve == id).IsActive = false;
+                        _dbContext.reservations.FirstOrDefault(x => x.Id_reserve == id).Status = "Cancel";
+                        _dbContext.accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Point += 5;
                         _dbContext.SaveChanges();
                         return 1;
                     }
@@ -112,7 +119,7 @@ namespace test2.Repositories
         {
             try
             {
-                if(_dbContext.Reservations.FirstOrDefault(x=>x.Id_reserve==reserveID).Code.ToLower()=="string")
+                if(_dbContext.reservations.FirstOrDefault(x=>x.Id_reserve==reserveID).Code.ToLower()=="string")
                 {
                     return 1;
                 }
@@ -129,25 +136,18 @@ namespace test2.Repositories
             try
             {
                 //find owner reservation
-                string accountID = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id_reserve).Id_account;
+                string accountID = _dbContext.reservations.FirstOrDefault(x => x.Id_reserve == id_reserve).Id_account;
                 //find all reservation that owner has booked the reservation and check that Code is not replicated.
-                var reservelist = _dbContext.Reservations.FirstOrDefault(x => x.Id_account == accountID && x.Code == code && x.IsActive == true);
+                var reservelist = _dbContext.reservations.FirstOrDefault(x => x.Id_account == accountID && x.Code == code && x.IsActive == true);
                 if (reservelist != null)
                 {
-                    return 3;
+                    return 2;
                 }
                 else
                 {
-                    if(_dbContext.Reservations.FirstOrDefault(x=>x.Id_reserve==id_reserve).Code.ToLower()=="string")
-                    {
-                        _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id_reserve).Code = code;
+                        _dbContext.reservations.FirstOrDefault(x => x.Id_reserve == id_reserve).Code = code;
                         _dbContext.SaveChanges();
                         return 1;
-                    }
-                    else
-                    {
-                        return 2;
-                    }
                 }
 
 
@@ -163,7 +163,7 @@ namespace test2.Repositories
         {
             try
             {
-                var result = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == reserveID);
+                var result = _dbContext.reservations.FirstOrDefault(x => x.Id_reserve == reserveID);
                 if (result.Code.ToLower() != "string" && result.IsActive == true)
                 {
                     return result.Code;
@@ -189,7 +189,7 @@ namespace test2.Repositories
         {
             try
             {
-                var list = _dbContext.Reservations.OrderByDescending(x => x.DateModified);
+                var list = _dbContext.reservations.OrderByDescending(x => x.DateModified);
                 List<WebForm> result = new List<WebForm>();
                 foreach (var run in list)
                 {
@@ -216,7 +216,7 @@ namespace test2.Repositories
         {
             try
             {
-                var list = _dbContext.Reservations.Where(x => x.Status.ToLower() == "timeup").OrderByDescending(x => x.DateModified);
+                var list = _dbContext.reservations.Where(x => x.Status.ToLower() == "timeup").OrderByDescending(x => x.DateModified);
                 List<WebForm> result = new List<WebForm>();
                 foreach (var run in list)
                 {
@@ -248,7 +248,7 @@ namespace test2.Repositories
                 //    return null;
                 //}
                 //var intime = list.Where(x => x.EndDay > DateTime.Now).OrderBy(x => x.StartDay); // change; isActive==true
-                var intime = from list in _dbContext.Reservations
+                var intime = from list in _dbContext.reservations
                              where list.Id_account == id && list.IsActive == true
                              orderby list.StartDay
                              select list;
@@ -259,7 +259,7 @@ namespace test2.Repositories
                 List < BookingForm > result = new List<BookingForm>();
                 foreach (var run in intime)
                 {
-                    string no_vacancy = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == run.Id_vacancy).No_vacancy;
+                    string no_vacancy = _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == run.Id_vacancy).No_vacancy;
                     BookingForm tmp = new BookingForm()
                     {
                         BookingID = run.Id_reserve,
@@ -286,7 +286,7 @@ namespace test2.Repositories
 
                 //var list = GetReserve(id);
                 //var intime = list.Where(x => x.StartDay < DateTime.Now).OrderByDescending(x => x.EndDay); // change; isActive==false
-                var intime = from list in _dbContext.Reservations
+                var intime = from list in _dbContext.reservations
                              where list.Id_account == id && list.IsActive == false
                              orderby list.EndDay descending
                              select list;
@@ -297,7 +297,7 @@ namespace test2.Repositories
                 List<BookingForm> result = new List<BookingForm>();
                 foreach (var run in intime)
                 {
-                    string no_vacancy = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == run.Id_vacancy).No_vacancy;
+                    string no_vacancy = _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == run.Id_vacancy).No_vacancy;
                     BookingForm tmp = new BookingForm()
                     {
                         BookingID = run.Id_reserve,
@@ -321,12 +321,12 @@ namespace test2.Repositories
         {
             try
             {
-                var list = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id_reserve);
+                var list = _dbContext.reservations.FirstOrDefault(x => x.Id_reserve == id_reserve);
                 if(list==null)
                 {
                     return null;
                 }
-                string no_vacancy = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == list.Id_vacancy).No_vacancy;
+                string no_vacancy = _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == list.Id_vacancy).No_vacancy;
                 BookingForm result = new BookingForm()
                 {
                     UserID = list.Id_account,
@@ -349,13 +349,13 @@ namespace test2.Repositories
         {
             try
             {
-                var reserve = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == id_reserve); //BookingID,UserID,StartDate,EndDate,DateModified,Location,Size
+                var reserve = _dbContext.reservations.FirstOrDefault(x => x.Id_reserve == id_reserve); //BookingID,UserID,StartDate,EndDate,DateModified,Location,Size
                 if(reserve==null)
                 {
                     return null;
                 }
-                string numberVacant = _dbContext.Vacancies.FirstOrDefault(x => x.Id_vacancy == reserve.Id_vacancy).No_vacancy;//NumberVacancy
-                string name = _dbContext.Accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Name;
+                string numberVacant = _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == reserve.Id_vacancy).No_vacancy;//NumberVacancy
+                string name = _dbContext.accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Name;
                 ReserveDetail result = new ReserveDetail()
                 {
                     Id_user = reserve.Id_account,
@@ -379,12 +379,12 @@ namespace test2.Repositories
         }
         public List<Reservation> GetReserve()
         {
-            return _dbContext.Reservations.ToList();
+            return _dbContext.reservations.ToList();
         }
 
         public List<Reservation> GetReserve(string id) //by id account
         {
-            return _dbContext.Reservations.Where(x => x.Id_account == id).ToList();
+            return _dbContext.reservations.Where(x => x.Id_account == id).ToList();
         }
 
         public int Unuse (string id)
@@ -423,15 +423,15 @@ namespace test2.Repositories
             {
                 if(condition.ToLower()=="use")
                 {
-                    _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == reserve).Status = condition;
-                    var user = _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == reserve);
-                    _dbContext.Accounts.FirstOrDefault(x => x.Id_account == user.Id_account).Point += 5;
+                    _dbContext.reservations.FirstOrDefault(x => x.Id_reserve == reserve).Status = condition;
+                    var user = _dbContext.reservations.FirstOrDefault(x => x.Id_reserve == reserve);
+                    _dbContext.accounts.FirstOrDefault(x => x.Id_account == user.Id_account).Point += 5;
                     _dbContext.SaveChanges();
                     return 1;
                 }
                 else
                 {
-                    _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == reserve).Status = condition;
+                    _dbContext.reservations.FirstOrDefault(x => x.Id_reserve == reserve).Status = condition;
                     _dbContext.SaveChanges();
                     return 2;
                 }
@@ -450,12 +450,12 @@ namespace test2.Repositories
         {
             try
             {
-                var reserve = _dbContext.Reservations.Where(x => x.Id_reserve == reserveID);
+                var reserve = _dbContext.reservations.Where(x => x.Id_reserve == reserveID);
                 if (reserve == null)
                 {
                     return 1;
                 }
-                _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == reserveID).IsActive = isActive;
+                _dbContext.reservations.FirstOrDefault(x => x.Id_reserve == reserveID).IsActive = isActive;
                 _dbContext.SaveChanges();
                 return 2;
             }catch (Exception)
@@ -469,8 +469,8 @@ namespace test2.Repositories
         {
             try
             {
-                var data = from list in _dbContext.Reservations select list;
-                _dbContext.Reservations.RemoveRange(data);
+                var data = from list in _dbContext.reservations select list;
+                _dbContext.reservations.RemoveRange(data);
                 _dbContext.SaveChanges();
                 return true;
 
@@ -486,14 +486,14 @@ namespace test2.Repositories
         {
             try
             {
-                if (_dbContext.Reservations.Where(x => x.Id_reserve == id_reserve) == null)
+                if (_dbContext.reservations.Where(x => x.Id_reserve == id_reserve) == null)
                 {
                     return false;
                 }
-                var data = from list in _dbContext.Reservations
+                var data = from list in _dbContext.reservations
                            where list.Id_reserve == id_reserve
                            select list;
-                _dbContext.Reservations.RemoveRange(data);
+                _dbContext.reservations.RemoveRange(data);
                 _dbContext.SaveChanges();
                 return true;
             }

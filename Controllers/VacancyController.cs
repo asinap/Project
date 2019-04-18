@@ -33,10 +33,10 @@ namespace test2.Controllers
         {
             if (_vacancyRepo.AddVacancy(vacant))
             {
-                Log.Information("Add vacancy {no}, {location} OK.",vacant.No_vacancy,_dbContext.LockerMetadatas.FirstOrDefault(x=>x.Mac_address==vacant.Mac_address).Location);
+                Log.Information("Add vacancy {no}, {location} OK.",vacant.No_vacancy,_dbContext.lockerMetadatas.FirstOrDefault(x=>x.Mac_address==vacant.Mac_address).Location);
                 return Ok(vacant.Id_vacancy);
             }
-            Log.Information("Cannot Add vacancy {no}, {location} OK.", vacant.No_vacancy, _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == vacant.Mac_address).Location);
+            Log.Information("Cannot Add vacancy {no}, {location} OK.", vacant.No_vacancy, _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == vacant.Mac_address).Location);
             return NotFound();
         }
 
@@ -47,25 +47,25 @@ namespace test2.Controllers
         {
             if (_vacancyRepo.EditVacancy(vacant))
             {
-                Log.Information("Edit Locker {Location} OK.", _dbContext.LockerMetadatas.FirstOrDefault(x=>x.Mac_address== vacant.Mac_address).Location);
+                Log.Information("Edit Locker {Location} OK.", _dbContext.lockerMetadatas.FirstOrDefault(x=>x.Mac_address== vacant.Mac_address).Location);
                 return Ok(vacant.Mac_address);
             }
-            Log.Information("Edit Locker {Location} Error.", _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == vacant.Mac_address).Location);
+            Log.Information("Edit Locker {Location} Error.", _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == vacant.Mac_address).Location);
             return NotFound();
         }
 
-        [Route("DeleteVacant")]
+        [Route("/web/DeleteVacant")]
         [HttpDelete]
         public IActionResult DeleteVacancy([FromQuery] string No_vacant, string Mac_address)
         {
             if (_vacancyRepo.DeleteVacancy(No_vacant, Mac_address))
             {
-                Log.Information("Delete vacancy {no}, {location} OK.", No_vacant, _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == Mac_address).Location);
+                Log.Information("Delete vacancy {no}, {location} OK.", No_vacant, _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == Mac_address).Location);
                 return Ok();
             }
-            if (_dbContext.Vacancies.FirstOrDefault(x => x.No_vacancy == No_vacant && x.Mac_address == Mac_address) != null)
+            if (_dbContext.vacancies.FirstOrDefault(x => x.No_vacancy == No_vacant && x.Mac_address == Mac_address) != null)
             {
-                Log.Information("Cannot Delete vacancy {no}, {location} OK.", No_vacant, _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == Mac_address).Location);
+                Log.Information("Cannot Delete vacancy {no}, {location} OK.", No_vacant, _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == Mac_address).Location);
                 return NotFound();
             }
             else
@@ -82,12 +82,12 @@ namespace test2.Controllers
         {
             if (_vacancyRepo.UpdateActive(No_vacant, Mac_address))
             {
-                Log.Information("Set Active vacancy {no}, {location} OK.", No_vacant, _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == Mac_address).Location);
+                Log.Information("Set Active vacancy {no}, {location} OK.", No_vacant, _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == Mac_address).Location);
                 return Ok();
             }
-            if (_dbContext.Vacancies.FirstOrDefault(x => x.No_vacancy == No_vacant && x.Mac_address == Mac_address) != null)
+            if (_dbContext.vacancies.FirstOrDefault(x => x.No_vacancy == No_vacant && x.Mac_address == Mac_address) != null)
             {
-                Log.Information("Cannot set Active vacancy {no}, {location} OK.", No_vacant, _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == Mac_address).Location);
+                Log.Information("Cannot set Active vacancy {no}, {location} OK.", No_vacant, _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == Mac_address).Location);
                 return NotFound();
             }
             else
@@ -103,12 +103,12 @@ namespace test2.Controllers
         {
             if (_vacancyRepo.UpdateSize(updateSize.No_vacant, updateSize.Mac_address, updateSize.Size))
             {
-                Log.Information("Set Size vacancy {size}, {no}, {location} OK.", updateSize.Size, updateSize.No_vacant, _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == updateSize.Mac_address).Location);
+                Log.Information("Set Size vacancy {size}, {no}, {location} OK.", updateSize.Size, updateSize.No_vacant, _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == updateSize.Mac_address).Location);
                 return Ok();
             }
-            if (_dbContext.Vacancies.FirstOrDefault(x => x.No_vacancy == updateSize.No_vacant && x.Mac_address == updateSize.Mac_address && x.Size== updateSize.Size) != null)
+            if (_dbContext.vacancies.FirstOrDefault(x => x.No_vacancy == updateSize.No_vacant && x.Mac_address == updateSize.Mac_address && x.Size== updateSize.Size) != null)
             {
-                Log.Information("Cannot Set Size vacancy {size}, {no}, {location} OK.", updateSize.Size, updateSize.No_vacant, _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == updateSize.Mac_address).Location);
+                Log.Information("Cannot Set Size vacancy {size}, {no}, {location} OK.", updateSize.Size, updateSize.No_vacant, _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == updateSize.Mac_address).Location);
                 return NotFound();
             }
             else

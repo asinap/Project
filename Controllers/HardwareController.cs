@@ -33,7 +33,7 @@ namespace test2.Controllers
             }
             else
             {
-                Log.Information("Get hardware from node-red {name} {location}.", _dbContext.Accounts.FirstOrDefault(x => x.Id_account == userID).Name, _dbContext.LockerMetadatas.FirstOrDefault(x => x.Mac_address == mac_address).Location);
+                Log.Information("Get hardware from node-red {name} {location}.", _dbContext.accounts.FirstOrDefault(x => x.Id_account == userID).Name, _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == mac_address).Location);
             }
                 return Json(result);
         }
