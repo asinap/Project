@@ -10,6 +10,7 @@ using Microsoft.Extensions.Options;
 using Serilog;
 using test2.DatabaseContext;
 using test2.DatabaseContext.Models;
+using test2.Entities;
 using test2.Helpers;
 
 namespace test2.Scheduler
@@ -32,7 +33,7 @@ namespace test2.Scheduler
             {
                 _dbContext = new LockerDbContext(dbOption);
                 var reservelist = (from row in _dbContext.reservations
-                                   where row.Status.ToLower() == "timeup"
+                                   where row.Status == Status.Timeup
                                    select row.Id_account).Distinct();
 
                 TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
@@ -46,7 +47,7 @@ namespace test2.Scheduler
                 {
                     foreach (var run in reservelist)
                     {
-                        int timeupcount = _dbContext.reservations.Count(x => x.Id_account == run.ToString()&&x.Status.ToLower()=="timeup");
+                        int timeupcount = _dbContext.reservations.Count(x => x.Id_account == run.ToString()&&x.Status==Status.Timeup);
                         int penalty = timeupcount / 4;
                         if (penalty==0)
                         {
@@ -57,9 +58,9 @@ namespace test2.Scheduler
                             int i;
                             for (i=0;i<4*penalty;i++)
                             {
-                                _dbContext.reservations.FirstOrDefault(x => x.Id_account == run.ToString() && x.Status.ToLower() == "timeup").Status = "Expire";
+                                _dbContext.reservations.FirstOrDefault(x => x.Id_account == run.ToString() && x.Status == Status.Timeup).Status = Status.Expire;
                                 _dbContext.SaveChanges();
-                                //Log.Information("Set Expire every 1 hour {0} {1} Data to be set", DateTime.Now,run.ToString());
+                                Log.Information("Set Expire every 1 hour {0} {1} Data to be set", dateTime,run.ToString());
                             }
                             _dbContext.accounts.FirstOrDefault(x => x.Id_account == run.ToString()).Point -= _appSettings.PenaltyPoint * penalty;
                             _dbContext.SaveChanges();
@@ -73,7 +74,7 @@ namespace test2.Scheduler
                                     CreateTime = dateTime,
                                     Id_content = _appSettings.PenaltyContent,
                                     IsShow = true,
-                                    Read = true
+                                    Read = false
                                 };
                                 _dbContext.notifications.Add(notification);
                                 _dbContext.accounts.FirstOrDefault(x => x.Id_account == run.ToString()).Point = 0;
@@ -83,9 +84,7 @@ namespace test2.Scheduler
                             }
                             Log.Information("Set Expire every 1 hour {0} {1} Data to be set", dateTime, run.ToString());
                         }
-                    //    _dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == run.Id_reserve).IsActive = false;
-                    //    _dbContext.SaveChanges();
-                        //Log.Information("Set Expire every 1 hour {0} Data to be set", DateTime.Now);
+        
                     }
                 }
             }

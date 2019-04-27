@@ -82,8 +82,6 @@ namespace test2.Migrations
                     StartDay = table.Column<DateTime>(nullable: false),
                     EndDay = table.Column<DateTime>(nullable: false),
                     DateModified = table.Column<DateTime>(nullable: false),
-                    Size = table.Column<string>(nullable: true),
-                    Location = table.Column<string>(nullable: true),
                     Id_account = table.Column<string>(nullable: true),
                     Id_vacancy = table.Column<int>(nullable: false)
                 },

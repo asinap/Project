@@ -13,6 +13,7 @@ using test2.Helpers;
 using Microsoft.Extensions.Options;
 using System.Net;
 using System.IdentityModel.Tokens.Jwt;
+using test2.Entities;
 
 namespace test2.Scheduler
 {
@@ -39,7 +40,7 @@ namespace test2.Scheduler
                 _dbContext = new LockerDbContext(dbOption);
                 
                 var reservelist = from list in _dbContext.reservations
-                                  where list.EndDay < dateTime && list.IsActive == true && list.Status.ToLower() == "unuse"
+                                  where list.EndDay < dateTime && list.IsActive == true && list.Status == Status.Unuse
                                   select list;
 
                
@@ -51,7 +52,7 @@ namespace test2.Scheduler
                 {
                     foreach (var run in reservelist)
                     {
-                        _dbContext.reservations.FirstOrDefault(x => x.Id_reserve == run.Id_reserve).Status = "TimeUp";
+                        _dbContext.reservations.FirstOrDefault(x => x.Id_reserve == run.Id_reserve).Status = Status.Timeup;
                         _dbContext.reservations.FirstOrDefault(x => x.Id_reserve == run.Id_reserve).IsActive = false;
                         _dbContext.SaveChanges();
 

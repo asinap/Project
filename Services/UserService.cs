@@ -33,30 +33,40 @@ namespace test2.Services
             _appSettings = appSettings.Value;
         }
 
+        /*user authentication => check account, if there is user account in the system, generate the token 
+            if there is no user account in the system, create account in the system then generate the token 
+        */
         public async Task<Account> AuthenticateAsync(string _token)
         {
             try
             {
+                //get user information from google account 
                 GoogleJsonWebSignature.Payload validPayload = await GoogleJsonWebSignature.ValidateAsync(_token);
                 string id = "";
                 string domainmail = "@kmitl.ac.th";
+                //if domain account is not "@kmitl.ac.th"
                 if (!validPayload.Email.Contains(domainmail))
                 {
                     // detect domain email
                     return null;
                 }
                 id = validPayload.Email.Replace(domainmail, "");
+                //if id account is not numberic
                 if (!int.TryParse(id, out int numberic))
                 {
                     //before email is not studentID
                     return null;
                 }
+                //if account already exist
                 if (_dbContext.accounts.FirstOrDefault(x => x.Id_account == id) != null)
                 {
+                    //generate token
                     var _user = GetToken(id);
                     Console.WriteLine("already exist");
                     return _user;
                 }
+
+                //create account to store in database
                 Account account = new Account()
                 {
                     Id_account = id,
@@ -66,19 +76,26 @@ namespace test2.Services
                     Point = 100,
                     Role = Role.User
                 };
+                //add account into database
                 _dbContext.accounts.Add(account);
+
+                //save database
                 _dbContext.SaveChanges();
+
+                //generate token
                 var user = GetToken(id);
                 return user;
             }
             catch
             {
+                //error
                 Console.WriteLine("AddUserAccount Error");
                 return null;
 
             }
         }
 
+        /*generate the token*/
         public Account GetToken (string id_account)
         { 
             var user = _dbContext.accounts.SingleOrDefault(x => x.Id_account == id_account);

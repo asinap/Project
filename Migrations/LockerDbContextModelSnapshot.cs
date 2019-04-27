@@ -107,10 +107,6 @@ namespace test2.Migrations
 
                     b.Property<bool>("IsActive");
 
-                    b.Property<string>("Location");
-
-                    b.Property<string>("Size");
-
                     b.Property<DateTime>("StartDay");
 
                     b.Property<string>("Status");

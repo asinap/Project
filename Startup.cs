@@ -73,9 +73,6 @@ namespace test2
                 //option.UseSqlServer("Server=DESKTOP-D2NINII\\SQLEXPRESS; Database=LeaveManagement;Integrated Security=true");
             });
 
-            ////Hangfire
-            //services.AddHangfire(x => x.UseSQLiteStorage(Configuration.GetConnectionString("DefaultConnection")));
-            //services.AddHangfireServer();
     
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
@@ -111,8 +108,7 @@ namespace test2
             services.AddTransient<IHostedService, SetExpire>();
             services.AddTransient<IHostedService, CheckTenMins>();
             services.AddTransient<IHostedService, CheckFiveMins>();
-            //services.AddHostedService<SetTimeUp>();
-            //BackgroundJob.Schedule<BGservice>(x=>x.Set_TimeUp(), TimeSpan.FromMinutes(1));
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -138,18 +134,6 @@ namespace test2
             app.UseCookiePolicy();
             app.UseCors(x=> x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
-
-          
-            //var options = new SQLiteStorageOptions();
-            //GlobalConfiguration.Configuration.UseSQLiteStorage(Configuration.GetConnectionString("DefaultConnection"), options);
-            //var option = new BackgroundJobServerOptions { WorkerCount = 1 };
-            //app.UseHangfireServer(option);
-            //app.UseHangfireDashboard();
-
-
-            //RecurringJob.AddOrUpdate(() => new Job(unitOfWork).Print(), Cron.MinuteInterval(1));
-
-
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>

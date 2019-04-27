@@ -82,7 +82,7 @@ namespace test2.Repositories
             return _dbContext.contents.ToList();
         }
 
-        /* Get Content                                  *
+        /* Get all Content                                  *
          * Input = Id_content                           *
          * return content that has Id_content = Input   */
 
@@ -91,6 +91,9 @@ namespace test2.Repositories
             return _dbContext.contents.Where(x => x.IsActive == true).ToList();
         }
 
+        /* Get specific Content                                  *
+        * Input = Id_content                           *
+        * return content that has Id_content = Input   */
         public List<Content> GetContent(int id)
         {
             var content = from contentlist in _dbContext.contents
@@ -99,44 +102,6 @@ namespace test2.Repositories
             return content.ToList();
         }
 
-        /*Delete*/
-        public bool Delete()
-        {
-            try
-            {
-                var data = from list in _dbContext.contents select list;
-                _dbContext.contents.RemoveRange(data);
-                _dbContext.SaveChanges();
-                return true;
-
-            }
-            catch (Exception)
-            {
-                Console.Write("Cannot delete all contents database");
-                return false;
-            }
-        }
-
-        public bool Delete(int id)
-        {
-            try
-            {
-                if (_dbContext.contents.Where(x => x.Id_content == id) == null)
-                {
-                    return false;
-                }
-                var data = from list in _dbContext.contents
-                           where list.Id_content == id
-                           select list;
-                _dbContext.contents.RemoveRange(data);
-                _dbContext.SaveChanges();
-                return true;
-            }
-            catch (Exception)
-            {
-                Console.Write("Cannot delete %s", id);
-                return false;
-            }
-        }
+      
     }
 }

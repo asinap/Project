@@ -10,6 +10,7 @@ using System.Net;
 using System.Threading.Tasks;
 using test2.DatabaseContext;
 using test2.DatabaseContext.Models;
+using test2.Entities;
 using test2.Helpers;
 
 namespace test2.Scheduler
@@ -35,7 +36,7 @@ namespace test2.Scheduler
                 DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
                 _dbContext = new LockerDbContext(dbOption);
                 var reservelist = from list in _dbContext.reservations
-                                  where list.EndDay < dateTime && list.IsActive == true && list.Status.ToLower() == "use"
+                                  where list.EndDay < dateTime && list.IsActive == true && list.Status== Status.Use
                                   select list;
                 
                 if (reservelist == null)
@@ -46,7 +47,7 @@ namespace test2.Scheduler
                 {
                     foreach (var run in reservelist)
                     {
-                        //_dbContext.Reservations.FirstOrDefault(x => x.Id_reserve == run.Id_reserve).Status = "TimeUp";
+                        
                         _dbContext.reservations.FirstOrDefault(x => x.Id_reserve == run.Id_reserve).IsActive = false;
                         _dbContext.SaveChanges();
                         Notification notification = new Notification()
@@ -56,7 +57,7 @@ namespace test2.Scheduler
                             Id_content = _appSettings.EndContent,
                             Id_reserve = run.Id_reserve,
                             IsShow = true,
-                            Read = true
+                            Read = false
 
                         };
                         _dbContext.notifications.Add(notification);
@@ -72,7 +73,7 @@ namespace test2.Scheduler
                                 CreateTime = dateTime,
                                 Id_content = _appSettings.PenaltyContent,
                                 IsShow = true,
-                                Read = true
+                                Read = false
                             };
                             _dbContext.notifications.Add(p_notification);
                             _dbContext.accounts.FirstOrDefault(x => x.Id_account == run.Id_account).Point = 0;
@@ -93,10 +94,7 @@ namespace test2.Scheduler
                 DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
                 Log.Information("Use Time up every 1 mins {0} Error.", dateTime);
             }
-            //List<Reservation> reservations = _dbContext.Reservations.ToList();
-            //Console.WriteLine("Processing starts here");
-            //var run = reservations;
-            //foreach (var list in run)
+
 
             return Task.CompletedTask;
         }

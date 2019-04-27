@@ -53,18 +53,25 @@ namespace test2.Controllers
                 //if there is no user in database
                 if (user == null)
                 {
-                    Log.Information("Access Denied. {0}",dateTime);
+                    Log.Information("Access Denied. {DateTime}",dateTime);
                     return BadRequest(new { message = "Access Denied." });
                 }
 
                 // there is user in database
-                Log.Information("user access {0}. {1}.",user.Name, dateTime);
-                return Ok(user.Token);
+                Log.Information("user access {name}. {DateTime}.",user.Name, dateTime);
+                MemberAccount member = new MemberAccount()
+                {
+                    Id_account=user.Id_account,
+                    Name=user.Name,
+                    Point=user.Point,
+                    Token=user.Token
+                };
+                return Ok(member);
 
             }
             catch 
             {
- 
+                //error
                 Log.Information("Error User Authentication", dateTime);
                 return NotFound("Error User Authentication");
             }
@@ -85,15 +92,16 @@ namespace test2.Controllers
                 //if there is no user in database
                 if (user != 4)
                 {
-                    Log.Information("Access Denied. {0}", dateTime);
+                    Log.Information("Access Denied. {DateTime}", dateTime);
                     return BadRequest(new { message = "Access Denied." });
                 }
                 // there is user in database
-                Log.Information("user access {0}. {1}.", account.Name, dateTime);
-                return Ok(user);
+                Log.Information("user access {Name}. {DateTime}.", account.Name, dateTime);
+                return Ok(account.Email);
             }
             catch
             {
+                //Error
                 Log.Information("Error User Authentication");
                 return NotFound("Error User Authentication");
             }
@@ -113,18 +121,19 @@ namespace test2.Controllers
                 //if there is no user in database
                 if (user == null)
                 {
-                    Log.Information("Access Denied {0}.", dateTime);
+                    Log.Information("Access Denied {DateTime}.", dateTime);
                     return NotFound("Access Denied.");
                 }
                 else
                 // there is user in database
                 {
-                    Log.Information("check token {0}., {1}.",user.Name, dateTime);
+                    Log.Information("check token {Name}., {DateTime}.",user.Name, dateTime);
                     return Ok(user);
                 }
             }
             catch
             {
+                //Error
                 Log.Information("Error CHECKTOKEN");
                 return NotFound("Error CHECKTOKEN");
             }
@@ -141,29 +150,31 @@ namespace test2.Controllers
             // if it can add notification token 
             if (_accountRepo.NotiToken(notiToken))
             {
-                Log.Information("Add notification token {0} OK. {1}.", notiToken.Id_account,dateTime);
+                Log.Information("Add notification token {Id} OK. {DateTime}.", notiToken.Id_account,dateTime);
                 return Ok(notiToken.Id_account);
             }
             // if it can not add notification token 
-            Log.Information("Add notification token {0} Error. {1}.", notiToken.Id_account,dateTime);
+            Log.Information("Add notification token {id} Error. {DateTime}.", notiToken.Id_account,dateTime);
             return NotFound("Error to add notification token");
         }
 
         /*TEST Get each user's notification token*/
         [AllowAnonymous]
-        [Route("getnotitoken")]
+        [Route("/test/getnotitoken")]
         [HttpGet]
         public IActionResult GetNotiToken()
         {
             TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             var list = _accountRepo.GetNotiToken();
+            //there is no user account in the database
             if (list == null)
             {
-                Log.Information("Get notification token Error. {0}.", dateTime);
+                Log.Information("Get notification token Error. {DateTime}.", dateTime);
                 return NotFound();
             }
-            Log.Information("Get notification token Error. {1}.", dateTime);
+            //there are user accounts in the database
+            Log.Information("Get notification token Error. {DateTime}.", dateTime);
             return Ok(list);
         }
 
@@ -179,25 +190,30 @@ namespace test2.Controllers
             {
                 GoogleJsonWebSignature.Payload validPayload = await GoogleJsonWebSignature.ValidateAsync(token._Token);
                 var admin = await _adminService.AuthenticateAsync(token._Token);
+                //there is admin account return back to this function
+                //if there is admin return to this function
                 if (admin!=null)
                 {
 
-                    Log.Information("Admin access {0}., {1}.", admin.Name, dateTime);
+                    Log.Information("Admin access {name}., {DateTime}.", admin.Name, dateTime);
                     return Ok(admin.Token);
                 }
+                // there is no admin return to this function
                 else
                 {
-                    Log.Information("Access Denied {0}.", dateTime);
+                    Log.Information("Access Denied {DateTime}.", dateTime);
                     return BadRequest("Access Denied.");
                 }
             }
             catch
             {
+                //error
                 Log.Information("Error Admin Authentication");
                 return NotFound("Error Admin Authentication");
             }
         }
 
+        /*Register administrator through web application*/
         [AllowAnonymous]
         [Route("/web/AddAdminAccount")]
         [HttpPost]
@@ -206,20 +222,22 @@ namespace test2.Controllers
             TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             int result = _accountRepo.AddAdminAccount(account);
+            //there is a result return to this function
             switch (result)
             {
                 case 1:
-                    Log.Information("Add admin from web {Email} account already existed. {0}.", account.Email,dateTime);
+                    Log.Information("Add admin from web {Email} account already existed. {DateTime}.", account.Email,dateTime);
                     return BadRequest("Account already existed.");
                 case 2:
-                    Log.Information("Add user from mobile {name} done. {0}.", account.Name, dateTime);
+                    Log.Information("Add user from mobile {name} done. {DateTime}.", account.Name, dateTime);
                     return Ok(account.Id_account);
                 default:
-                    Log.Information("Add user from mobile {name} error. {0}.", account.Name, dateTime);
+                    Log.Information("Add user from mobile {name} error. {DateTime}.", account.Name, dateTime);
                     return NotFound("Error add admin");
             }
         }
 
+        /*Add phone number from user through mobile application*/
         [Authorize (Roles = Role.User)]
         [Route("/mobile/AddPhoneNumber")]
         [HttpPost]
@@ -227,15 +245,18 @@ namespace test2.Controllers
         {
             TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
+            //if success to edit mobile phone 
             if (_accountRepo.AddPhoneNumber(phone.Id_account, phone.Phone))
             {
-                Log.Information("Add phone from mobile {name}. {0}.", _dbContext.accounts.FirstOrDefault(x=>x.Id_account==phone.Id_account).Name, dateTime );
+                Log.Information("Add phone from mobile {name}. {DateTime}.", _dbContext.accounts.FirstOrDefault(x=>x.Id_account==phone.Id_account).Name, dateTime );
                 return Ok(phone.Id_account);
             }
-            Log.Information("Cannot Add phone from mobile {0}.", dateTime);
+            //if not succes to edit mobile phone
+            Log.Information("Cannot Add phone from mobile {id}, {DateTime}.",phone.Id_account, dateTime);
             return NotFound("Cannot Add phone.");
         }
 
+        /*Get phone number from user through mobile application*/
         [Authorize(Roles = Role.User)]
         [Route("/mobile/Getphone")]
         [HttpGet]
@@ -244,16 +265,18 @@ namespace test2.Controllers
             TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             string result = _accountRepo.GetPhone(id_account);
-            if (result!=null)
+            //if there is result back to this function
+            if (result!=null && result.Count() != 0)
             {
-                Log.Information("Get phone from mobile {name}. {0}.", _dbContext.accounts.FirstOrDefault(x => x.Id_account == id_account).Name, dateTime);
+                Log.Information("Get phone from mobile {name}. {DateTime}.", _dbContext.accounts.FirstOrDefault(x => x.Id_account == id_account).Name, dateTime);
                 return Ok(result);
             }
-            Log.Information("Cannot Get phone from mobile {0}.", dateTime);
+            //if there is no result back to this function
+            Log.Information("Cannot Get phone from mobile {DateTime}.", dateTime);
             return NotFound("Cannot Get phone.");
         }
   
-
+        /*Get all user account in this system from administrator through web application*/
         [Authorize (Roles = Role.Admin)]
         [Route("/web/UserAccountAll")]
         [HttpGet]
@@ -262,20 +285,22 @@ namespace test2.Controllers
             TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             var list = _accountRepo.GetUserAccount();
-
-            if (list != null)
+            // if there are user accounts return to this function
+            if (list != null&& list.Count()!=0)
             {
-                Log.Information("Get all user from web {0}.", dateTime);
+                Log.Information("Get all user from web {DateTime}.", dateTime);
                 return Ok(list);
             }
+            // if there is no user account return to this function
             else
             {
-                Log.Information("There is not user account in system {0}.", dateTime);
+                Log.Information("There is not user account in system {DateTime}.", dateTime);
                 return NotFound("There is not user account in system.");
             }
         }
 
         //[AllowAnonymous]
+        /*Get specific user from administrator through web application*/
         [Authorize(Roles = Role.User)]
         [Route("/mobile/UserAccount")]
         [HttpGet]
@@ -284,19 +309,22 @@ namespace test2.Controllers
             TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             MemberAccount account = _accountRepo.GetUserAccount(id_account);
-
-            if (account != null)
+            //if there is user account return to this function
+            if (account != null )
             {
-                Log.Information("Get user account from mobile {0}. {1).", account.Name,dateTime);
+                Log.Information("Get user account from mobile {name}. {DateTime).", account.Name,dateTime);
                 return Json(account);
             }
+            //if there is no user account return to this function
             else
             {
-                Log.Information("Get user account from mobile (0}.", dateTime);
+                Log.Information("Get user account from mobile {name}, {DateTime}.",id_account, dateTime);
                 return Json(null);
             }
         }
 
+
+        /*Get user information from administrator through web application*/
         [Authorize( Roles = Role.Admin)]
         [Route("/web/UserOverview")]
         [HttpGet]
@@ -305,109 +333,103 @@ namespace test2.Controllers
             TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             UserOverview user = _accountRepo.GetUserOverview(id_account);
-            
-            if (user != null)
+            //if there is user account return to this function
+            if (user != null )
             {
-                //Log.Information("Get user overview from web {name}.", _dbContext.accounts.FirstOrDefault(x => x.Id_account == id_account).Name);
+                Log.Information("Get user overview from web {name}.", _dbContext.accounts.FirstOrDefault(x => x.Id_account == id_account).Name);
                 return Json(user);
             }
+            //if there is no user account return to this function
             else
             {
-                //Log.Information("Get user overview from web {name}.", _dbContext.accounts.FirstOrDefault(x => x.Id_account == id_account).Name);
+                Log.Information("Get user overview from web {id}.", id_account);
                 return Json(null);
             }
                 
         }
 
-        [Route("UserAccountAll")]
+        /*TEST get all user account in this system*/
+        [Route("test/UserAccountAll")]
         [HttpGet]
         public IActionResult GetUserAccountdev()
         {
-
             var list = _accountRepo.GetUserAccountdev();
-            if (list != null)
+            //if there is user account return to this function
+            if (list.Count()!= 0)
                 return Ok(list);
+            //if there is no user account return to this function
             else
                 return NotFound("No Account");
-
         }
 
+        /*TEST get specific user account*/
         [Route("UserAccount")]
         [HttpGet]
         public IActionResult GetUserAccountdev(string id_account)
         {
             var list = _accountRepo.GetUserAccountdev(id_account);
-            if (list != null)
+            //if there is user account return to this function
+            if (list.Count() != 0)
                 return Ok(list);
+            //if there is no user account return to this function
             else
                 return NotFound("No Account");
 
         }
 
+        /*TEST get all admin account in this system*/
         [Route("AdminAccountAll")]
         [HttpGet]
         public IActionResult GetAdminAccount()
         {
             var list = _accountRepo.GetAdminAccount();
-            if (list != null)
+            //if there is admin account return to this function
+            if (list.Count() != 0)
                 return Ok(list);
+            //if there is no admin account return to this function
             else
                 return NotFound("No Account");
 
         }
 
+        /*Get admin account from web application */
         [Authorize(Roles = Role.Admin)]
         [Route("/web/Admin")]
         [HttpGet]
         public IActionResult GetAdmin ()
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             var admin = _accountRepo.GetAdmins();
+            //if there is admin account return to this function
             if ((admin != null) && (admin.Count() != 0))
             {
-                Log.Information("Get all admin from web {datetime}.", DateTime.Now);
+                Log.Information("Get all admin from web {datetime}.", dateTime);
                 return Ok(admin);
             }
+            //if there is no admin account return to this function
             else
             {
-                Log.Information("Cannot Get all admin from web {datetime}.", DateTime.Now);
+                Log.Information("Cannot Get all admin from web {datetime}.", dateTime);
                 return NotFound("No_admin");
             }
         }
 
-        
 
+        /*TEST get specific admin account in this system*/
         [Route("AdminAccount")]
         [HttpGet]
         public IActionResult GetAdminAccount(string id_account)
         {
             var list = _accountRepo.GetAdminAccount(id_account);
-            if (list != null)
+            //if there is admin account return to this function
+            if (list.Count() != 0)
                 return Ok(list);
+            //if there is no admin account return to this function
             else
                 return NotFound("No Account");
 
         }
-
-        [Route("DeleteAll")]
-        [HttpDelete]
-        public IActionResult Delete ()
-        {
-            if(_accountRepo.Delete())
-            {
-                return Ok();
-            }
-            return NotFound();
-        }
-
-        [Route("Delete")]
-        [HttpDelete]
-        public IActionResult Delete (string id_account)
-        {
-            if(_accountRepo.Delete(id_account))
-            {
-                return Ok();
-            }
-            return NotFound();
-        }
+        
     }
 }

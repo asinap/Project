@@ -23,7 +23,10 @@ namespace test2
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-            //.UseShutdownTimeout(TimeSpan.FromSeconds(10))
+                .UseUrls("https://10.10.0.189:5566") // have to change IP before use
+               // .UseContentRoot(Directory.GetCurrentDirectory()) 
+                //.UseIISIntegration()
+                //.UseShutdownTimeout(TimeSpan.FromSeconds(10))
                 .UseStartup<Startup>();
     }
 }

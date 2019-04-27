@@ -64,3 +64,4 @@ D:\Project\test2\Project\obj\Release\netcoreapp2.1\test2.Views.pdb
 D:\Project\test2\Project\obj\Release\netcoreapp2.1\test2.dll
 D:\Project\test2\Project\obj\Release\netcoreapp2.1\test2.pdb
 D:\Project\test2\Project\obj\Release\netcoreapp2.1\test2.csproj.CopyComplete
+D:\Project\test2\Project\bin\Release\netcoreapp2.1\app.yaml

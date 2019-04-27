@@ -10,5 +10,6 @@ namespace test2.Class
         public string Id_account { get; set; }
         public string Name { get; set; }
         public int Point { get; set; }
+        public string Token { get; set; }
     }
 }

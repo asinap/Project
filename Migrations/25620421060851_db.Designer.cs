@@ -9,7 +9,7 @@ using test2.DatabaseContext;
 namespace test2.Migrations
 {
     [DbContext(typeof(LockerDbContext))]
-    [Migration("25620418142726_db")]
+    [Migration("25620421060851_db")]
     partial class db
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -108,10 +108,6 @@ namespace test2.Migrations
                     b.Property<int>("Id_vacancy");
 
                     b.Property<bool>("IsActive");
-
-                    b.Property<string>("Location");
-
-                    b.Property<string>("Size");
 
                     b.Property<DateTime>("StartDay");
 

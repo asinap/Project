@@ -26,56 +26,62 @@ namespace test2.Controllers
             _vacancyRepo = new VacancyRepository(_dbContext);
         }
 
+        /*Add vacancy from administrator through web application*/
         [AllowAnonymous]
         [Route("/web/AddVacant")]
         [HttpPost]
         public IActionResult AddVacancy([FromBody] Vacancy vacant)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             if (_vacancyRepo.AddVacancy(vacant))
             {
-                Log.Information("Add vacancy {no}, {location} OK.",vacant.No_vacancy,_dbContext.lockerMetadatas.FirstOrDefault(x=>x.Mac_address==vacant.Mac_address).Location);
+                Log.Information("Add vacancy {id} OK. {datetime}.",vacant.Id_vacancy,dateTime);
                 return Ok(vacant.Id_vacancy);
             }
-            Log.Information("Cannot Add vacancy {no}, {location} OK.", vacant.No_vacancy, _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == vacant.Mac_address).Location);
-            return NotFound();
+            Log.Information("Cannot Add vacancy {id}. {datetime}.", vacant.Id_vacancy, dateTime);
+            return NotFound("Cannot add vacancy");
         }
 
+        /*Edit vacancy from administrator through web application*/
         [AllowAnonymous]
         [Route("/web/EditVancancy")]
         [HttpPost]
         public IActionResult EditVacancy([FromBody] Vacancy vacant)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             if (_vacancyRepo.EditVacancy(vacant))
             {
-                Log.Information("Edit Locker {Location} OK.", _dbContext.lockerMetadatas.FirstOrDefault(x=>x.Mac_address== vacant.Mac_address).Location);
+                Log.Information("Edit Locker {id} OK. {datetime}.", vacant.Id_vacancy, dateTime);
                 return Ok(vacant.Mac_address);
             }
-            Log.Information("Edit Locker {Location} Error.", _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == vacant.Mac_address).Location);
-            return NotFound();
+            Log.Information("Edit Locker {id} Error. {datetime}.", vacant.Id_vacancy, dateTime);
+            return NotFound("Cannot edit locker");
         }
 
+        /*Delete vacancy from administrator thriugh web application*/
+        [AllowAnonymous]
         [Route("/web/DeleteVacant")]
         [HttpDelete]
         public IActionResult DeleteVacancy([FromQuery] string No_vacant, string Mac_address)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             if (_vacancyRepo.DeleteVacancy(No_vacant, Mac_address))
             {
-                Log.Information("Delete vacancy {no}, {location} OK.", No_vacant, _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == Mac_address).Location);
-                return Ok();
-            }
-            if (_dbContext.vacancies.FirstOrDefault(x => x.No_vacancy == No_vacant && x.Mac_address == Mac_address) != null)
-            {
-                Log.Information("Cannot Delete vacancy {no}, {location} OK.", No_vacant, _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == Mac_address).Location);
-                return NotFound();
+                Log.Information("Delete vacancy {no}, {mac} OK. {datetime}", No_vacant, Mac_address,dateTime);
+                return Ok("Delete vacancy complete.");
             }
             else
             {
-                Log.Information("Cannot Delete vacancy {no}, {location} OK.", No_vacant, Mac_address);
-                return NotFound();
+                Log.Information("Cannot Delete vacancy {no}, {mac}. {datetime}.", No_vacant, Mac_address, dateTime);
+                return NotFound("Delete vacancy fail.");
             }
 
         }
 
+        /*TEST*/
         [Route("UpadateActiveVacant")]
         [HttpPost]
         public IActionResult UpdateActive([FromBody] string No_vacant, string Mac_address)
@@ -97,6 +103,7 @@ namespace test2.Controllers
             }
         }
 
+        /*TEST*/
         [Route("UpdateSizeVacant")]
         [HttpPost]
         public IActionResult UpdateSize([FromBody] UpdateSize updateSize)
@@ -118,6 +125,7 @@ namespace test2.Controllers
             }
         }
 
+        /*TEST*/
         [Route("VacancyAll")]
         [HttpGet]
         public IActionResult GetVacancy()
@@ -126,6 +134,8 @@ namespace test2.Controllers
             return Ok(list);
         }
 
+
+        /*TEST*/
         [Route("VacancyId")]
         [HttpGet]
         public IActionResult GetHistory(int id_vacant)
@@ -134,26 +144,6 @@ namespace test2.Controllers
             return Ok(list);
         }
 
-        [Route("DeleteAll")]
-        [HttpDelete]
-        public IActionResult Delete()
-        {
-            if (_vacancyRepo.Delete())
-            {
-                return Ok();
-            }
-            return NotFound();
-        }
-
-        [Route("Delete")]
-        [HttpDelete]
-        public IActionResult Delete(int id_vacant)
-        {
-            if (_vacancyRepo.Delete(id_vacant))
-            {
-                return Ok();
-            }
-            return NotFound();
-        }
+       
     }
 }

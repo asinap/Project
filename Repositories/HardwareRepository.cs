@@ -20,21 +20,41 @@ namespace test2.Repositories
         {
             try
             {
-                if(_dbContext.accounts.FirstOrDefault(x=>x.Id_account==userID)==null)
+                TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+                DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
+                //checking user is existed
+                if (_dbContext.accounts.FirstOrDefault(x=>x.Id_account==userID)==null)
                 {
                     return null;
                 }
+                //checking locker is existed
                 if (_dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == mac_address) == null)
                 {
                     return null;
                 }
-                string location = _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == mac_address).Location;
-                var allreserve = from reservelist in _dbContext.reservations
-                                 where reservelist.Id_account == userID && reservelist.Location == location && reservelist.IsActive == true && (reservelist.Status == "Use" || reservelist.Status == "Unuse")
-                                        && reservelist.StartDay<=DateTime.Now && reservelist.EndDay>=DateTime.Now
-                                 select reservelist;
 
+                //find location
+                string location = _dbContext.lockerMetadatas.FirstOrDefault(x => x.Mac_address == mac_address).Location;
+
+                //find vacancy in the locker
+                var vacantlist = _dbContext.vacancies.Where(x => x.Mac_address == mac_address);
+
+                /*find reservation that 1. id_account == userID 
+                                        2. isActive = true
+                                        3. status = unuse / use 
+                                        4. reservation  startday<now and endday>now
+                                        5. id_vacancy in vacantlist*/
+                var allreserve = from reservelist in _dbContext.reservations
+                                 where  reservelist.Id_account == userID 
+                                        && reservelist.Code == code
+                                        && reservelist.IsActive == true 
+                                        && (reservelist.Status == "Use" || reservelist.Status == "Unuse")
+                                        && reservelist.StartDay<= dateTime && reservelist.EndDay>= dateTime
+                                        && vacantlist.Any(x=>x.Id_vacancy==reservelist.Id_vacancy) 
+                                 select reservelist;
+                //check code = code
                 var reserve = allreserve.FirstOrDefault(x => x.Code == code);
+                //if there is no reservation
                 if (reserve == null)
                 {
                     Hardware result = new Hardware()
@@ -46,6 +66,7 @@ namespace test2.Repositories
                     };
                     return result;
                 }
+                //if there is reservation
                 else
                 {
                     string no_vacant = _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == reserve.Id_vacancy).No_vacancy;
@@ -61,6 +82,7 @@ namespace test2.Repositories
             }
             catch (Exception)
             {
+                //error
                 return null;
             }
         }

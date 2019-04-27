@@ -9,6 +9,7 @@ using test2.Class;
 using test2.DatabaseContext;
 using test2.DatabaseContext.Models;
 using test2.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace test2.Controllers
 {
@@ -24,46 +25,65 @@ namespace test2.Controllers
             _contentRepo = new ContentRepository(_dbContext);
         }
 
+        [AllowAnonymous]
+        /*Adding content for notification*/
         [Route("AddContent")]
         [HttpPost]
         public IActionResult AddContent([FromBody] Content _cont)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
+            //if adding content success
             if (_contentRepo.AddContent(_cont))
             {
-                Log.Information("Add content {id} OK.", _cont.Id_content);
+                Log.Information("Add content {id} OK. {DateTime}.", _cont.Id_content, dateTime);
                 return Ok(_cont.Id_content);
             }
-            Log.Information("Cannot Add content {id}.", _cont.Id_content);
+            //if adding content fail
+            Log.Information("Cannot Add content {id}. {DateTime}.", _cont.Id_content, dateTime);
             return NotFound();
         }
 
+        [AllowAnonymous]
+        /*Deleting content by set active to be false*/
         [Route("DeleteContent")]
         [HttpPost]
         public IActionResult DeleteContent([FromBody] ContentForm _cont)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
+            //if deleting content success
             if (_contentRepo.DeleteContent(_cont.Id_content))
             {
-                Log.Information("Delete content {id} OK.", _cont.Id_content);
-                return Ok();
+                Log.Information("Delete content {id} OK. {DateTime}.", _cont.Id_content, dateTime);
+                return Ok(_cont.Id_content);
             }
-            Log.Information("Cannot Delete content {id}.", _cont.Id_content);
-            return NotFound();
+            //if deleting content fail
+            Log.Information("Cannot Delete content {id}. {DateTime}.", _cont.Id_content, dateTime);
+            return NotFound(_cont.Id_content);
 
         }
 
+        [AllowAnonymous]
+        /*Restoring content by set active to be true*/
         [Route("RestoreContent")]
         [HttpPost]
         public IActionResult RestoreContent([FromBody] ContentForm _cont)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
+            //if restore content success
             if (_contentRepo.RestoreContent(_cont.Id_content))
             {
-                Log.Information("Restore content {id} OK.", _cont.Id_content);
+                Log.Information("Restore content {id} OK. {DateTime}.", _cont.Id_content, dateTime);
                 return Ok(_cont.Id_content);
             }
-            Log.Information("Cannot Restore content {id}.", _cont.Id_content);
-            return NotFound();
+            //if restore content fail
+            Log.Information("Cannot Restore content {id}. {DateTime}.", _cont.Id_content, dateTime);
+            return NotFound(_cont.Id_content);
         }
 
+        /*TEST show all content*/
         [Route("ContentAll")]
         [HttpGet]
         public IActionResult GetContent()
@@ -72,6 +92,7 @@ namespace test2.Controllers
             return Ok(list);
         }
 
+        /*TEST show all content that active is true*/
         [Route("ActiveContent")]
         [HttpGet]
         public IActionResult ActiveContent()
@@ -80,34 +101,13 @@ namespace test2.Controllers
             return Ok(list);
         }
 
+        /*TEST show specific content that active is true*/
         [Route("ActiveContentID")]
         [HttpGet]
         public IActionResult GetContent(int id_content)
         {
             var list = _contentRepo.GetContent(id_content);
             return Ok(list);
-        }
-
-        [Route("DeleteAll")]
-        [HttpDelete]
-        public IActionResult Delete()
-        {
-            if (_contentRepo.Delete())
-            {
-                return Ok();
-            }
-            return NotFound();
-        }
-
-        [Route("Delete")]
-        [HttpDelete]
-        public IActionResult Delete(int id_content)
-        {
-            if (_contentRepo.Delete(id_content))
-            {
-                return Ok();
-            }
-            return NotFound();
         }
 
     }

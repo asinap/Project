@@ -23,7 +23,6 @@ namespace test2.Services
     public class AdminService : IAdminService
     {
         private readonly LockerDbContext _dbContext;
-        // users hardcoded for simplicity, store in a db with hashed passwords in production applications
         private readonly AppSettings _appSettings;
 
         public AdminService(LockerDbContext dbContext, IOptions<AppSettings> appSettings)
@@ -32,19 +31,25 @@ namespace test2.Services
             _appSettings = appSettings.Value;
         }
 
+        /*admin authentication => check account, if there is admin account in the system, generate the token*/
         public async Task<Account> AuthenticateAsync(string _token)
         {
             try
             {
+                //get admin information from google account 
                 GoogleJsonWebSignature.Payload validPayload = await GoogleJsonWebSignature.ValidateAsync(_token);
                 var admin = _dbContext.accounts.FirstOrDefault(x => x.Email.ToLower() == validPayload.Email.ToLower() && x.Role == Role.Admin);
+                //if there is admin account in this system
                 if (admin != null)
                 {
+                    //generate token
                     var _user = GetToken(admin.Id_account);
                     return _user;
                 }
+                //if there is no admin account in this system
                 else
                 {
+              
                     return null;
                 }
                     
@@ -52,11 +57,13 @@ namespace test2.Services
             }
             catch (Exception)
             {
+                //error
                 Console.WriteLine("Error check admin");
                 return null;
             }
         }
 
+        /*gennerate token*/
         public Account GetToken(string id_account)
         {
             var user = _dbContext.accounts.SingleOrDefault(x => x.Id_account == id_account);

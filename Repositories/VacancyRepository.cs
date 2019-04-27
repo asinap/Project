@@ -70,6 +70,7 @@ namespace test2.Repositories
 
         }
 
+        /*Edit vacancy*/
         public bool EditVacancy(Vacancy vacant)
         {
             try
@@ -205,45 +206,7 @@ namespace test2.Repositories
             return _dbContext.vacancies.Where(x => x.IsActive == false).ToList();
         }
 
-        public bool Delete()
-        {
-            try
-            {
-                var data = from list in _dbContext.vacancies select list;
-                _dbContext.vacancies.RemoveRange(data);
-                _dbContext.SaveChanges();
-                return true;
-
-            }
-            catch (Exception)
-            {
-                Console.Write("Cannot delete all Vacancy database");
-                return false;
-            }
-        }
-
-        public bool Delete(int id_vacant)
-        {
-            try
-            {
-                if (_dbContext.vacancies.Where(x => x.Id_vacancy == id_vacant) == null)
-                {
-                    return false;
-                }
-                var data = from list in _dbContext.vacancies
-                           where list.Id_vacancy == id_vacant
-                           select list;
-                _dbContext.vacancies.RemoveRange(data);
-                _dbContext.SaveChanges();
-                return true;
-            }
-            catch (Exception)
-            {
-                Console.Write("Cannot delete %s", id_vacant);
-                return false;
-            }
-        }
-
+       
 
     }
 }

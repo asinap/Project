@@ -27,241 +27,167 @@ namespace test2.Controllers
             _reserveRepo = new ReservationRepository(_dbContext);
         }
 
+        /*Add reservation from user through mobile application*/
         [Authorize(Roles = Role.User)]
         [Route("/mobile/AddReserve")]
         [HttpPost]
-        public IActionResult AddReservation([FromBody] Reservation reserve)
+        public IActionResult AddReservation([FromBody] ReservationForm reserve)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             int result = _reserveRepo.AddReservation(reserve);
-            switch(result)
+            if(result == 0)
             {
-                case 1:
-                    Log.Information("Add reservation {accountID} account_is_not_existed.", reserve.Id_account);
-                    return NotFound("account_is_not_existed.");
-                case 2:
-                    Log.Information("Add reservation {Name} {location} {size} No_avaliable_vacant."
-                        , _dbContext.accounts.FirstOrDefault(x=>x.Id_account==reserve.Id_account).Name
-                        , reserve.Location, reserve.Size);
-                    return NotFound("No_avaliable_vacant.");
-                case 3:
-                    Log.Information("Add reservation {Name} {location} {size} Cannot_find_size_requirement."
-                        , _dbContext.accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Name
-                        , reserve.Location, reserve.Size);
-                    return NotFound("Cannot_find_size_requirement");
-                case 4:
-                    Log.Information("Add reservation {Name} {reserveID} No_point.", _dbContext.accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Name);
-                    return NotFound("No_point");
-                case 5:
-                    Log.Information("Add reservation {Name}, {no_number}, {location}, {size}, {createdTime} done."
-                        , _dbContext.accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Name
-                        , _dbContext.vacancies.FirstOrDefault(x=>x.Id_vacancy==_dbContext.reservations.FirstOrDefault(y=>y.Id_reserve==reserve.Id_reserve).Id_vacancy).No_vacancy
-                        , reserve.Location
-                        , reserve.Size
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == reserve.Id_reserve).DateModified);
-                    return Ok(reserve.Id_reserve);
-                default:
-                    Log.Information("Add reservation {userID} {reserveID} Error.", reserve.Id_account, reserve.Id_reserve);
-                    return NotFound("Error");
+                Log.Information("Add reservation Error. {DateTime}, {1}.", reserve.Id_account, dateTime);
+                return NotFound("Error");
+            }
+            else
+            {
+                Log.Information("Add reservation {accountID} done. {DateTime}.", reserve.Id_account);
+                return Ok(result);
 
             }
-            //{
-            //    return Ok(reserve.Id_reserve);
-            //}
-            //return NotFound();
+
         }
 
+        /*Cancel reservation from user through mobile application*/
         [Authorize(Roles = Role.User)]
         [Route("/mobile/CancelReserve")]
         [HttpDelete]
         public IActionResult CancelReservation([FromQuery] int id)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             int result = _reserveRepo.CancelReseveration(id);
             switch (result)
             {
                 case 1:
-                    Log.Information("Cancel reservation from mobile {Name}, {no_number}, {location}, {size}, {createdTime} done."
-                        , _dbContext.accounts.FirstOrDefault(x => x.Id_account == _dbContext.reservations.FirstOrDefault(y=>y.Id_reserve==id).Id_account).Name
-                        , _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id).Id_vacancy).No_vacancy
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id).Location
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id).Size
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id).DateModified);
+                    Log.Information("Cancel reservation from mobile {id} done. {DateTime}.", id,dateTime);
                     return Ok(id);
                 case 2:
-                    Log.Information("Cancel reservation from mobile {Name}, {no_number}, {location}, {size}, {createdTime} Cannot_cancel_cause_time."
-                        , _dbContext.accounts.FirstOrDefault(x => x.Id_account == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id).Id_account).Name
-                        , _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id).Id_vacancy).No_vacancy
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id).Location
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id).Size
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id).DateModified);
-                    return NotFound("Cannot_cancel_cause_time");
+                    Log.Information("Cancel reservation from mobile {id} Cannot_cancel_cause_time. {DateTime}.", id, dateTime);
+                    return NotFound("Cannot cancel cause time");
                 case 3:
-                    Log.Information("Cancel reservation from mobile {reserveID} Reservation_is_not_existed.", id);
-                    return NotFound("Reservation_is_not_existed");
+                    Log.Information("Cancel reservation from mobile {id} Reservation_is_not_existed.", id, dateTime);
+                    return NotFound("Reservation is not existed");
                 default:
-                    Log.Information("Cancel reservation from mobile {reserveID} Error.", id);
+                    Log.Information("Cancel reservation from mobile {id} Error.", id);
                     return NotFound("Error");
             }
         }
 
+        /*check if reservation is set code from user through mobile application*/
         [Authorize(Roles = Role.User)]
         [Route ("/mobile/IsSetCode")]
         [HttpGet]
         public IActionResult IsSetCode (int id_reserve)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             int result = _reserveRepo.IsSetCode(id_reserve);
             switch(result)
             {
                 case 1:
-                    Log.Information("check code is set? code is not set from mobile {Name}, {no_number}, {location}, {size}, {createdTime} done."
-                        , _dbContext.accounts.FirstOrDefault(x => x.Id_account == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Id_account).Name
-                        , _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Id_vacancy).No_vacancy
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Location
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Size
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).DateModified);
+                    Log.Information("check code is set? code is not set from mobile {id} done. {DateTime}.", id_reserve, dateTime);
                     return Ok("code==\"string\"");
                 case 2:
-                    Log.Information("check code is set? code is already set from mobile {Name}, {no_number}, {location}, {size}, {createdTime} done."
-                       , _dbContext.accounts.FirstOrDefault(x => x.Id_account == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Id_account).Name
-                       , _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Id_vacancy).No_vacancy
-                       , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Location
-                       , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Size
-                       , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).DateModified);
+                    Log.Information("check code is set? code is already set from mobile {id} done. {DateTime}.", id_reserve, dateTime);
                     return NotFound("code is already set");
                 default:
-                    if (_dbContext.reservations.FirstOrDefault(x => x.Id_reserve == id_reserve) != null)
-                    {
-                        Log.Information("check code is set? Error from mobile {Name}, {no_number}, {location}, {size}, {createdTime} done."
-                           , _dbContext.accounts.FirstOrDefault(x => x.Id_account == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Id_account).Name
-                           , _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Id_vacancy).No_vacancy
-                           , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Location
-                           , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Size
-                           , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).DateModified);
-                        return NotFound("Error set code");
-                    }
-                    else
-                    {
-                        Log.Information("check code is set? Error from mobile {id_reserve} done.", id_reserve);
-                        return NotFound("Error");
-                    }
-                
+                    Log.Information("check code is set? Error from mobile {id_reserve} {DateTime}.", id_reserve, dateTime);
+                    return NotFound("Error");
             }
         }
 
+        /*Set code in each reservation from user through mobile application*/
         [Authorize(Roles = Role.User)]
         [Route ("/mobile/SetCode")]
         [HttpPost]
         public IActionResult SetCode ([FromBody]CodeUser codeUser)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             int result = _reserveRepo.SetCode(codeUser.Id_reserve, codeUser.Code);
             if (result == 1)
             {
-                Log.Information("Set code OK from mobile {Name}, {no_number}, {location}, {size}, {createdTime} done."
-                        , _dbContext.accounts.FirstOrDefault(x => x.Id_account == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Id_account).Name
-                        , _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Id_vacancy).No_vacancy
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Location
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Size
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).DateModified);
-                string _result = string.Format("id_reserve : {0}, code : {1}", codeUser.Id_reserve, codeUser.Code);
-                return Ok(_result);
+                Log.Information("Set code OK from mobile {id} done. {DateTime}.", codeUser.Id_reserve, dateTime);
+                return Ok(codeUser);
             }
             else if (result == 2)
             {
          
-                Log.Information("Set code Code_is_duplicated from mobile {Name}, {no_number}, {location}, {size}, {createdTime} done."
-                         , _dbContext.accounts.FirstOrDefault(x => x.Id_account == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Id_account).Name
-                         , _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Id_vacancy).No_vacancy
-                         , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Location
-                         , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Size
-                         , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).DateModified);
+                Log.Information("Set code Code_is_duplicated from mobile {id} done. {DateTime}.", codeUser.Id_reserve, dateTime);
                 return NotFound("Code_is_duplicated");
             }
             else
             {
-                if (_dbContext.reservations.FirstOrDefault(x => x.Id_reserve == codeUser.Id_reserve) != null)
-                {
-                    Log.Information("Set code Error to set code from mobile {Name}, {no_number}, {location}, {size}, {createdTime} done."
-                        , _dbContext.accounts.FirstOrDefault(x => x.Id_account == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Id_account).Name
-                        , _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Id_vacancy).No_vacancy
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Location
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).Size
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == codeUser.Id_reserve).DateModified);
+                    Log.Information("Set code Error to set code from mobile {id_reserve}. {DateTime}.", codeUser.Id_reserve, dateTime);
                     return NotFound("Error to set code");
-                }
-                else
-                {
-                    Log.Information("Set code Error to set code from mobile {id_reserve} done.", codeUser.Id_reserve);
-                    return NotFound("Error to set code");
-                }
 
             }
         }
 
+        /*Get code from user through mobile application*/
         [Authorize(Roles = Role.User)]
         [Route ("/mobile/GetCode")]
         [HttpGet]
         public IActionResult GetCode (int id_reserve)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             string result = _reserveRepo.GetCode(id_reserve);
             if(result==null)
             {
-                if (_dbContext.reservations.FirstOrDefault(x => x.Id_reserve == id_reserve) != null)
-                {
-                    Log.Information("Get Code Error to get code from mobile {Name}, {no_number}, {location}, {size}, {createdTime} done."
-                           , _dbContext.accounts.FirstOrDefault(x => x.Id_account == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Id_account).Name
-                           , _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Id_vacancy).No_vacancy
-                           , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Location
-                           , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Size
-                           , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).DateModified);
-                    return NotFound("Cannot Get code");
-                }
-                else
-                {
-                    Log.Information("Get Code Error to get code from mobile {id_reserve} done.", id_reserve);
-                    return NotFound("Cannot Get code");
-                }
+                Log.Information("Get Code Error to get code from mobile {id}. {DateTime}.", id_reserve, dateTime);
+                return NotFound("Cannot Get code");
             }
             else
             {
-                Log.Information("Get Code from mobile {Name}, {no_number}, {location}, {size}, {createdTime} done."
-                       , _dbContext.accounts.FirstOrDefault(x => x.Id_account == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Id_account).Name
-                       , _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Id_vacancy).No_vacancy
-                       , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Location
-                       , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Size
-                       , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).DateModified);
+                Log.Information("Get Code from mobile {id} done. {DateTime}.", id_reserve, dateTime);
                 return Ok(result);
             }
         }
 
+        /*Get all reservation from administrator through web application*/
         [Authorize(Roles = Role.Admin)]
         [Route ("/web/Activity")]
         [HttpGet]
         public JsonResult GetActivity()
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             var list = _reserveRepo.GetActivities();
-            Log.Information("Get Activity from web {DateTime}.", DateTime.Now);
+            Log.Information("Get Activity from web {DateTime}.", dateTime);
             return Json(list);
         }
 
+        /*Get all notification from administrator through web application*/
         [Authorize(Roles = Role.Admin)]
         [Route("/web/Notification")]
         [HttpGet]
         public JsonResult GetNotification()
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             var list = _reserveRepo.GetNotification();
-            Log.Information("Get noti from web {DateTime}.", DateTime.Now);
+            Log.Information("Get noti from web {DateTime}.", dateTime);
             return Json(list);
         }
 
+        /*Get specific reservastion detail from administrator through web application*/
         [Authorize(Roles = Role.Admin)]
         [Route ("/web/ReserveDetail")]
         [HttpGet]
         public JsonResult GetReserveDetail(int id_reserve)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             ReserveDetail detail = _reserveRepo.GetReserveDetail(id_reserve);
-            Log.Information("Get reservation detail from web {DateTime} {Name} {No_vacant} {size} {location}.", detail.DateModified,detail.Name,detail.NumberVacancy,detail.Size,detail.Location);
+            Log.Information("Get reservation detail from web {id} {DateTime}.", id_reserve,dateTime);
             return Json(detail);
         }
 
+        /*TEST Get all reservastion*/
         [Route("ReserveAll")]
         [HttpGet]
         public IActionResult GetReserve()
@@ -270,6 +196,7 @@ namespace test2.Controllers
             return Ok(list);
         }
 
+        /*TEST Get specific reservastion*/
         [Route("ReserveID")]
         [HttpGet]
         public IActionResult GetReserve(string id_account)
@@ -278,103 +205,75 @@ namespace test2.Controllers
             return Ok(list);
         }
 
+        /*Get pending reservation from user through mobile application*/
         [Authorize(Roles = Role.User)]
         [Route("/mobile/Pending")]
         [HttpGet]
         public JsonResult Pending (string id_account)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             var list = _reserveRepo.Pending(id_account);
-            Log.Information("Pending from mobile {name}.", _dbContext.accounts.FirstOrDefault(x=>x.Id_account== id_account).Name);
-          
+            Log.Information("Pending from mobile {id}. {0}.", id_account, dateTime);
             return Json(list);
         }
 
+        /*Get history reservation from user through mobile application*/
         [Authorize(Roles = Role.User)]
         [Route("/mobile/History")]
         [HttpGet]
         public JsonResult History (string id_account)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             var list = _reserveRepo.History(id_account);
-            Log.Information("History from mobile {name}.", _dbContext.accounts.FirstOrDefault(x => x.Id_account == id_account).Name);
+            Log.Information("History from mobile {id}. {0}.", id_account, dateTime);
 
             return Json(list);
         }
 
+        /*Get specific reservation detail from user through mobile application*/
         [Authorize(Roles = Role.User)]
         [Route ("/mobile/BookingDetail")]
         [HttpGet]
         public JsonResult BookingDetail (int id_reserve)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             BookingForm result = _reserveRepo.GetBookingDetail(id_reserve);
-            Log.Information("Booking detail from mobile {Name}, {no_number}, {location}, {size}, {createdTime} done."
-                        , _dbContext.accounts.FirstOrDefault(x => x.Id_account == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Id_account).Name
-                        , _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Id_vacancy).No_vacancy
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Location
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).Size
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == id_reserve).DateModified);
+            Log.Information("Booking detail from mobile {id}. {0}.",id_reserve, dateTime);
             return Json(result);
         }
 
-
-        [Route ("Count")]
-        [HttpGet]
-        public JsonResult CountUser (string id_account)
-        {
-            int unuse = _reserveRepo.Unuse(id_account);
-            int use = _reserveRepo.Use(id_account);
-            int penalty = _reserveRepo.TimeUp(id_account);
-            int expire = _reserveRepo.Expire(id_account);
- //           string result = String.Format("Unuse:{0},Use:{1},Penalty:{2},Expire:{3}",unuse,use,penalty,expire);
-            Counter counter = new Counter()
-            {
-                Unuse = unuse,
-                Use = use,
-                Penalty = penalty,
-                Expire = expire
-            };
-            return Json(counter);
-        }
-
-        [AllowAnonymous]
+        /*Set status in reservation from HW, if locker is used*/
+        //[AllowAnonymous]
         [Route("/HW/SetState")]
         [HttpPost]
         public IActionResult SetState ([FromBody]SetState setState)
         {
-            if(_reserveRepo.SetStatus(setState.Id_reserve,setState.Condition)==1)
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
+            if (_reserveRepo.SetStatus(setState.Id_reserve,setState.Condition)==1)
             {
-                string result = String.Format("{0}:{1}", setState.Id_reserve, setState.Condition);
-                Log.Information("Set state unuse to use. { Name}, { no_number}, { location}, { size}, { createdTime} done."
-                        , _dbContext.accounts.FirstOrDefault(x => x.Id_account == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).Id_account).Name
-                        , _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).Id_vacancy).No_vacancy
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).Location
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).Size
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).DateModified);
+                string result = String.Format("{id}:{1}", setState.Id_reserve, setState.Condition);
+                Log.Information("Set state unuse to use. {id}, {condition}, {DateTime}.", setState.Id_reserve, setState.Condition, dateTime);
                 return Ok(result);
             }
             else if (_reserveRepo.SetStatus(setState.Id_reserve, setState.Condition) ==2)
             {
-                string result = String.Format("{0}:{1}", setState.Id_reserve, setState.Condition);
-                Log.Information("Set state use to use. { Name}, { no_number}, { location}, { size}, { createdTime} done."
-                        , _dbContext.accounts.FirstOrDefault(x => x.Id_account == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).Id_account).Name
-                        , _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).Id_vacancy).No_vacancy
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).Location
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).Size
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).DateModified);
+                string result = String.Format("{id}:{1}", setState.Id_reserve, setState.Condition);
+                Log.Information("Set state use to use. {id}, {condition}, {DateTime}.", setState.Id_reserve, setState.Condition, dateTime);
                 return Ok(result);
             }
             else
             {
-                Log.Information("Set state Error to Set state.{ Name}, { no_number}, { location}, { size}, { createdTime} done."
-                        , _dbContext.accounts.FirstOrDefault(x => x.Id_account == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).Id_account).Name
-                        , _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).Id_vacancy).No_vacancy
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).Location
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).Size
-                        , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == setState.Id_reserve).DateModified);
+                Log.Information("Set state Error to Set state. {id}, {condition}, {DateTime}.", setState.Id_reserve, setState.Condition, dateTime);
                 return NotFound("Error to Set state");
             }
 
         }
 
+        /*TEST set active status*/
         [Route("SetBoolIsActive")]
         [HttpPost]
         public IActionResult SetBoolIsActive([FromBody]SetIsActive setIsActive)
@@ -382,7 +281,7 @@ namespace test2.Controllers
             int result = _reserveRepo.SetBoolIsActive(setIsActive.Id_reserve,setIsActive.IsActive);
             if (result == 2)
             {
-                string _result = String.Format("{0}:{1}", setIsActive.Id_reserve, setIsActive.IsActive);
+                string _result = String.Format("{DateTime}:{1}", setIsActive.Id_reserve, setIsActive.IsActive);
                 return Ok(result);
             }
             else if (result == 1)
@@ -397,27 +296,6 @@ namespace test2.Controllers
 
         }
 
-        [Route("DeleteAll")]
-        [HttpDelete]
-        public IActionResult Delete()
-        {
-            if (_reserveRepo.Delete())
-            {
-                return Ok();
-            }
-            return NotFound();
-        }
-
-        [Route("Delete")]
-        [HttpDelete]
-        public IActionResult Delete(int id_reserve)
-        {
-            if (_reserveRepo.Delete(id_reserve))
-            {
-                return Ok();
-            }
-            return NotFound();
-        }
-
+       
     }
 }

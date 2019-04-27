@@ -27,82 +27,54 @@ namespace test2.Controllers
             _notiRepo = new NotificationRepository(_dbContext);
         }
 
-        [Route("AddNotification")]
-        [HttpPost]
-        public IActionResult AddNotification([FromBody] Notification detail)
-        {
-            if (_notiRepo.AddNotification(detail))
-            {
-                Log.Information("Add notification {Name}, {No}, {Location}, {contentID} OK."
-                    , _dbContext.accounts.FirstOrDefault(x => x.Id_account == detail.Id_account).Name
-                    , _dbContext.vacancies.FirstOrDefault(y => y.Id_vacancy == _dbContext.reservations.FirstOrDefault(x => x.Id_reserve == detail.Id_reserve).Id_vacancy).No_vacancy
-                    , _dbContext.reservations.FirstOrDefault(y=>y.Id_reserve==detail.Id_reserve).Location
-                    , detail.Id_content);
-                return Ok(detail.Id_notification);
-            }
-            Log.Information("Cannot Add notification {Name}, {No}, {Location}, {contentID}."
-                   , _dbContext.accounts.FirstOrDefault(x => x.Id_account == detail.Id_account).Name
-                   , _dbContext.vacancies.FirstOrDefault(y => y.Id_vacancy == _dbContext.reservations.FirstOrDefault(x => x.Id_reserve == detail.Id_reserve).Id_vacancy).No_vacancy
-                   , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == detail.Id_reserve).Location
-                   , detail.Id_content);
-            return NotFound();
-        }
-
+        //Delete notification by user through mobile application
         [Authorize (Roles = Role.User)]
         [Route("/mobile/DeleteNotificaiton")]
         [HttpPost]
         public IActionResult DeleteNotification([FromBody]NotificationIForm notification)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
+            //if setting notification is not show on user's mobile success
             if (_notiRepo.DeleteNotification(notification.Id_noti))
             {
-                Log.Information("Delete noti from mobile {Name}, {No}, {Location}, {contentID} OK."
-                    , _dbContext.accounts.FirstOrDefault(x => x.Id_account == _dbContext.notifications.FirstOrDefault(y => y.Id_notification == notification.Id_noti).Id_account).Name
-                    , _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.notifications.FirstOrDefault(z => z.Id_notification == notification.Id_noti).Id_reserve).Id_vacancy).No_vacancy
-                    , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.notifications.FirstOrDefault(z => z.Id_notification == notification.Id_noti).Id_reserve).Location
-                    , _dbContext.notifications.FirstOrDefault(x => x.Id_notification == notification.Id_noti).Id_content);
+                Log.Information("Delete noti from mobile {id_notification} OK. {DateTime}.", notification.Id_noti, dateTime);
                 return Ok(notification.Id_noti);
             }
-            if (_dbContext.notifications.FirstOrDefault(x => x.Id_notification == notification.Id_noti) != null)
-            {
-                Log.Information("Error_Delete.");
-                return NotFound("Error_Delete");
-            }
+            //if setting notification is not show on user's mobile fail
             else
             {
-                Log.Information("Cannot Delete noti from mobile {id_noti}.", notification.Id_noti);
-                return NotFound("Id_noti is not existed.");
+                Log.Information("Error_Delete. {DateTime}.", dateTime);
+                return NotFound("Error Delete notification");
 
             }
 
         }
 
+        //set notification that is read by user through mobile application
         [Authorize(Roles = Role.User)]
         [Route("/mobile/SetRead")]
         [HttpPost]
         public IActionResult SetRead([FromBody]NotificationIForm notification)
         {
-            if(_notiRepo.SetRead(notification.Id_noti))
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
+            //if set notification is read success
+            if (_notiRepo.SetRead(notification.Id_noti))
             {
-                Log.Information("Set Read noti from mobile {Name}, {No}, {Location}, {contentID} OK."
-                    , _dbContext.accounts.FirstOrDefault(x => x.Id_account == _dbContext.notifications.FirstOrDefault(y => y.Id_notification == notification.Id_noti).Id_account).Name
-                    , _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.notifications.FirstOrDefault(z => z.Id_notification == notification.Id_noti).Id_reserve).Id_vacancy).No_vacancy
-                    , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.notifications.FirstOrDefault(z => z.Id_notification == notification.Id_noti).Id_reserve).Location
-                    , _dbContext.notifications.FirstOrDefault(x => x.Id_notification == notification.Id_noti).Id_content);
+                Log.Information("Set Read noti from mobile {id_noti} OK. {DateTime}.",notification.Id_noti,dateTime);
                 return Ok(notification.Id_noti);
             }
-            if (_dbContext.notifications.FirstOrDefault(x => x.Id_notification == notification.Id_noti) != null)
-            {
-                Log.Information("Error_SetRead {noti}.", notification.Id_noti);
-                return NotFound("Error_SetRead");
-            }
+            //if set notification is read fail
             else
             {
-                Log.Information("Cannot Set Read noti from mobile {id_noti}.", notification.Id_noti);
-                return NotFound("Id_noti is not existed.");
+                Log.Information("Error_SetRead {noti}. {DateTime}.", notification.Id_noti,dateTime);
+                return NotFound("Error_SetRead");
 
             }
         }
 
+        /*TEST get all notification */
         [Route("NotificationAll")]
         [HttpGet]
         public IActionResult GetNotification()
@@ -111,6 +83,7 @@ namespace test2.Controllers
             return Ok(list);
         }
 
+        /*TEST get specific notification*/
         [Route("UserAllNotification")]
         [HttpGet]
         public IActionResult GetNotification(int _noti)
@@ -119,60 +92,33 @@ namespace test2.Controllers
             return Ok(list);
         }
 
+        /*Get notification from each user through mobile application */
         [Authorize(Roles = Role.User)]
         [Route ("/mobile/UserInbox")]
         [HttpGet]
         public JsonResult GetNotificationForm (string id_account)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             var list = _notiRepo.GetNotificationForm(id_account);
-            Log.Information("Get user inbox from mobile {Name} OK.", _dbContext.accounts.FirstOrDefault(x => x.Id_account == id_account).Name);
+            Log.Information("Get user inbox from mobile {id} OK. {DateTime}.", id_account, dateTime);
             return Json(list);
         }
 
+        /*Get specific notification from user through mobile application*/
         [Authorize(Roles = Role.User)]
         [Route("/mobile/UserInboxDetail")]
         [HttpGet]
         public JsonResult GetNotificationDetail (int id_noti)
         {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
             NotificationForm form = _notiRepo.GetNotificationDetail(id_noti);
-            Log.Information("Get user inbox detail from mobile {Name} , {No}, {Location}, {contentID} Ok."
-                 , _dbContext.accounts.FirstOrDefault(x => x.Id_account == _dbContext.notifications.FirstOrDefault(y => y.Id_notification == id_noti).Id_account).Name
-                    , _dbContext.vacancies.FirstOrDefault(x => x.Id_vacancy == _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.notifications.FirstOrDefault(z => z.Id_notification == id_noti).Id_reserve).Id_vacancy).No_vacancy
-                    , _dbContext.reservations.FirstOrDefault(y => y.Id_reserve == _dbContext.notifications.FirstOrDefault(z => z.Id_notification == id_noti).Id_reserve).Location
-                    , _dbContext.notifications.FirstOrDefault(x => x.Id_notification == id_noti).Id_content);
+            Log.Information("Get user inbox from mobile {id} OK. {DateTime}.", id_noti, dateTime);
             return Json(form);
         }
 
-        [Route("UserActiveNotification")]
-        [HttpGet]
-        public IActionResult GetActiveNotification (string id_account)
-        {
-            var list = _notiRepo.GetActiveNoti(id_account);
-            return Ok(list);
-        }
-
-        [Route("DeleteAll")]
-        [HttpDelete]
-        public IActionResult Delete()
-        {
-            if(_notiRepo.Delete())
-            {
-                return Ok();
-            }
-            return NotFound();
-        }
-
-        [Route("Delete")]
-        [HttpDelete]
-        public IActionResult Delete(int id_noti)
-        {
-            if (_notiRepo.Delete(id_noti))
-            {
-                Log.Information("Ok.");
-                return Ok();
-            }
-            return NotFound();
-        }
+       
 
     }
  }

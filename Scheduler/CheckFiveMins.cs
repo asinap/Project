@@ -30,12 +30,15 @@ namespace test2.Scheduler
             try
             {
                 _dbContext = new LockerDbContext(dbOption);
-                //DateTime dateTime = DateTime.Now;
+                
                 TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
                 DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
+
+                //get active reservation
                 var reservelist = from row in _dbContext.reservations
                                   where row.IsActive == true
                                   select row;
+
                 if (reservelist == null)
                 {
                     Log.Information("Check five mins every minute {0} No data to set.", dateTime);
@@ -44,9 +47,10 @@ namespace test2.Scheduler
                 {
                     foreach (var run in reservelist)
                     {
+                        //if there is no notification in each reservation 
                         if (_dbContext.notifications.FirstOrDefault(x => x.Id_reserve == run.Id_reserve && x.Id_content == _appSettings.FiveContent) == null)
                         {
-                            
+                            //check different time = 5 minutes
                             TimeSpan diff = (run.EndDay - dateTime).Duration();
                             if (diff.TotalMinutes < 6 && diff.TotalMinutes > 4)
                             {
@@ -57,7 +61,7 @@ namespace test2.Scheduler
                                     Id_content = _appSettings.FiveContent,
                                     Id_reserve = run.Id_reserve,
                                     IsShow = true,
-                                    Read = true
+                                    Read = false
 
                                 };
                                 _dbContext.notifications.Add(notification);
