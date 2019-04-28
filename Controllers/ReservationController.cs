@@ -248,26 +248,26 @@ namespace test2.Controllers
         /*Set status in reservation from HW, if locker is used*/
         //[AllowAnonymous]
         [Route("/HW/SetState")]
-        [HttpPost]
-        public IActionResult SetState ([FromBody]SetState setState)
+        [HttpPut]
+        public IActionResult SetState (int id_reserve, string condition)
         {
             TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
-            if (_reserveRepo.SetStatus(setState.Id_reserve,setState.Condition)==1)
+            if (_reserveRepo.SetStatus(id_reserve,condition)==1)
             {
-                string result = String.Format("{id}:{1}", setState.Id_reserve, setState.Condition);
-                Log.Information("Set state unuse to use. {id}, {condition}, {DateTime}.", setState.Id_reserve, setState.Condition, dateTime);
+                string result = String.Format("{id}:{1}", id_reserve, condition);
+                Log.Information("Set state unuse to use. {id}, {condition}, {DateTime}.", id_reserve, condition, dateTime);
                 return Ok(result);
             }
-            else if (_reserveRepo.SetStatus(setState.Id_reserve, setState.Condition) ==2)
+            else if (_reserveRepo.SetStatus(id_reserve, condition) ==2)
             {
-                string result = String.Format("{id}:{1}", setState.Id_reserve, setState.Condition);
-                Log.Information("Set state use to use. {id}, {condition}, {DateTime}.", setState.Id_reserve, setState.Condition, dateTime);
+                string result = String.Format("{id}:{1}", id_reserve, condition);
+                Log.Information("Set state use to use. {id}, {condition}, {DateTime}.", id_reserve, condition, dateTime);
                 return Ok(result);
             }
             else
             {
-                Log.Information("Set state Error to Set state. {id}, {condition}, {DateTime}.", setState.Id_reserve, setState.Condition, dateTime);
+                Log.Information("Set state Error to Set state. {id}, {condition}, {DateTime}.", id_reserve, condition, dateTime);
                 return NotFound("Error to Set state");
             }
 

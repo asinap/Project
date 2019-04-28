@@ -79,7 +79,7 @@ namespace test2.Repositories
                 Console.WriteLine("AddReservation Error");
                 return 0;
             }
-        
+
         }
 
         /*check if there is an account*/
@@ -89,11 +89,11 @@ namespace test2.Repositories
         }
 
         /*find available vacancy during the day reservation*/
-        public List<Vacancy> CheckAvailableDay (ReservationForm reserve)
+        public List<Vacancy> CheckAvailableDay(ReservationForm reserve)
         {
             var overlap = from reservelist in _dbContext.reservations
-                             where reservelist.StartDay <= reserve.StartDay && reservelist.EndDay >= reserve.StartDay
-                             select reservelist;
+                          where reservelist.StartDay <= reserve.StartDay && reservelist.EndDay >= reserve.StartDay && (reservelist.Status == Status.Use || reservelist.Status == Status.Unuse)
+                          select reservelist;
             var availableVacant = from vacantlist in _dbContext.vacancies join lockerlist in _dbContext.lockerMetadatas
                                   on vacantlist.Mac_address equals lockerlist.Mac_address
                                   where !(overlap.Any(x => x.Id_vacancy == vacantlist.Id_vacancy)) && lockerlist.Location == reserve.Location
@@ -112,7 +112,7 @@ namespace test2.Repositories
                 if (reserve!=null)
                 {
                     
-                    if(reserve.StartDay>dateTime)
+                    if(DateTime.Compare(reserve.StartDay,dateTime)>0)
                     {
                         _dbContext.reservations.FirstOrDefault(x => x.Id_reserve == id).IsActive = false;
                         _dbContext.reservations.FirstOrDefault(x => x.Id_reserve == id).Status = Status.Cancel;

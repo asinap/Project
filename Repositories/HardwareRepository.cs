@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using test2.Class;
 using test2.DatabaseContext;
+using test2.Entities;
 
 namespace test2.Repositories
 {
@@ -48,7 +49,7 @@ namespace test2.Repositories
                                  where  reservelist.Id_account == userID 
                                         && reservelist.Code == code
                                         && reservelist.IsActive == true 
-                                        && (reservelist.Status == "Use" || reservelist.Status == "Unuse")
+                                        && (reservelist.Status == Status.Use || reservelist.Status == Status.Unuse)
                                         && reservelist.StartDay<= dateTime && reservelist.EndDay>= dateTime
                                         && vacantlist.Any(x=>x.Id_vacancy==reservelist.Id_vacancy) 
                                  select reservelist;
