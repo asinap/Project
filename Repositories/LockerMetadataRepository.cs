@@ -201,12 +201,18 @@ namespace test2.Repositories
 
         }
         /* Get all locker                       *
-         *  return all locker detail to string  */
+         *  return all locker to string  */
         public List<LockerMetadata> GetLocker()
         {
             return _dbContext.lockerMetadatas.ToList();
         }
 
+        /* Get all locker                       *
+         *  return all locker and IsActive=true to string  */
+        public List<LockerMetadata> GetLockerMobile()
+        {
+            return _dbContext.lockerMetadatas.Where(x => x.IsActive == true).ToList();
+        }
         /* Get specific locker                          *
          * Input = string Mac_address                   *
          * return locker that has Mac_address = input   */

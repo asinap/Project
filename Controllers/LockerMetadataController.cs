@@ -125,8 +125,20 @@ namespace test2.Controllers
             return Ok(list);
         }
 
+        [Authorize(Roles = Role.User)]
+        [Route("/mobile/Locker")]
+        [HttpGet]
+        public IActionResult GetLockerMobile()
+        {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime dateTime = TimeZoneInfo.ConvertTime(DateTime.Now, zone);
+            var list = _lockerRepo.GetLockerMobile();
+            Log.Information("Get Locker from mobile {datetime}.", dateTime);
+            return Ok(list);
+        }
+
         /*Get locker detail from adminstrator through web application*/
-        [Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = Role.Admin + "," + Role.User)]
         [Route("/web/lockerDetail")]
         [HttpGet]
         public JsonResult GetLockerDetail(string mac_address)

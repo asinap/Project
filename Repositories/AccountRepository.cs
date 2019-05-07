@@ -133,6 +133,11 @@ namespace test2.Repositories
                 //if there is user account in the database
                 if (_dbContext.accounts.FirstOrDefault(x => x.Id_account == id_account) != null)
                 {
+                    if(phone.Length!=10)
+                    {
+                        return false;
+                    }
+
                     _dbContext.accounts.FirstOrDefault(x => x.Id_account == id_account).Phone = phone;
                     _dbContext.SaveChanges();
                     return true;
