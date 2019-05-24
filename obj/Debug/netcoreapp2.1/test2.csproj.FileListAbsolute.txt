@@ -97,3 +97,4 @@ D:\Project\test2\test2\Project-master\obj\Debug\netcoreapp2.1\test2.Views.pdb
 D:\Project\test2\test2\Project-master\obj\Debug\netcoreapp2.1\test2.dll
 D:\Project\test2\test2\Project-master\obj\Debug\netcoreapp2.1\test2.pdb
 D:\Project\test2\test2\Project-master\obj\Debug\netcoreapp2.1\test2.csproj.CopyComplete
+D:\Project\test2\Project\bin\Debug\netcoreapp2.1\app.yaml

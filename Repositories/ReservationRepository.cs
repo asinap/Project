@@ -29,27 +29,58 @@ namespace test2.Repositories
                 {
                     return 0;
                 }
+                // 5.time more than 3 days
+                //TimeSpan diff = (reserve.EndDay - reserve.StartDay).Duration();
+                //if (diff.TotalDays > 4)
+                //{
+                //    return 0;
+                //}
+                //else if (diff.TotalDays > 0)
+                //{
+                //    var nonOverlap = CheckAvailableTime(reserve);
+                //    if (nonOverlap.Count() == 0)
+                //    {
+                //        return 0;
+                //    }
 
-                //2. find non-overlap locker; check available day, free vacancy and right location return list of vacancy
-                var nonOverlap = CheckAvailableDay(reserve);
-                if (nonOverlap.Count() == 0)
-                {
-                    return 0;
-                }
+                //    //3.find size
+                //    var inSize = nonOverlap.FirstOrDefault(x => x.Size.ToLower() == reserve.Size.ToLower());
+                //    if (inSize == null)
+                //    {
+                //        return 0;
+                //    }
+                //    reserve.Id_vacancy = inSize.Id_vacancy;
+                //    reserve.Status = Status.Unuse;
+                //    //4.out of point
+                //    if (_dbContext.accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Point <= 0)
+                //    {
+                //        return 0;
+                //    }
+                //}
+                //else
+                //{
+                    //2. find non-overlap locker; check available day, free vacancy and right location return list of vacancy
+                    var nonOverlap = CheckAvailableDay(reserve);
+                    if (nonOverlap.Count() == 0)
+                    {
+                        return 0;
+                    }
 
-                //3.find size
-                var inSize = nonOverlap.FirstOrDefault(x => x.Size.ToLower() == reserve.Size.ToLower());
-                if (inSize == null)
-                {
-                    return 0;
-                }
-                reserve.Id_vacancy = inSize.Id_vacancy;
-                reserve.Status = Status.Unuse;
-                //4.out of point
-                if (_dbContext.accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Point <= 0)
-                {
-                    return 0;
-                }
+                    //3.find size
+                    var inSize = nonOverlap.FirstOrDefault(x => x.Size.ToLower() == reserve.Size.ToLower());
+                    if (inSize == null)
+                    {
+                        return 0;
+                    }
+                    reserve.Id_vacancy = inSize.Id_vacancy;
+                    reserve.Status = Status.Unuse;
+                    //4.out of point
+                    if (_dbContext.accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Point <= 0)
+                    {
+                        return 0;
+                    }
+                //}
+               
 
                 _dbContext.accounts.FirstOrDefault(x => x.Id_account == reserve.Id_account).Point -= 5;
 
@@ -96,7 +127,25 @@ namespace test2.Repositories
                           select reservelist;
             var availableVacant = from vacantlist in _dbContext.vacancies join lockerlist in _dbContext.lockerMetadatas
                                   on vacantlist.Mac_address equals lockerlist.Mac_address
-                                  where !(overlap.Any(x => x.Id_vacancy == vacantlist.Id_vacancy)) && lockerlist.Location == reserve.Location
+                                  where !(overlap.Any(x => x.Id_vacancy == vacantlist.Id_vacancy))&& lockerlist.Location == reserve.Location
+                                  select vacantlist;
+            return availableVacant.ToList();
+        }
+        public List<Vacancy> CheckAvailableTime(ReservationForm reserve)
+        {
+            var overlap = from reservelist in _dbContext.reservations
+                          where reservelist.StartDay <= reserve.StartDay && reservelist.EndDay >= reserve.StartDay && (reservelist.Status == Status.Use || reservelist.Status == Status.Unuse)
+                          select reservelist;
+            var _overlap = from reservelist in _dbContext.reservations
+                           where reservelist.StartDay.Date == reserve.StartDay.Date
+                           || reservelist.StartDay.Date == reserve.EndDay.Date
+                           || reservelist.EndDay.Date == reserve.StartDay.Date
+                           || reservelist.EndDay.Date == reserve.EndDay.Date
+                           select reservelist;
+            var availableVacant = from vacantlist in _dbContext.vacancies
+                                  join lockerlist in _dbContext.lockerMetadatas 
+                                  on vacantlist.Mac_address equals lockerlist.Mac_address
+                                  where !(overlap.Any(x => x.Id_vacancy == vacantlist.Id_vacancy)) && !(_overlap.Any(x => x.Id_vacancy == vacantlist.Id_vacancy)) && lockerlist.Location == reserve.Location
                                   select vacantlist;
             return availableVacant.ToList();
         }
